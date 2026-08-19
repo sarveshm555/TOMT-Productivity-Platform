@@ -1,0 +1,229 @@
+/* Ported verbatim from health-routine.html's <style> block (professional-routine.html
+   is structurally identical, differing only in --primary-color/--secondary-color -
+   applied below via .routine-type-health / .routine-type-professional). */
+
+.routine-page-root {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-color);
+
+  --danger-color: #e91e63;
+  --warning-color: #ff9800;
+  --bg-color: #101010;
+  --card-bg: #16171d;
+  --input-bg: #1f202a;
+  --text-color: #bdbecb;
+  --heading-color: #f0f4f8;
+  --border-color: #2f303d;
+  --muted-text: #888;
+  --shadow-light: 0 0 0 1.5px #2b2c37, 0 0 25px -17px rgba(0, 0, 0, 0.7);
+}
+
+.routine-page-root.routine-type-health {
+  --primary-color: #00bcd4;
+  --secondary-color: #ff9800;
+}
+.routine-page-root.routine-type-professional {
+  --primary-color: #9c27b0;
+  --secondary-color: #00bcd4;
+}
+
+.routine-page-root * {
+  box-sizing: border-box;
+}
+
+.routine-page-root .header-container {
+  width: 95%;
+  max-width: 800px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.routine-page-root .back-to-dashboard-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  background-color: #2f303d;
+  color: var(--heading-color);
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  border: 1px solid #3f404e;
+}
+
+.routine-page-root .app-container {
+  width: 95%;
+  max-width: 800px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  border: 1px solid var(--border-color);
+}
+
+.routine-page-root h2 {
+  color: var(--primary-color);
+  border-bottom: 3px solid var(--primary-color);
+  padding-bottom: 10px;
+  margin-top: 0;
+  font-weight: 700;
+}
+
+.routine-page-root .control-box {
+  border: 1px solid var(--border-color);
+  padding: 18px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  background-color: var(--input-bg);
+  box-shadow: var(--shadow-light);
+}
+
+.routine-page-root .form-row {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  align-items: flex-end;
+}
+.routine-page-root .form-group {
+  flex: 1;
+  min-width: 150px;
+}
+.routine-page-root .form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  font-size: 0.9em;
+  color: var(--heading-color);
+}
+
+.routine-page-root input:not([type='checkbox']),
+.routine-page-root select,
+.routine-page-root textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #555;
+  border-radius: 6px;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+.routine-page-root .btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-top: 5px;
+}
+.routine-page-root .btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+.routine-page-root .btn-edit {
+  background-color: var(--warning-color);
+  color: var(--card-bg);
+}
+.routine-page-root .btn-danger {
+  background-color: var(--danger-color);
+  color: white;
+}
+.routine-page-root .btn-success {
+  background-color: var(--primary-color);
+  color: white;
+  width: 100%;
+  margin-top: 20px;
+  font-size: 1.1em;
+}
+.routine-page-root .btn-outline {
+  background-color: transparent;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+.routine-page-root .btn-reset {
+  background-color: #3f404e;
+  color: var(--text-color);
+}
+
+.routine-page-root .yn-button-container {
+  display: flex;
+  gap: 10px;
+}
+.routine-page-root .yn-button {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 1.1em;
+}
+.routine-page-root .yn-button.yes {
+  background-color: #4caf50;
+  color: white;
+}
+.routine-page-root .yn-button.no {
+  background-color: var(--danger-color);
+  color: white;
+}
+.routine-page-root .yn-button.active-selected {
+  opacity: 0.8;
+  box-shadow: 0 0 0 3px var(--primary-color);
+}
+
+.routine-page-root #data-entry-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 15px 0;
+}
+.routine-page-root .data-group {
+  padding: 15px;
+  border: 1px solid #3f404e;
+  border-radius: 6px;
+  background-color: var(--input-bg);
+}
+
+.routine-page-root .modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.routine-page-root .modal-content {
+  background: var(--card-bg);
+  padding: 25px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 600px;
+  border: 1px solid var(--primary-color);
+}
+.routine-page-root .query-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+/* New, minimal - see TargetsPage.css for why. */
+.routine-page-root .routine-error {
+  color: var(--danger-color);
+  margin-bottom: 15px;
+  font-size: 0.9em;
+  font-weight: 600;
+}

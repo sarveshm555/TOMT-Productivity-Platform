@@ -1,0 +1,402 @@
+/* Colors, spacing, shadows, and typography below are copied verbatim
+   from personal-diary.html's <style> block (:root variables, .btn-*,
+   #entry-area/#entry-text, .settings-row, responsive breakpoint) - only
+   the selector names differ, to match this component's actual class
+   names (see PersonalDiaryPage.jsx). No visual value was changed. */
+
+.personal-diary-page-root {
+  font-family: 'Georgia', serif;
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-color);
+  min-height: 100vh;
+
+  --primary-color: #00bcd4;
+  --secondary-color: #ff9800;
+  --bg-color: #101010;
+  --card-bg: #16171d;
+  --input-bg: #1f202a;
+  --text-color: #bdbecb;
+  --heading-color: #f0f4f8;
+  --danger-color: #e91e63;
+  --muted-text: #888;
+  --border-color: #2f303d;
+  --shadow-light: 0 0 0 1.5px #2b2c37, 0 0 25px -17px rgba(0, 0, 0, 0.7);
+  --shadow-medium: 0 0 0 2.5px #2f303d, 0px 0px 30px -10px rgba(0, 0, 0, 0.9);
+}
+
+.personal-diary-page-root * {
+  box-sizing: border-box;
+}
+
+.personal-diary-page-root .header-row {
+  width: 100%;
+  max-width: 900px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.personal-diary-page-root .header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.personal-diary-page-root .back-button,
+.personal-diary-page-root .btn-edit-appearance,
+.personal-diary-page-root .btn-view-history {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  background-color: #2f303d;
+  color: var(--heading-color);
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  border: 1px solid #3f404e;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1em;
+}
+.personal-diary-page-root .back-button:hover,
+.personal-diary-page-root .btn-edit-appearance:hover,
+.personal-diary-page-root .btn-view-history:hover {
+  background-color: #3f404e;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+.personal-diary-page-root .app-container {
+  width: 98%;
+  max-width: 900px;
+  background: var(--card-bg);
+  border-radius: 10px;
+  box-shadow: var(--shadow-medium);
+  padding: 25px;
+  border: 1px solid var(--border-color);
+}
+
+.personal-diary-page-root h2 {
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 10px;
+  margin-top: 0;
+  font-weight: 700;
+  font-size: 2em;
+  text-shadow: 0 0 5px rgba(0, 188, 212, 0.3);
+}
+
+.personal-diary-page-root .diary-edit-banner {
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.15), rgba(0, 188, 212, 0.15));
+  border: 1px solid #2196f3;
+  border-radius: 8px;
+  padding: 12px 18px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.personal-diary-page-root .edit-banner-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--heading-color);
+  font-size: 1.05em;
+}
+
+.personal-diary-page-root .edit-banner-badge {
+  background-color: #2196f3;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.personal-diary-page-root .btn-cancel-edit {
+  background-color: #555;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.personal-diary-page-root .btn-cancel-edit:hover {
+  background-color: #777;
+  transform: translateY(-1px);
+}
+
+.personal-diary-page-root .settings-panel {
+  border: 1px solid var(--border-color);
+  padding: 18px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  background-color: var(--input-bg);
+  box-shadow: var(--shadow-light);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px 20px;
+  align-items: start;
+}
+
+.personal-diary-page-root .setting-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+.personal-diary-page-root .setting-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: var(--heading-color);
+}
+
+.personal-diary-page-root input[type='text'],
+.personal-diary-page-root input[type='file'],
+.personal-diary-page-root select,
+.personal-diary-page-root input[type='color'] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #555;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+.personal-diary-page-root input[type='color'] {
+  width: 50px;
+  height: 35px;
+  padding: 2px;
+}
+
+.personal-diary-page-root .cover-thumb {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #555;
+  margin-top: 8px;
+  display: block;
+}
+
+.personal-diary-page-root .btn-pen-toggle,
+.personal-diary-page-root .btn-reset-cover,
+.personal-diary-page-root .btn-save-entry {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: white;
+}
+.personal-diary-page-root .btn-pen-toggle:hover,
+.personal-diary-page-root .btn-reset-cover:hover,
+.personal-diary-page-root .btn-save-entry:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.personal-diary-page-root .btn-pen-toggle {
+  background-color: var(--secondary-color);
+}
+.personal-diary-page-root .btn-reset-cover {
+  background-color: var(--danger-color);
+  font-size: 0.85em;
+  padding: 6px 12px;
+  margin-top: 6px;
+}
+.personal-diary-page-root .btn-save-entry {
+  background-color: #4caf50;
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  font-size: 1.05em;
+}
+.personal-diary-page-root .btn-save-entry:disabled {
+  opacity: 0.7;
+  cursor: default;
+  transform: none;
+}
+
+.personal-diary-page-root .diary-textarea {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  border: 1px solid var(--border-color);
+  resize: vertical;
+  padding: 20px;
+  font-size: 16px;
+  line-height: 1.6;
+  background-color: var(--input-bg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-blend-mode: overlay;
+  box-sizing: border-box;
+  outline: none;
+  border-radius: 8px;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+  caret-color: var(--primary-color);
+}
+
+.personal-diary-page-root .pen-caret-thick {
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2), 1px 0 0 0 transparent;
+}
+
+/* New, minimal - see TargetsPage.css for why. */
+.personal-diary-page-root .personal-diary-error {
+  color: var(--danger-color);
+  margin-bottom: 15px;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+/* Modal / Popover Styling for Appearance Controls */
+.personal-diary-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
+  animation: fadeInModal 0.2s ease-out;
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.personal-diary-modal {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85);
+  width: 100%;
+  max-width: 720px;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.personal-diary-modal-header {
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--card-bg);
+}
+
+.personal-diary-modal-header h3 {
+  margin: 0;
+  color: var(--primary-color);
+  font-size: 1.25em;
+  font-weight: 600;
+}
+
+.personal-diary-modal-close {
+  background: none;
+  border: none;
+  color: var(--muted-text);
+  font-size: 1.3em;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.personal-diary-modal-close:hover {
+  color: #fff;
+  background-color: var(--input-bg);
+}
+
+.personal-diary-modal-body {
+  padding: 22px;
+  overflow-y: auto;
+}
+
+.personal-diary-modal-body .settings-panel {
+  margin-bottom: 0;
+}
+
+.personal-diary-modal-footer {
+  padding: 14px 22px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  background-color: var(--input-bg);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.btn-modal-done {
+  padding: 9px 24px;
+  background-color: var(--primary-color);
+  color: #101010;
+  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95em;
+  transition: all 0.2s;
+}
+
+.btn-modal-done:hover {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .personal-diary-page-root .app-container {
+    padding: 15px;
+  }
+  .personal-diary-page-root .settings-panel {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  .personal-diary-page-root .diary-textarea {
+    height: 250px;
+    padding: 12px;
+  }
+  .personal-diary-page-root .header-row {
+    padding: 0 5px;
+    flex-direction: column;
+  }
+  .personal-diary-page-root .header-actions {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+  }
+  .personal-diary-page-root .back-button,
+  .personal-diary-page-root .btn-edit-appearance,
+  .personal-diary-page-root .btn-view-history {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 5px;
+  }
+}

@@ -1,0 +1,246 @@
+/* Ported verbatim from password_page.html's <style> block. `body, html`
+   is scoped to `.auth-page-root` for the same SPA reason documented in
+   LoadingPage.css. Every color, size, timing, and keyframe is identical
+   to the original. Shared by LoginPage.jsx and RegisterPage.jsx since the
+   original toggled between SET_PASSWORD / LOGIN / RESET_PASSWORD forms
+   inside one page using this exact same styling for all three. */
+
+.auth-page-root {
+  height: 100%;
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #212121;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #9fc4d0;
+  overflow: hidden;
+}
+
+.auth-page-root .auth-container {
+  width: 90%;
+  max-width: 400px;
+}
+
+.auth-page-root .container {
+  font-style: italic;
+  font-weight: bold;
+  display: flex;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.auth-page-root .submit,
+.auth-page-root .link-button {
+  color: #9fc4d0;
+  text-decoration: none;
+  font-size: 25px;
+  border: none;
+  background: none;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  margin: 10px 0 0;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.auth-page-root .submit::before,
+.auth-page-root .link-button::before {
+  margin-left: auto;
+}
+
+.auth-page-root .submit::after,
+.auth-page-root .submit::before,
+.auth-page-root .link-button::after,
+.auth-page-root .link-button::before {
+  content: '';
+  width: 0%;
+  height: 2px;
+  background: #06aed8;
+  display: block;
+  transition: 0.5s;
+}
+
+.auth-page-root .submit:hover::after,
+.auth-page-root .submit:hover::before,
+.auth-page-root .link-button:hover::after,
+.auth-page-root .link-button:hover::before {
+  width: 100%;
+}
+
+.auth-page-root .input-container {
+  filter: drop-shadow(46px 36px 24px #4090b5) drop-shadow(-55px -40px 25px #9e30a9);
+  animation: auth-page-blinkShadowsFilter 8s ease-in infinite;
+  width: 100%;
+}
+
+.auth-page-root .input-content {
+  position: relative;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  align-items: center;
+  text-align: center;
+  padding-inline: 1em;
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+}
+
+.auth-page-root .input-content::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  filter: blur(40px);
+  -webkit-clip-path: polygon(26% 0, 66% 0, 92% 0, 100% 8%, 100% 89%, 91% 100%, 7% 100%, 0 92%, 0 0);
+  clip-path: polygon(26% 0, 66% 0, 92% 0, 100% 8%, 100% 89%, 91% 100%, 7% 100%, 0 92%, 0 0);
+  background: rgba(122, 251, 255, 0.5568627451);
+  transition: all 1s ease-in-out;
+}
+
+.auth-page-root .input-content::after {
+  content: '';
+  position: absolute;
+  width: 98%;
+  height: 98%;
+  box-shadow: inset 0px 0px 20px 20px #212121;
+  background: repeating-linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(64, 144, 181, 0.6) 1px,
+      rgb(0, 0, 0) 3px,
+      hsl(295, 60%, 12%) 5px,
+      #153544 4px,
+      transparent 0.5%
+    ),
+    repeating-linear-gradient(to left, hsl(295, 60%, 12%) 100%, hsla(295, 60%, 12%, 0.99) 100%);
+  -webkit-clip-path: polygon(26% 0, 31% 5%, 61% 5%, 66% 0, 92% 0, 100% 8%, 100% 89%, 91% 100%, 7% 100%, 0 92%, 0 0);
+  clip-path: polygon(26% 0, 31% 5%, 61% 5%, 66% 0, 92% 0, 100% 8%, 100% 89%, 91% 100%, 7% 100%, 0 92%, 0 0);
+  animation: auth-page-backglitch 50ms linear infinite;
+}
+
+.auth-page-root .input-dist {
+  z-index: 80;
+  display: grid;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  padding-inline: 1em;
+  padding-block: 1.2em;
+  grid-template-columns: 1fr;
+}
+
+.auth-page-root .input-type {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 1em;
+  font-size: 1.1rem;
+  background-color: transparent;
+  width: 100%;
+  border: none;
+}
+
+.auth-page-root .input-is {
+  color: #fff;
+  font-size: 0.9rem;
+  background-color: transparent;
+  width: 100%;
+  box-sizing: border-box;
+  padding-inline: 0.5em;
+  padding-block: 0.7em;
+  border: none;
+  transition: all 1s ease-in-out;
+  border-bottom: 1px solid hsl(221, 26%, 43%);
+  text-align: center;
+}
+
+.auth-page-root .input-is:hover {
+  transition: all 1s ease-in-out;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(102, 224, 255, 0.2) 27%,
+    rgba(102, 224, 255, 0.2) 63%,
+    transparent 100%
+  );
+}
+
+.auth-page-root .input-content:focus-within::before {
+  transition: all 1s ease-in-out;
+  background: hsla(0, 0%, 100%, 0.814);
+}
+
+.auth-page-root .input-is:focus {
+  outline: none;
+  border-bottom: 1px solid hsl(192, 100%, 100%);
+  color: hsl(192, 100%, 88%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(102, 224, 255, 0.2) 27%,
+    rgba(102, 224, 255, 0.2) 63%,
+    transparent 100%
+  );
+}
+
+.auth-page-root .input-is::-moz-placeholder,
+.auth-page-root .input-is::placeholder {
+  color: hsla(192, 100%, 88%, 0.806);
+  font-style: italic;
+}
+
+.auth-page-root .error-message {
+  color: #ff004c;
+  filter: drop-shadow(0 0 5px #ff004c);
+  margin-top: 20px;
+  font-size: 0.9em;
+  font-weight: bold;
+  z-index: 100;
+}
+
+.auth-page-root .header-text {
+  color: #06aed8;
+  font-size: 1.5em;
+  text-shadow: 0 0 10px rgba(6, 174, 216, 0.5);
+  margin-bottom: 20px;
+  z-index: 100;
+  font-weight: bold;
+  font-family: 'Poppins', sans-serif;
+}
+
+@keyframes auth-page-backglitch {
+  0% {
+    box-shadow: inset 0px 20px 20px 30px #212121;
+  }
+  50% {
+    box-shadow: inset 0px -20px 20px 30px hsl(297, 42%, 10%);
+  }
+  to {
+    box-shadow: inset 0px 20px 20px 30px #212121;
+  }
+}
+
+@keyframes auth-page-blinkShadowsFilter {
+  0% {
+    filter: drop-shadow(46px 36px 28px rgba(64, 144, 181, 0.34)) drop-shadow(-55px -40px 28px #9e30a9);
+  }
+  25% {
+    filter: drop-shadow(46px -36px 24px rgba(64, 144, 181, 0.9)) drop-shadow(-55px 40px 24px #9e30a9);
+  }
+  50% {
+    filter: drop-shadow(46px 36px 30px rgba(64, 144, 181, 0.9)) drop-shadow(-55px 40px 30px rgba(159, 48, 169, 0.29));
+  }
+  75% {
+    filter: drop-shadow(20px -18px 25px rgba(64, 144, 181, 0.9)) drop-shadow(-20px 20px 25px rgba(159, 48, 169, 0.29));
+  }
+  to {
+    filter: drop-shadow(46px 36px 28px rgba(64, 144, 181, 0.34)) drop-shadow(-55px -40px 28px #9e30a9);
+  }
+}

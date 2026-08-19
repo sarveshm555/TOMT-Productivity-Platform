@@ -1,0 +1,303 @@
+/* Ported verbatim from target.html's <style> block. `body` and `:root`
+   are scoped to `.targets-page-root` for the same SPA reason documented
+   in LoadingPage.css. Every color, size, timing, and keyframe is
+   identical to the original. `#goal-form-container`'s `display: none`
+   default is handled by JSX conditional rendering instead (see
+   TargetsPage.jsx) rather than a CSS default + toggle. */
+
+.targets-page-root {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  color: var(--text-color);
+  transition: background-color 0.3s;
+
+  --primary-color: #37ff8b;
+  --secondary-color: #ff9800;
+  --bg-color: #1a1a1a;
+  --card-bg: #2a2a2a;
+  --danger-color: #dc3545;
+  --success-color: #28a745;
+  --border-color: #4f4f4f;
+  --secondary-dark: #e58b00;
+  --text-color: #e0e0e0;
+  --input-bg: #333333;
+}
+
+.targets-page-root .app-container {
+  width: 90%;
+  max-width: 800px;
+  background: var(--card-bg);
+  border-radius: 15px;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
+  padding: 25px;
+  transition: background-color 0.3s;
+}
+
+.targets-page-root h2 {
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  font-size: 1.6rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.targets-page-root h3 {
+  color: var(--text-color);
+  text-align: left;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.targets-page-root .header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.targets-page-root .go-to-dashboard-btn {
+  padding: 10px 18px;
+  background-color: var(--primary-color);
+  color: var(--card-bg);
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 0.9em;
+  display: inline-block;
+  transition: background-color 0.3s, filter 0.2s;
+  box-shadow: 0 0 10px rgba(55, 255, 139, 0.5);
+}
+
+.targets-page-root .go-to-dashboard-btn:hover {
+  filter: brightness(1.2);
+  box-shadow: 0 0 15px rgba(55, 255, 139, 0.8);
+}
+
+.targets-page-root .btn-toggle-add {
+  background-color: var(--secondary-color);
+  color: var(--card-bg);
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 10px rgba(255, 152, 0, 0.4);
+}
+
+.targets-page-root .search-container {
+  margin-bottom: 20px;
+}
+.targets-page-root .search-container input {
+  width: 100%;
+  padding: 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  color: white;
+  border-radius: 8px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.targets-page-root #goal-form-container {
+  border: 1px solid var(--border-color);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  background-color: var(--input-bg);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+  animation: targets-page-slideDown 0.3s ease-out;
+}
+
+@keyframes targets-page-slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.targets-page-root .form-row {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+.targets-page-root .form-group {
+  flex: 1;
+  min-width: 180px;
+  margin-bottom: 15px;
+}
+
+.targets-page-root .form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 700;
+  font-size: 0.9em;
+  color: var(--primary-color);
+}
+
+.targets-page-root .form-group input,
+.targets-page-root .form-group select,
+.targets-page-root .form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  box-sizing: border-box;
+  resize: vertical;
+  background-color: #444;
+  color: var(--text-color);
+}
+
+.targets-page-root #target-date {
+  max-width: 140px;
+  display: inline-block;
+}
+.targets-page-root #progress-note {
+  height: 42px;
+  min-height: 42px;
+}
+
+.targets-page-root .btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+.targets-page-root .btn-add {
+  background-color: var(--secondary-color);
+  color: var(--card-bg);
+  height: 42px;
+  align-self: flex-end;
+  box-shadow: 0 0 15px rgba(255, 152, 0, 0.6);
+}
+.targets-page-root .btn-add:hover {
+  background-color: var(--secondary-dark);
+  transform: translateY(-2px);
+}
+.targets-page-root .btn-add:disabled {
+  opacity: 0.7;
+  cursor: default;
+  transform: none;
+}
+
+.targets-page-root #goals-list {
+  list-style: none;
+  padding: 0;
+}
+.targets-page-root .goal-item {
+  padding: 15px 20px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background-color: var(--input-bg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border-left: 6px solid var(--secondary-color);
+  transition: border-left-color 0.3s;
+}
+
+.targets-page-root .goal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.targets-page-root .goal-name {
+  font-weight: 800;
+  font-size: 1.2em;
+  color: var(--text-color);
+}
+.targets-page-root .goal-date {
+  font-size: 0.95em;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.targets-page-root .progress-note {
+  font-size: 0.9em;
+  color: var(--muted-text);
+  margin-top: 10px;
+  padding: 10px;
+  background: #444;
+  border-radius: 6px;
+  white-space: pre-wrap;
+}
+.targets-page-root .goal-actions {
+  display: flex;
+  gap: 8px;
+}
+.targets-page-root .action-btn {
+  padding: 8px 12px;
+  font-size: 0.85em;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+.targets-page-root .btn-edit {
+  background-color: var(--primary-color);
+  color: var(--card-bg);
+}
+.targets-page-root .btn-delete {
+  background: none;
+  color: var(--danger-color);
+  font-size: 1.2em;
+  padding: 5px;
+}
+.targets-page-root .status-overdue {
+  border-left-color: var(--danger-color);
+}
+
+/* New, minimal - not part of the original page, which had no error-state
+   styling for this module (the original was purely a localStorage form, so
+   a save/load could never fail this way). Kept visually consistent with
+   the page's own danger-color token rather than introducing a new one. */
+.targets-page-root .targets-form-error {
+  color: var(--danger-color);
+  margin-top: 10px;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .targets-page-root .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .targets-page-root .form-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .targets-page-root .form-group {
+    min-width: 100%;
+    margin-bottom: 10px;
+  }
+  .targets-page-root .btn-add {
+    width: 100%;
+    margin-top: 10px;
+  }
+  .targets-page-root .goal-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .targets-page-root .goal-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

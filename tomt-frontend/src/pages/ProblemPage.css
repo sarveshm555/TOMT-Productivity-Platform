@@ -1,0 +1,161 @@
+.problem-page-root {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: var(--text-color);
+
+  --primary-color: #f44336;
+  --secondary-color: #4caf50;
+  --bg-color: #101010;
+  --card-bg: #16171d;
+  --text-color: #bdbecb;
+  --heading-color: #f0f4f8;
+  --shadow-medium: 0 0 0 2.5px #2f303d, 0px 0px 30px -10px rgba(0, 0, 0, 0.9);
+}
+
+.problem-page-root * {
+  box-sizing: border-box;
+}
+
+.problem-page-root .app-container {
+  width: 90%;
+  max-width: 800px;
+  background: var(--card-bg);
+  border-radius: 15px;
+  box-shadow: var(--shadow-medium);
+  padding: 25px;
+  border: 1px solid #2f303d;
+}
+
+.problem-page-root .header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.problem-page-root .top-buttons-group {
+  display: flex;
+  gap: 10px;
+}
+.problem-page-root .back-home-button {
+  padding: 10px 18px;
+  background-color: #2f303d;
+  color: var(--heading-color);
+  text-decoration: none;
+  border-radius: 8px;
+  border: 1px solid #3f404e;
+}
+
+.problem-page-root h2 {
+  color: var(--primary-color);
+  margin: 10px 0;
+}
+
+.problem-page-root #input-form-container {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #1a1b23;
+  border-radius: 10px;
+  border: 1px dashed #3f404e;
+}
+.problem-page-root .input-group {
+  margin-bottom: 20px;
+}
+.problem-page-root label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: var(--heading-color);
+}
+.problem-page-root textarea {
+  width: 100%;
+  padding: 15px;
+  border-radius: 8px;
+  background: #1f202a;
+  color: white;
+  border: 1px solid #3f404e;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.problem-page-root .btn-save {
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.problem-page-root .btn-toggle {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.problem-page-root .btn-clear-top {
+  background-color: #3f404e;
+  color: #bdbecb;
+  border: 1px solid #555;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.problem-page-root hr {
+  border: 0;
+  border-top: 1px solid #2f303d;
+  margin: 20px 0;
+}
+
+.problem-page-root .problem-card {
+  background: #2b2c37;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border-left: 5px solid var(--primary-color);
+  position: relative;
+}
+.problem-page-root .problem-card h4 {
+  color: var(--primary-color);
+  margin: 0 0 10px 0;
+}
+.problem-page-root .solution-text {
+  color: #81c784;
+  font-style: italic;
+}
+.problem-page-root .timestamp {
+  font-size: 0.8em;
+  color: #666;
+  display: block;
+  margin-top: 15px;
+}
+.problem-page-root .btn-solved {
+  margin-top: 15px;
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* New, minimal - see TargetsPage.css for why. */
+.problem-page-root .problem-error {
+  color: var(--primary-color);
+  margin-bottom: 15px;
+  font-size: 0.9em;
+  font-weight: 600;
+}

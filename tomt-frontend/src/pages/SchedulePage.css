@@ -1,0 +1,489 @@
+/* Ported verbatim from schedule.html's <style> block, scoped to
+   `.schedule-page-root` for the same SPA reason documented in
+   LoadingPage.css. Every color, size, timing, and layout rule is
+   identical to the original. */
+
+.schedule-page-root {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 20px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  perspective: 1500px;
+  color: var(--text-color);
+
+  --primary-color: #00bcd4;
+  --secondary-color: #ff9800;
+  --bg-color: #101010;
+  --card-bg: #16171d;
+  --text-color: #bdbecb;
+  --heading-color: #f0f4f8;
+
+  --high-priority: #ef5350;
+  --medium-priority: #ffb300;
+  --low-priority: #4dd0e1;
+  --none-priority: #757575;
+  --history-color: #66bb6a;
+
+  --shadow-light: 0 0 0 1.5px #2b2c37, 0 0 25px -17px rgba(0, 0, 0, 0.7);
+  --shadow-medium: 0 0 0 2.5px #2f303d, 0px 0px 30px -10px rgba(0, 0, 0, 0.9);
+}
+
+.schedule-page-root * {
+  box-sizing: border-box;
+}
+
+.schedule-page-root .app-container {
+  width: 95%;
+  max-width: 900px;
+  background: var(--card-bg);
+  border-radius: 15px;
+  box-shadow: var(--shadow-medium);
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #2f303d;
+}
+
+.schedule-page-root .flip-wrapper {
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  transform: rotateY(0deg);
+}
+.schedule-page-root .flip-out {
+  transform: rotateY(15deg) scale(0.95);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.schedule-page-root .back-home-container {
+  padding: 15px 20px 0;
+  text-align: left;
+}
+.schedule-page-root .back-home-button {
+  display: inline-block;
+  padding: 10px 18px;
+  background-color: #2f303d;
+  color: var(--heading-color);
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transform: translateZ(0);
+  border: 1px solid #3f404e;
+}
+.schedule-page-root .back-home-button:hover {
+  background-color: #3f404e;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+}
+
+.schedule-page-root .content-wrapper {
+  padding: 25px;
+  position: relative;
+  height: auto;
+  min-height: 480px;
+}
+.schedule-page-root .tab-content {
+  position: static;
+  width: 100%;
+  height: auto;
+  padding: 0;
+}
+
+.schedule-page-root .content-wrapper h2 {
+  color: var(--primary-color);
+  font-size: 2em;
+  margin-bottom: 10px;
+  text-shadow: 0 0 5px rgba(0, 188, 212, 0.2);
+}
+.schedule-page-root .schedule-header p {
+  margin: 5px 0;
+  font-size: 0.95em;
+  color: #888;
+}
+
+.schedule-page-root .task-management-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 25px;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #1f202a;
+  box-shadow: var(--shadow-light);
+  border: 1px solid #2f303d;
+}
+.schedule-page-root .add-button,
+.schedule-page-root .action-button,
+.schedule-page-root .modal-actions button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.1s, box-shadow 0.1s;
+}
+.schedule-page-root .add-button {
+  background-color: var(--secondary-color);
+  color: var(--card-bg);
+}
+.schedule-page-root .action-button.secondary {
+  background-color: #3f404e;
+  color: var(--text-color);
+  border: 1px solid #555;
+}
+.schedule-page-root .action-button.primary {
+  background-color: var(--primary-color);
+  color: var(--card-bg);
+}
+.schedule-page-root .add-button:hover,
+.schedule-page-root .action-button:hover,
+.schedule-page-root .modal-actions button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.schedule-page-root .tasks-heading {
+  margin-top: 25px;
+  margin-bottom: 15px;
+  border-bottom: 2px solid var(--secondary-color);
+  padding-bottom: 5px;
+  color: var(--heading-color);
+  font-size: 1.3em;
+}
+.schedule-page-root .tasks-heading.pending {
+  border-bottom-color: var(--primary-color);
+  color: var(--primary-color);
+}
+.schedule-page-root .tasks-heading.history {
+  border-bottom-color: var(--history-color);
+  color: var(--history-color);
+  margin-top: 30px;
+}
+
+.schedule-page-root .tasks-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.schedule-page-root .task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  background-color: #2b2c37;
+  border-left: 5px solid #3f404e;
+  transition: all 0.3s ease;
+  transform-origin: left center;
+}
+.schedule-page-root .task-item:hover {
+  background-color: #3f404e;
+  transform: none;
+}
+.schedule-page-root .task-item.completed {
+  background-color: #1f202a;
+  border-left: 5px solid var(--history-color);
+  opacity: 0.85;
+  text-decoration: line-through;
+  color: #777;
+}
+.schedule-page-root .task-item.pending {
+  border-left: 5px solid var(--primary-color);
+}
+.schedule-page-root .task-item.past {
+  background-color: #1f202a;
+  border-left: 5px solid #9c27b0;
+}
+
+.schedule-page-root .task-time {
+  font-weight: bold;
+  color: var(--primary-color);
+  width: 15%;
+  min-width: 50px;
+  text-align: left;
+}
+.schedule-page-root .task-name {
+  flex-grow: 1;
+  text-align: left;
+  margin: 0 15px;
+  word-break: break-word;
+  color: var(--text-color);
+}
+
+.schedule-page-root .task-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 260px;
+  justify-content: flex-end;
+}
+.schedule-page-root .task-action-btn {
+  padding: 8px 10px;
+  font-size: 0.85em;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+.schedule-page-root .btn-remember {
+  background-color: #4caf50;
+  color: white;
+}
+.schedule-page-root .btn-remember:hover {
+  background-color: #43a047;
+}
+.schedule-page-root .btn-remembered {
+  background-color: #2f303d;
+  color: var(--history-color);
+  border: 1px solid var(--history-color);
+  pointer-events: none;
+}
+
+.schedule-page-root .btn-complete {
+  background-color: var(--history-color);
+  color: white;
+  border-color: var(--history-color);
+}
+.schedule-page-root .btn-complete:hover {
+  background-color: #558b2f;
+}
+
+.schedule-page-root .delete-task-btn {
+  background: none;
+  border: none;
+  color: var(--high-priority);
+  cursor: pointer;
+  font-size: 1.2em;
+  padding: 5px;
+  transition: transform 0.2s;
+}
+.schedule-page-root .delete-task-btn:hover {
+  transform: scale(1.1);
+}
+
+.schedule-page-root .priority-tag {
+  font-size: 0.8em;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: #3f404e;
+}
+.schedule-page-root .priority-High {
+  color: var(--high-priority);
+  border: 1px solid var(--high-priority);
+}
+.schedule-page-root .priority-Medium {
+  color: var(--medium-priority);
+  border: 1px solid var(--medium-priority);
+}
+.schedule-page-root .priority-Low {
+  color: var(--low-priority);
+  border: 1px solid var(--low-priority);
+}
+.schedule-page-root .priority-no-priority {
+  color: var(--none-priority);
+  border: 1px solid var(--none-priority);
+}
+
+.schedule-page-root #schedule-history-section {
+  margin-top: 15px;
+}
+.schedule-page-root .history-item-schedule {
+  background-color: #1f202a;
+  border-left: 5px solid var(--history-color);
+  padding: 12px 15px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: var(--text-color);
+}
+.schedule-page-root .history-item-schedule strong {
+  color: var(--history-color);
+  margin-right: 10px;
+}
+.schedule-page-root .history-item-schedule span {
+  font-style: italic;
+  color: #888;
+}
+
+.schedule-page-root #toggle-history-btn {
+  background-color: #2f303d;
+  color: var(--text-color);
+  border: 1px solid #444;
+  padding: 10px 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+.schedule-page-root #toggle-history-btn:hover {
+  background-color: #3f404e;
+}
+
+.schedule-page-root .modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+.schedule-page-root .modal-backdrop.visible {
+  visibility: visible;
+  opacity: 1;
+}
+.schedule-page-root .modal-content {
+  background: var(--card-bg);
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 600px;
+  transform: translateZ(500px) scale(0.6);
+  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  color: var(--text-color);
+  border: 1px solid var(--primary-color);
+  box-shadow: 0 0 20px rgba(0, 188, 212, 0.3);
+}
+.schedule-page-root .modal-backdrop.visible .modal-content {
+  transform: translateZ(0) scale(1);
+}
+.schedule-page-root .modal-content h3 {
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}
+
+.schedule-page-root #task-form input[type='text'],
+.schedule-page-root #task-form input[type='time'],
+.schedule-page-root #task-form select,
+.schedule-page-root #task-form input[type='date'] {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #555;
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: #1f202a;
+  color: var(--text-color);
+}
+.schedule-page-root #task-form input[type='text']::placeholder {
+  color: #888;
+}
+
+.schedule-page-root #task-form .form-row {
+  display: flex;
+  gap: 15px;
+}
+.schedule-page-root #task-form .form-row > div {
+  flex: 1;
+}
+.schedule-page-root #task-form .form-row label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.9em;
+  color: var(--text-color);
+  font-weight: 500;
+}
+.schedule-page-root .modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* New, minimal - see TargetsPage.css for why. */
+.schedule-page-root .schedule-error {
+  color: var(--high-priority);
+  margin-bottom: 15px;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .schedule-page-root .content-wrapper {
+    padding: 15px;
+  }
+
+  .schedule-page-root .task-management-controls {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+  .schedule-page-root .task-management-controls .add-button,
+  .schedule-page-root .task-management-controls .action-button {
+    width: 100%;
+  }
+
+  .schedule-page-root .task-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px;
+  }
+
+  .schedule-page-root .task-time,
+  .schedule-page-root .task-name {
+    width: 100%;
+    min-width: 100%;
+    margin: 0 0 5px 0;
+    text-align: left;
+  }
+  .schedule-page-root .task-actions {
+    min-width: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 8px;
+    margin-top: 5px;
+  }
+  .schedule-page-root .priority-tag {
+    grid-column: 1 / 2;
+    order: 0;
+    text-align: center;
+  }
+  .schedule-page-root .btn-remember,
+  .schedule-page-root .btn-remembered,
+  .schedule-page-root .btn-complete {
+    grid-column: 2 / 3;
+  }
+  .schedule-page-root .delete-task-btn {
+    grid-column: 3 / 4;
+    align-self: center;
+    justify-self: center;
+  }
+
+  .schedule-page-root #task-form .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  .schedule-page-root .modal-actions {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 400px) {
+  .schedule-page-root .task-item {
+    padding: 10px;
+  }
+  .schedule-page-root .task-action-btn {
+    font-size: 0.75em;
+    padding: 6px 8px;
+  }
+}

@@ -1,0 +1,247 @@
+/* Ported verbatim from loading_page.html's <style> block. Only change:
+   `body, html { ... }` and `:root { ... }` are scoped to
+   `.loading-page-root` instead of the real <body>/<html>/:root, because in
+   an SPA those are shared across every page - see src/styles/global.css
+   for why. Every color, size, timing, and keyframe below is identical to
+   the original. */
+
+.loading-page-root {
+  height: 100%;
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #1f2937 0%, #0f172a 100%);
+  color: #ecf0f1;
+  font-family: 'Inter', sans-serif;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+
+  /* --- Custom Variables (originally on :root) --- */
+  --primary-color: #37ff8b;
+  --primary-color-faded: rgba(55, 255, 139, 0.4);
+  --secondary-color: #3498db;
+  --title-font-size: 2em;
+  --title-letter-spacing: 1px;
+  --loader-width: 180px;
+  --loader-height: 32px;
+}
+
+/* --- LIQUID LOADER STYLES --- */
+.loading-page-root .liquid-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 20px;
+  font-family: system-ui, sans-serif;
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
+  margin: 30px;
+}
+
+.loading-page-root .loader-track {
+  position: relative;
+  width: var(--loader-width);
+  height: var(--loader-height);
+  background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+  border-radius: calc(var(--loader-height) / 2);
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(255, 255, 255, 0.1);
+}
+
+.loading-page-root .liquid-fill {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  height: calc(100% - 4px);
+  background: linear-gradient(90deg, #4f46e5, #7c3aed, #ec4899, #f59e0b);
+  border-radius: calc(var(--loader-height) / 2 - 2px);
+  animation: loading-page-fillProgress 4s ease-out infinite, loading-page-colorShift 3s linear infinite;
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+.loading-page-root .loading-text {
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  animation: loading-page-textGlow 1s ease-in-out infinite;
+}
+
+.loading-page-root .dot {
+  margin-left: 3px;
+  animation: loading-page-blink 1.5s infinite;
+}
+.loading-page-root .dot:nth-of-type(1) {
+  animation-delay: 0s;
+}
+.loading-page-root .dot:nth-of-type(2) {
+  animation-delay: 0.3s;
+}
+.loading-page-root .dot:nth-of-type(3) {
+  animation-delay: 0.6s;
+}
+.loading-page-root .liquid-loader.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* --- TITLE ANIMATION STYLES --- */
+.loading-page-root .title-container {
+  margin: 20px 0;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.loading-page-root .button {
+  margin: 0;
+  height: auto;
+  background: transparent;
+  padding: 0;
+  border: none;
+  cursor: default;
+
+  --border-right: 4px;
+  --text-stroke-color: rgba(255, 255, 255, 0.6);
+  --animation-color: var(--primary-color);
+
+  letter-spacing: var(--title-letter-spacing);
+  font-size: var(--title-font-size);
+  font-family: 'Arial', sans-serif;
+  position: relative;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--text-stroke-color);
+  transition: transform 1s ease-out;
+  transform: scale(0.8);
+  white-space: nowrap;
+}
+
+.loading-page-root .hover-text {
+  position: absolute;
+  box-sizing: border-box;
+  color: var(--animation-color);
+  width: 0%;
+  inset: 0;
+  border-right: var(--border-right) solid var(--animation-color);
+  overflow: hidden;
+  transition: 1s ease-out;
+  -webkit-text-stroke: 1px var(--animation-color);
+  filter: drop-shadow(0 0 10px var(--animation-color));
+}
+
+.loading-page-root .button.visible .hover-text {
+  width: 100%;
+  filter: drop-shadow(0 0 23px var(--animation-color));
+}
+
+.loading-page-root .button.visible {
+  transform: scale(1);
+}
+
+.loading-page-root #subtitle {
+  font-size: 1.2em;
+  color: var(--secondary-color);
+  margin-top: 15px;
+  opacity: 0;
+  transition: opacity 1s ease-in 0.5s;
+}
+
+.loading-page-root #subtitle.visible {
+  opacity: 1;
+}
+
+/* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 600px) {
+  .loading-page-root {
+    --loader-width: 140px;
+    --loader-height: 24px;
+    --title-font-size: 1.5em;
+    --title-letter-spacing: 0px;
+  }
+
+  .loading-page-root .button {
+    --border-right: 3px;
+    -webkit-text-stroke: 0.5px var(--text-stroke-color);
+  }
+
+  .loading-page-root .loading-text {
+    font-size: 16px;
+  }
+
+  .loading-page-root #subtitle {
+    font-size: 1em;
+    padding: 0 15px;
+  }
+}
+
+/* --- KEYFRAMES --- */
+@keyframes loading-page-fillProgress {
+  0% {
+    width: 4px;
+  }
+  25% {
+    width: 25%;
+  }
+  50% {
+    width: 50%;
+  }
+  75% {
+    width: 75%;
+  }
+  100% {
+    width: calc(100% - 4px);
+  }
+}
+@keyframes loading-page-colorShift {
+  0% {
+    filter: hue-rotate(0deg) brightness(1);
+  }
+  33% {
+    filter: hue-rotate(120deg) brightness(1.1);
+  }
+  66% {
+    filter: hue-rotate(240deg) brightness(0.9);
+  }
+  100% {
+    filter: hue-rotate(360deg) brightness(1);
+  }
+}
+@keyframes loading-page-textGlow {
+  0%,
+  100% {
+    opacity: 0.7;
+    text-shadow: 0 0 8px rgba(139, 92, 246, 0.3);
+  }
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 16px rgba(139, 92, 246, 0.6);
+  }
+}
+@keyframes loading-page-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.loading-page-root.loading-page-root--ready {
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+}
+
+.loading-page-root .footer-text {
+  position: absolute;
+  bottom: 15px;
+  font-size: 0.85em;
+  color: rgba(255, 255, 255, 0.4);
+  transition: opacity 1s ease-in;
+}

@@ -1,0 +1,225 @@
+.daily-learning-tracker-page-root {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  color: var(--text-color);
+
+  --primary-color: #00bcd4;
+  --secondary-color: #ff5722;
+  --bg-color: #101010;
+  --card-bg: #16171d;
+  --input-bg: #1f202a;
+  --text-color: #bdbecb;
+  --heading-color: #f0f4f8;
+  --danger-color: #e91e63;
+  --success-color: #4caf50;
+  --border-color: #2f303d;
+  --muted-color: #888;
+  --shadow-light: 0 0 0 1.5px #2b2c37, 0 0 25px -17px rgba(0, 0, 0, 0.7);
+}
+
+.daily-learning-tracker-page-root * {
+  box-sizing: border-box;
+}
+
+.daily-learning-tracker-page-root .app-container {
+  width: 100%;
+  max-width: 900px;
+  background: var(--card-bg);
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  border: 1px solid var(--border-color);
+}
+
+.daily-learning-tracker-page-root .header-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.daily-learning-tracker-page-root h2 {
+  color: var(--primary-color);
+  border-bottom: 3px solid var(--primary-color);
+  padding-bottom: 10px;
+  margin: 0;
+  font-size: 1.5rem;
+  flex-grow: 1;
+}
+
+.daily-learning-tracker-page-root .btn-toggle-form {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.daily-learning-tracker-page-root .btn-back {
+  background-color: #3f404e;
+  color: var(--heading-color);
+  text-decoration: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 0.9em;
+  border: 1px solid #555;
+}
+
+.daily-learning-tracker-page-root .search-container {
+  margin-bottom: 20px;
+}
+.daily-learning-tracker-page-root .search-container input {
+  width: 100%;
+  padding: 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  color: white;
+  border-radius: 8px;
+  outline: none;
+}
+.daily-learning-tracker-page-root .search-container input:focus {
+  border-color: var(--primary-color);
+}
+
+.daily-learning-tracker-page-root #stats-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  background: var(--input-bg);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color);
+}
+.daily-learning-tracker-page-root .stat-box strong {
+  color: var(--primary-color);
+  display: block;
+  font-size: 1.2rem;
+}
+
+.daily-learning-tracker-page-root #log-form-container {
+  background-color: var(--input-bg);
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--primary-color);
+  margin-bottom: 25px;
+  animation: daily-learning-tracker-slideDown 0.3s ease-out;
+}
+@keyframes daily-learning-tracker-slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.daily-learning-tracker-page-root .form-row {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.daily-learning-tracker-page-root .form-group {
+  flex: 1;
+  min-width: 200px;
+  margin-bottom: 15px;
+}
+.daily-learning-tracker-page-root .form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 700;
+  font-size: 0.9em;
+  color: var(--heading-color);
+}
+.daily-learning-tracker-page-root .form-group input,
+.daily-learning-tracker-page-root .form-group textarea {
+  width: 100%;
+  padding: 10px;
+  background: var(--card-bg);
+  border: 1px solid #555;
+  border-radius: 6px;
+  color: white;
+}
+
+.daily-learning-tracker-page-root .btn-log {
+  background-color: var(--primary-color);
+  color: white;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.daily-learning-tracker-page-root #daily-progress-list {
+  list-style: none;
+  padding: 0;
+}
+.daily-learning-tracker-page-root .progress-item {
+  padding: 15px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  background: var(--input-bg);
+  border-left: 6px solid var(--secondary-color);
+}
+.daily-learning-tracker-page-root .progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.daily-learning-tracker-page-root .progress-title {
+  font-weight: 800;
+  font-size: 1.1em;
+  color: var(--heading-color);
+}
+.daily-learning-tracker-page-root .progress-learnings {
+  margin-top: 10px;
+  padding: 10px;
+  background: #2b2c37;
+  border-radius: 6px;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.daily-learning-tracker-page-root .progress-actions button {
+  background: none;
+  border: none;
+  color: var(--danger-color);
+  cursor: pointer;
+  font-size: 1.2em;
+}
+.daily-learning-tracker-page-root .progress-actions button[data-action='edit'] {
+  color: var(--secondary-color);
+  margin-right: 10px;
+}
+
+/* New, minimal - see TargetsPage.css for why. */
+.daily-learning-tracker-page-root .daily-learning-tracker-error {
+  color: var(--danger-color);
+  margin-bottom: 15px;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .daily-learning-tracker-page-root .form-group {
+    min-width: 100%;
+  }
+  .daily-learning-tracker-page-root .header-box {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

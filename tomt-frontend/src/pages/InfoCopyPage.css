@@ -1,0 +1,234 @@
+.infocopy-page-root {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  color: var(--text-color);
+
+  --primary-color: #9c27b0;
+  --secondary-color: #00bcd4;
+  --bg-color: #101010;
+  --card-bg: #16171d;
+  --input-bg: #1f202a;
+  --text-color: #bdbecb;
+  --heading-color: #f0f4f8;
+  --danger-color: #e91e63;
+  --border-color: #2f303d;
+  --accent-gradient: linear-gradient(45deg, #a050ff, #9c27b0);
+  --shadow-light: 0 0 0 1.5px #2b2c37, 0 0 25px -17px rgba(0, 0, 0, 0.7);
+}
+
+.infocopy-page-root * {
+  box-sizing: border-box;
+}
+
+.infocopy-page-root .app-container {
+  width: 100%;
+  max-width: 800px;
+  background: var(--card-bg);
+  border-radius: 15px;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  border: 1px solid var(--border-color);
+}
+
+.infocopy-page-root .back-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  background-color: #2f303d;
+  color: var(--heading-color);
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  border: 1px solid #3f404e;
+  transition: all 0.2s;
+  font-size: 0.9em;
+}
+
+.infocopy-page-root .header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.infocopy-page-root h2 {
+  color: var(--primary-color);
+  margin: 0;
+  font-size: 1.5em;
+  font-weight: 800;
+}
+
+.infocopy-page-root #add-form-container {
+  border: 1px solid var(--border-color);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  background-color: var(--input-bg);
+  box-shadow: var(--shadow-light);
+}
+
+.infocopy-page-root .form-group {
+  margin-bottom: 15px;
+}
+.infocopy-page-root .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+  font-size: 0.9em;
+  color: var(--heading-color);
+}
+.infocopy-page-root .form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #3f404e;
+  border-radius: 8px;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  font-size: 1em;
+}
+
+.infocopy-page-root .form-inline-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 15px;
+  align-items: end;
+}
+
+.infocopy-page-root .btn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.infocopy-page-root .btn-add {
+  background: var(--accent-gradient);
+  color: white;
+  box-shadow: 0 4px 10px rgba(156, 39, 176, 0.3);
+}
+
+.infocopy-page-root #links-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.infocopy-page-root .link-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background-color: var(--input-bg);
+  border-left: 8px solid var(--primary-color);
+  gap: 15px;
+  transition: transform 0.2s;
+}
+
+.infocopy-page-root .link-details {
+  flex: 1;
+  min-width: 0;
+}
+.infocopy-page-root .link-name {
+  font-weight: 800;
+  font-size: 1.4em;
+  color: var(--heading-color);
+  margin-bottom: 4px;
+}
+
+.infocopy-page-root .link-url-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.infocopy-page-root .link-url {
+  font-size: 0.85em;
+  color: #666;
+  background: #121212;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: monospace;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  filter: blur(3px);
+  transition: filter 0.3s;
+}
+.infocopy-page-root .link-url.visible {
+  filter: blur(0);
+  max-width: 100%;
+}
+
+.infocopy-page-root .view-toggle {
+  background: none;
+  border: none;
+  color: var(--secondary-color);
+  cursor: pointer;
+  font-size: 0.8em;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.infocopy-page-root .link-password-badge {
+  font-size: 0.8em;
+  color: #ff4d6d;
+  background: rgba(233, 30, 99, 0.1);
+  border: 1px solid #ff4d6d;
+  padding: 3px 8px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+}
+
+.infocopy-page-root .link-actions {
+  display: flex;
+  gap: 8px;
+}
+.infocopy-page-root .action-icon-btn {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.9em;
+}
+
+/* New, minimal - see TargetsPage.css for why. */
+.infocopy-page-root .infocopy-error {
+  color: var(--danger-color);
+  margin-bottom: 15px;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+@media (max-width: 650px) {
+  .infocopy-page-root .form-inline-row {
+    grid-template-columns: 1fr;
+  }
+  .infocopy-page-root .link-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .infocopy-page-root .link-actions {
+    width: 100%;
+    justify-content: flex-end;
+    border-top: 1px solid var(--border-color);
+    padding-top: 10px;
+  }
+}

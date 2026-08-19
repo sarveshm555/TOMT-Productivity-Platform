@@ -1,0 +1,190 @@
+.internship-page-root {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 15px;
+  color: var(--text-color);
+
+  --primary-color: #ff5722;
+  --secondary-color: #00bcd4;
+  --bg-color: #101010;
+  --card-bg: #16171d;
+  --input-bg: #1f202a;
+  --text-color: #bdbecb;
+  --heading-color: #f0f4f8;
+  --danger-color: #e91e63;
+  --success-color: #4caf50;
+  --border-color: #2f303d;
+  --applied-color: #007bff;
+  --shadow-medium: 0 0 0 2.5px #2f303d, 0px 0px 30px -10px rgba(0, 0, 0, 0.9);
+}
+
+.internship-page-root * {
+  box-sizing: border-box;
+}
+
+.internship-page-root .app-container {
+  width: 100%;
+  max-width: 950px;
+  margin: auto;
+  background: var(--card-bg);
+  border-radius: 15px;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+}
+
+.internship-page-root .back-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  background-color: #2f303d;
+  color: var(--heading-color);
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  border: 1px solid #3f404e;
+  transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.internship-page-root .back-button:hover {
+  background-color: #3f404e;
+  transform: translateY(-1px);
+}
+.internship-page-root .back-button span {
+  margin-right: 8px;
+  font-size: 1.2em;
+}
+
+.internship-page-root .header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+.internship-page-root .search-box {
+  width: 100%;
+  margin-bottom: 15px;
+}
+.internship-page-root .search-box input {
+  width: 100%;
+  padding: 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  color: white;
+  border-radius: 8px;
+}
+
+.internship-page-root .btn-nav-add {
+  background: var(--primary-color);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.internship-page-root #filter-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  padding-bottom: 5px;
+}
+.internship-page-root .filter-btn {
+  white-space: nowrap;
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  padding: 8px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.internship-page-root .filter-btn.active {
+  background: var(--primary-color);
+  color: white;
+}
+
+.internship-page-root .app-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: 15px;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background: #1a1b23;
+  border: 1px solid var(--border-color);
+  transition: 0.2s;
+}
+.internship-page-root .app-item:hover {
+  box-shadow: 0 0 10px rgba(255, 87, 34, 0.2);
+}
+
+.internship-page-root .mistake-tag {
+  grid-column: 1 / -1;
+  background: rgba(233, 30, 99, 0.1);
+  border-left: 4px solid var(--danger-color);
+  padding: 10px;
+  font-size: 0.85em;
+  margin-top: 5px;
+  border-radius: 4px;
+}
+
+.internship-page-root .action-group {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.internship-page-root .btn-sm {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.75em;
+  color: white;
+}
+
+/* New, minimal - see TargetsPage.css for why. */
+.internship-page-root .internship-error {
+  color: var(--danger-color);
+  margin-bottom: 15px;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .internship-page-root .app-item {
+    grid-template-columns: 1fr 1fr;
+  }
+  .internship-page-root .app-item div:first-child {
+    grid-column: 1 / -1;
+  }
+  .internship-page-root .item-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-start;
+    border-top: 1px solid #333;
+    padding-top: 10px;
+  }
+}
+
+.internship-page-root .modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+.internship-page-root .modal-content {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid var(--primary-color);
+}

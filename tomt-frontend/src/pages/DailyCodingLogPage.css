@@ -1,0 +1,258 @@
+.daily-coding-log-page-root {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  color: var(--text-color);
+
+  --primary-color: #00bcd4;
+  --secondary-color: #ff5722;
+  --bg-color: #101010;
+  --card-bg: #16171d;
+  --input-bg: #1f202a;
+  --text-color: #bdbecb;
+  --heading-color: #f0f4f8;
+  --danger-color: #e91e63;
+  --success-color: #4caf50;
+  --border-color: #2f303d;
+  --muted: #888;
+  --shadow-light: 0 0 0 1.5px #2b2c37, 0 0 25px -17px rgba(0, 0, 0, 0.7);
+  --shadow-medium: 0 0 0 2.5px #2f303d, 0px 0px 30px -10px rgba(0, 0, 0, 0.9);
+}
+
+.daily-coding-log-page-root * {
+  box-sizing: border-box;
+}
+
+.daily-coding-log-page-root .app-container {
+  width: 100%;
+  max-width: 900px;
+  background: var(--card-bg);
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+}
+
+.daily-coding-log-page-root h2 {
+  color: var(--primary-color);
+  border-bottom: 3px solid var(--primary-color);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  font-weight: 800;
+  text-shadow: 0 0 5px rgba(0, 188, 212, 0.2);
+}
+
+.daily-coding-log-page-root .header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.daily-coding-log-page-root .btn-back-profiles {
+  background-color: #3f404e;
+  color: var(--heading-color);
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  text-decoration: none;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.daily-coding-log-page-root .btn-add-toggle {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.daily-coding-log-page-root #stats-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: var(--input-bg);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  gap: 15px;
+  box-shadow: var(--shadow-light);
+  border: 1px solid var(--border-color);
+}
+.daily-coding-log-page-root .stat-box {
+  font-size: 0.9em;
+  font-weight: 600;
+  flex: 1;
+  text-align: center;
+}
+.daily-coding-log-page-root .stat-box strong {
+  font-size: 1.4em;
+  color: var(--primary-color);
+  display: block;
+}
+.daily-coding-log-page-root .stat-box a {
+  color: var(--secondary-color);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.daily-coding-log-page-root .search-container {
+  margin-bottom: 20px;
+}
+.daily-coding-log-page-root .search-container input {
+  width: 100%;
+  padding: 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.daily-coding-log-page-root .search-container input:focus {
+  border-color: var(--primary-color);
+}
+
+.daily-coding-log-page-root #log-form-container {
+  border: 1px solid var(--primary-color);
+  padding: 18px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  background-color: var(--input-bg);
+  box-shadow: 0 0 15px rgba(0, 188, 212, 0.1);
+  animation: daily-coding-log-slideDown 0.3s ease-out;
+}
+
+@keyframes daily-coding-log-slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.daily-coding-log-page-root .form-row {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.daily-coding-log-page-root .form-group {
+  margin-bottom: 15px;
+  flex: 1;
+  min-width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.daily-coding-log-page-root .form-group label {
+  margin-bottom: 5px;
+  font-weight: 700;
+  font-size: 0.85em;
+  color: var(--heading-color);
+}
+.daily-coding-log-page-root .form-group input,
+.daily-coding-log-page-root .form-group select,
+.daily-coding-log-page-root .form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #555;
+  border-radius: 6px;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  font-size: 14px;
+}
+
+.daily-coding-log-page-root .btn-log {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.daily-coding-log-page-root #daily-log-list {
+  list-style: none;
+  padding: 0;
+}
+.daily-coding-log-page-root .log-item {
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background-color: var(--input-bg);
+  border-left: 4px solid var(--secondary-color);
+  animation: daily-coding-log-fadeIn 0.4s ease;
+}
+@keyframes daily-coding-log-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.daily-coding-log-page-root .log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+.daily-coding-log-page-root .log-title {
+  font-weight: 700;
+  color: var(--heading-color);
+  font-size: 1em;
+}
+.daily-coding-log-page-root .log-meta {
+  font-size: 0.8em;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.daily-coding-log-page-root .log-actions {
+  display: flex;
+  gap: 10px;
+}
+.daily-coding-log-page-root .log-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+  padding: 0;
+}
+
+/* New, minimal - see TargetsPage.css for why. */
+.daily-coding-log-page-root .daily-coding-log-error {
+  color: var(--danger-color);
+  margin-bottom: 15px;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+@media (min-width: 600px) {
+  .daily-coding-log-page-root {
+    padding: 20px;
+  }
+  .daily-coding-log-page-root .form-group {
+    min-width: 180px;
+  }
+  .daily-coding-log-page-root .stat-box {
+    font-size: 1em;
+  }
+}

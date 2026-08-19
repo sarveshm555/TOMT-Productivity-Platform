@@ -1,0 +1,125 @@
+.progress-page-root {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-color);
+  min-height: 100vh;
+
+  --primary-color: #9c27b0;
+  --secondary-color: #00bcd4;
+  --warning-color: #ff9800;
+  --bg-color: #101010;
+  --card-bg: #16171d;
+  --text-color: #bdbecb;
+  --heading-color: #f0f4f8;
+  --border-color: #2f303d;
+  --muted-text: #888;
+  --shadow-light: 0 0 0 1.5px #2b2c37, 0 0 25px -17px rgba(0, 0, 0, 0.7);
+  --shadow-medium: 0 0 0 2.5px #2f303d, 0px 0px 30px -10px rgba(0, 0, 0, 0.9);
+}
+
+.progress-page-root * {
+  box-sizing: border-box;
+}
+
+.progress-page-root .header-container {
+  width: 95%;
+  max-width: 1200px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.progress-page-root .back-to-dashboard-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  background-color: #2f303d;
+  color: var(--heading-color);
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  border: 1px solid #3f404e;
+}
+
+.progress-page-root .dashboard-container {
+  width: 95%;
+  max-width: 1200px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: var(--shadow-medium);
+  padding: 25px;
+  border: 1px solid var(--border-color);
+}
+
+.progress-page-root h2 {
+  color: var(--primary-color);
+  border-bottom: 3px solid var(--primary-color);
+  padding-bottom: 10px;
+  margin-top: 0;
+  text-align: center;
+  font-size: 2em;
+}
+
+.progress-page-root .btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin: 8px 5px;
+  color: white;
+}
+
+.progress-page-root #main-controls,
+.progress-page-root #chart-controls {
+  text-align: center;
+  margin-bottom: 25px;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: #1f202a;
+}
+
+.progress-page-root #chart-container {
+  border: 1px solid var(--border-color);
+  padding: 20px;
+  border-radius: 8px;
+  min-height: 400px;
+  background-color: #1f202a;
+  position: relative;
+}
+
+.progress-page-root #chart-canvas {
+  max-height: 500px;
+  width: 100%;
+}
+
+.progress-page-root #metric-selector {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid var(--primary-color);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+.progress-page-root .no-data-message {
+  text-align: center;
+  padding: 50px;
+  font-size: 1.2em;
+  color: var(--muted-text);
+}
+
+@media (max-width: 720px) {
+  .progress-page-root .btn {
+    width: 100%;
+    margin: 5px 0;
+  }
+}

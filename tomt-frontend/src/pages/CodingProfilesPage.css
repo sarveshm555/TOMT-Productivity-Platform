@@ -1,0 +1,186 @@
+.coding-profiles-page-root {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  color: var(--text-color);
+
+  --primary-color: #00bcd4;
+  --secondary-color: #ff5722;
+  --bg-color: #101010;
+  --card-bg: #16171d;
+  --input-bg: #1f202a;
+  --text-color: #bdbecb;
+  --heading-color: #f0f4f8;
+  --danger-color: #e91e63;
+  --success-color: #4caf50;
+  --border-color: #2f303d;
+  --muted: #888;
+  --shadow-medium: 0 0 0 2.5px #2f303d, 0px 0px 30px -10px rgba(0, 0, 0, 0.9);
+}
+
+.coding-profiles-page-root * {
+  box-sizing: border-box;
+}
+
+.coding-profiles-page-root .app-container {
+  width: 90%;
+  max-width: 950px;
+  background: var(--card-bg);
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  padding: 25px;
+  border: 1px solid var(--border-color);
+}
+
+.coding-profiles-page-root .back-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  background-color: #2f303d;
+  color: var(--heading-color);
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  margin-bottom: 25px;
+  border: 1px solid #3f404e;
+}
+
+.coding-profiles-page-root .header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid var(--primary-color);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.coding-profiles-page-root h2 {
+  color: var(--primary-color);
+  margin: 0;
+  font-size: 2em;
+  font-weight: 800;
+  text-shadow: 0 0 5px rgba(0, 188, 212, 0.3);
+}
+.coding-profiles-page-root .btn-top-add {
+  padding: 10px 18px;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 6px;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0, 188, 212, 0.3);
+}
+
+.coding-profiles-page-root #profiles-list {
+  list-style: none;
+  padding: 0;
+}
+.coding-profiles-page-root .profile-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background-color: var(--input-bg);
+  border-left: 6px solid var(--primary-color);
+}
+.coding-profiles-page-root .profile-logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: contain;
+  margin-right: 15px;
+  background: white;
+  border: 1px solid #3f404e;
+}
+.coding-profiles-page-root .profile-details {
+  flex-grow: 1;
+}
+.coding-profiles-page-root .profile-name {
+  font-weight: 800;
+  font-size: 1.2em;
+  color: var(--heading-color);
+}
+.coding-profiles-page-root .problems-count {
+  font-weight: 700;
+  color: var(--primary-color);
+  font-size: 0.95em;
+  padding: 4px 8px;
+  background: #2b2c37;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 5px;
+}
+.coding-profiles-page-root .profile-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-width: 280px;
+  justify-content: flex-end;
+}
+.coding-profiles-page-root .action-btn {
+  padding: 8px 12px;
+  font-size: 0.85em;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+}
+.coding-profiles-page-root .btn-link {
+  background-color: var(--secondary-color);
+  color: white;
+}
+.coding-profiles-page-root .btn-log {
+  background: var(--primary-color);
+  color: white;
+}
+.coding-profiles-page-root .btn-delete {
+  background: none;
+  color: var(--danger-color);
+  font-size: 1.2em;
+  cursor: pointer;
+  border: none;
+}
+
+/* New, minimal - see TargetsPage.css for why. */
+.coding-profiles-page-root .coding-profiles-error {
+  color: var(--danger-color);
+  margin-bottom: 15px;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .coding-profiles-page-root .app-container {
+    width: 100%;
+    padding: 15px;
+  }
+  .coding-profiles-page-root .header-flex {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .coding-profiles-page-root .profile-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px;
+  }
+  .coding-profiles-page-root .profile-actions {
+    min-width: 100%;
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .coding-profiles-page-root .action-btn {
+    flex-grow: 1;
+  }
+}

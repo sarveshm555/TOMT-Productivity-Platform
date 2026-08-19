@@ -1,0 +1,205 @@
+.wardrobe-page-root {
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  margin: 0;
+  padding: 20px;
+  color: var(--text-color);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  --primary: #00bcd4;
+  --accent: #ff9800;
+  --danger: #dc3545;
+  --bg: #101010;
+  --card: #16171d;
+  --text-color: #bdbecb;
+  --heading-color: #f0f4f8;
+  --shadow-light: 0 0 0 1.5px #2b2c37, 0 0 25px -17px rgba(0, 0, 0, 0.7);
+  --shadow-medium: 0 0 0 2.5px #2f303d, 0px 0px 30px -10px rgba(0, 0, 0, 0.9);
+}
+
+.wardrobe-page-root * {
+  box-sizing: border-box;
+}
+
+.wardrobe-page-root .app-container {
+  width: 94%;
+  max-width: 900px;
+  background: var(--card);
+  border-radius: 12px;
+  box-shadow: var(--shadow-medium);
+  border: 1px solid #2f303d;
+  overflow: hidden;
+}
+
+.wardrobe-page-root .header-bar {
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #2f303d;
+}
+.wardrobe-page-root .back-btn {
+  display: inline-block;
+  padding: 10px 18px;
+  background: #2f303d;
+  color: var(--heading-color);
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  border: 1px solid #3f404e;
+  transition: 0.25s;
+}
+.wardrobe-page-root .back-btn:hover {
+  background-color: #3f404e;
+  transform: translateY(-1px);
+}
+
+.wardrobe-page-root .content-wrapper {
+  padding: 25px;
+}
+.wardrobe-page-root .h2 {
+  margin: 0 0 15px 0;
+  font-size: 1.8em;
+  color: var(--primary);
+}
+.wardrobe-page-root .tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.wardrobe-page-root .tab-btn {
+  padding: 10px 15px;
+  border-radius: 8px;
+  background: #2b2c37;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--text-color);
+}
+.wardrobe-page-root .tab-btn.active {
+  background: var(--primary);
+  color: var(--card);
+}
+.wardrobe-page-root .pane {
+  display: none;
+}
+.wardrobe-page-root .pane.active {
+  display: block;
+}
+
+.wardrobe-page-root #add-item-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px dashed #2f303d;
+  border-radius: 6px;
+}
+.wardrobe-page-root #add-item-form select,
+.wardrobe-page-root #add-item-form input {
+  padding: 10px;
+  border: 1px solid #555;
+  border-radius: 6px;
+  background: #1f202a;
+  color: var(--text-color);
+  flex: 1;
+  min-width: 150px;
+}
+
+.wardrobe-page-root .btn {
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.wardrobe-page-root .btn-primary {
+  background: var(--accent);
+  color: var(--card);
+}
+.wardrobe-page-root .btn-secondary {
+  background: var(--danger);
+  color: var(--card);
+}
+.wardrobe-page-root .btn-tertiary {
+  background: var(--primary);
+  color: var(--card);
+}
+
+.wardrobe-page-root .wardrobe-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.wardrobe-page-root .list-column {
+  flex: 1;
+  min-width: 250px;
+}
+.wardrobe-page-root .ul {
+  list-style: none;
+  padding: 0;
+  background: #1f202a;
+  border-radius: 6px;
+  border: 1px solid #2f303d;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.wardrobe-page-root .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #2f303d;
+}
+
+.wardrobe-page-root .day-row {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  padding: 10px;
+  background: #1f202a;
+  border-radius: 8px;
+}
+.wardrobe-page-root .day-row label {
+  min-width: 100px;
+  font-weight: 700;
+  color: var(--heading-color);
+}
+.wardrobe-page-root .select-multi {
+  flex: 1;
+  min-width: 200px;
+  padding: 8px;
+  background: #101010;
+  color: var(--text-color);
+  border: 1px solid #555;
+  border-radius: 6px;
+  height: 100px;
+}
+.wardrobe-page-root .save-rules {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+/* New, minimal - see TargetsPage.css for why. */
+.wardrobe-page-root .wardrobe-error {
+  color: var(--danger);
+  margin-bottom: 15px;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .wardrobe-page-root .day-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

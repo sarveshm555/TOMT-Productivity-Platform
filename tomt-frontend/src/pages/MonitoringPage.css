@@ -1,0 +1,151 @@
+.monitoring-page-root {
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-color);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  color: var(--text-color);
+  padding: 20px;
+
+  --primary-accent: #9c27b0;
+  --secondary-accent: #00bcd4;
+  --bg-color: #0a0b0e;
+  --card-bg: #16171d;
+  --text-color: #bdbecb;
+  --heading-color: #f0f4f8;
+  --border-color: #2f303d;
+}
+
+.monitoring-page-root *,
+.monitoring-page-root {
+  box-sizing: border-box;
+}
+
+.monitoring-page-root .page-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.monitoring-page-root .back-container {
+  width: 100%;
+  text-align: left;
+}
+
+.monitoring-page-root .back-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  background-color: #2f303d;
+  color: var(--heading-color);
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 0.95em;
+  font-weight: 500;
+  border: 1px solid #3f404e;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.25s ease;
+}
+.monitoring-page-root .back-button:hover {
+  background-color: #3f404e;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+}
+.monitoring-page-root .back-button span {
+  margin-right: 8px;
+  font-size: 1.2em;
+}
+
+.monitoring-page-root .app-container {
+  width: 100%;
+  background: var(--card-bg);
+  border-radius: 25px;
+  border: 1px solid var(--border-color);
+  padding: 40px 25px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.monitoring-page-root h2 {
+  color: var(--heading-color);
+  font-size: 2em;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.monitoring-page-root .subtitle {
+  color: #666;
+  margin-bottom: 35px;
+  font-size: 0.95em;
+  padding: 0 10px;
+}
+
+.monitoring-page-root .router-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.monitoring-page-root .router-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  padding: 30px 20px;
+  border-radius: 20px;
+  background-color: #1a1b23;
+  border: 1px solid #2a2b35;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.monitoring-page-root .icon-box {
+  background: #2b2c37;
+  padding: 15px;
+  border-radius: 15px;
+  font-size: 2.5em;
+  margin-bottom: 15px;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.monitoring-page-root .router-card h3 {
+  color: var(--heading-color);
+  margin: 5px 0;
+  font-size: 1.4em;
+}
+
+.monitoring-page-root .router-card p {
+  color: #888;
+  font-size: 0.9em;
+  margin: 5px 0 0;
+  line-height: 1.4;
+}
+
+.monitoring-page-root #ongoing-card:hover {
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 15px rgba(156, 39, 176, 0.3);
+}
+.monitoring-page-root #apply-card:hover {
+  border-color: var(--secondary-accent);
+  box-shadow: 0 0 15px rgba(0, 188, 212, 0.3);
+}
+.monitoring-page-root .router-card:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 600px) {
+  .monitoring-page-root .app-container {
+    padding: 35px 20px;
+    border-radius: 20px;
+  }
+  .monitoring-page-root h2 {
+    font-size: 1.8em;
+  }
+  .monitoring-page-root .back-button {
+    width: 100%;
+    justify-content: center;
+  }
+}

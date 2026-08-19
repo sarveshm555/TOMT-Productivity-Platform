@@ -1,0 +1,35 @@
+/*
+  This file intentionally contains NO design decisions - no colors, no
+  fonts, no spacing choices. Every one of those lives in each page's own
+  CSS file, ported verbatim from the matching original .html file.
+
+  The only thing here is the structural plumbing an SPA needs that a
+  multi-page site gets for free: in the original app, each page's own
+  <style> block targeted `body, html` directly (full page, full reload
+  every navigation). In a single-page app there is exactly one body/html
+  for the whole session, so each page instead renders into a full-viewport
+  root element and reproduces its own `body, html` rules there (see each
+  page's .css file, e.g. LoadingPage.css's `.loading-page-root`).
+  This block just makes that full-viewport handoff possible.
+*/
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 100vh;
+}
+
+/*
+  NOTE ON box-sizing: the original index.html declared a page-wide
+  `* { box-sizing: border-box; margin:0; padding:0; }` reset, but
+  loading_page.html, password_page.html, and dashboard.html did NOT -
+  those three rely on the browser's default content-box model, with
+  box-sizing:border-box applied only to specific elements that named it
+  explicitly. Adding a universal border-box reset here would silently
+  change padding/border math on those three pages - a real visual
+  regression, not just a "modernization." So that reset is NOT applied
+  globally; it is instead scoped to .hub-page-root (see HubPage.css),
+  exactly matching what index.html actually did.
+*/

@@ -1,0 +1,26 @@
+.shared-error-message {
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 0.9em;
+  font-weight: 600;
+  margin: 12px 0;
+  border: 1px solid transparent;
+}
+
+.shared-error-message--error {
+  background-color: rgba(255, 0, 76, 0.12);
+  color: #ff004c;
+  border-color: rgba(255, 0, 76, 0.4);
+}
+
+.shared-error-message--success {
+  background-color: rgba(0, 188, 212, 0.12);
+  color: #00bcd4;
+  border-color: rgba(0, 188, 212, 0.4);
+}
+
+.shared-error-message--info {
+  background-color: rgba(189, 190, 203, 0.1);
+  color: #bdbecb;
+  border-color: rgba(189, 190, 203, 0.3);
+}

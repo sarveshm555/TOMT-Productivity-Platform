@@ -1,0 +1,62 @@
+.not-found-page-root {
+  /* Rendered inside DashboardLayout's content area (Header + Sidebar
+     already occupy their own space), so this only needs to fill the
+     remaining content area, not the full viewport. */
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #101010;
+  color: #bdbecb;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  padding: 40px 20px;
+}
+
+.not-found-card {
+  background: #16171d;
+  border: 1px solid #2f303d;
+  border-radius: 18px;
+  padding: 40px;
+  text-align: center;
+  max-width: 420px;
+}
+
+.not-found-icon {
+  font-size: 3em;
+  margin-bottom: 10px;
+}
+
+.not-found-card h2 {
+  color: #f0f4f8;
+  margin-bottom: 10px;
+}
+
+.not-found-card p {
+  color: #888;
+  margin-bottom: 20px;
+  word-break: break-word;
+}
+
+.not-found-card code {
+  color: #00bcd4;
+}
+
+.not-found-links {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.not-found-links a {
+  color: #00bcd4;
+  text-decoration: none;
+  padding: 8px 16px;
+  border: 1px solid #2f303d;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+}
+
+.not-found-links a:hover {
+  background-color: #2f303d;
+}

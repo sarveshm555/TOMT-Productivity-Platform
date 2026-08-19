@@ -1,0 +1,197 @@
+.placement-hub-page-root {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-color);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  color: var(--text-color);
+
+  --primary-color: #ff5722;
+  --secondary-color: #00bcd4;
+  --bg-color: #101010;
+  --card-bg: #16171d;
+  --text-color: #bdbecb;
+  --heading-color: #f0f4f8;
+  --shadow-light: 0 0 0 1.5px #2b2c37, 0 0 25px -17px rgba(0, 0, 0, 0.7);
+  --shadow-medium: 0 0 0 2.5px #2f303d, 0px 0px 30px -10px rgba(0, 0, 0, 0.9);
+  --shadow-dark: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.placement-hub-page-root *,
+.placement-hub-page-root {
+  box-sizing: border-box;
+}
+
+.placement-hub-page-root .header-container {
+  width: 100%;
+  max-width: 950px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.placement-hub-page-root .back-to-dashboard-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  background-color: #2f303d;
+  color: var(--heading-color);
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  border: 1px solid #3f404e;
+}
+.placement-hub-page-root .back-to-dashboard-btn:hover {
+  background-color: #3f404e;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+.placement-hub-page-root .app-container {
+  width: 100%;
+  max-width: 950px;
+  background: var(--card-bg);
+  border-radius: 18px;
+  box-shadow: var(--shadow-dark);
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #2f303d;
+}
+
+.placement-hub-page-root h1 {
+  text-align: center;
+  padding: 30px 20px 10px;
+  color: var(--primary-color);
+  font-size: 2.2em;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 8px rgba(255, 87, 34, 0.4);
+}
+.placement-hub-page-root .subtitle {
+  color: #888;
+  margin-bottom: 20px;
+  font-size: 1em;
+}
+
+.placement-hub-page-root .dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  padding: 30px;
+}
+
+.placement-hub-page-root .dashboard-card {
+  background-color: #2b2c37;
+  border-radius: 12px;
+  box-shadow: var(--shadow-light);
+  text-align: center;
+  text-decoration: none;
+  color: var(--text-color);
+  padding: 35px 20px;
+  transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border-bottom: 4px solid #3f404e;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #3f404e;
+}
+.placement-hub-page-root .dashboard-card:hover {
+  box-shadow: 0 0 15px rgba(255, 87, 34, 0.6), var(--shadow-medium);
+  transform: translateY(-5px) scale(1.02);
+  border-bottom: 4px solid var(--primary-color);
+}
+
+.placement-hub-page-root .dashboard-card h3 {
+  font-size: 1.3em;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  color: var(--heading-color);
+  transition: color 0.3s;
+}
+.placement-hub-page-root .dashboard-card:hover h3 {
+  color: var(--primary-color);
+}
+.placement-hub-page-root .dashboard-card p {
+  font-size: 0.85em;
+  color: #888;
+  transition: color 0.3s;
+}
+
+.placement-hub-page-root .dashboard-card .icon {
+  font-size: 3.5em;
+  color: var(--secondary-color);
+  display: block;
+  line-height: 1;
+  transition: transform 0.35s;
+  filter: drop-shadow(0 0 2px rgba(0, 188, 212, 0.5));
+}
+.placement-hub-page-root .dashboard-card:hover .icon {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 5px var(--primary-color));
+}
+
+/* ICON COLOR CODING - keyed off explicit classes instead of href
+   substrings (see HubPage.css for why: /placement/internships etc. don't
+   contain the original filenames' substrings). */
+.placement-hub-page-root .internship-icon-card .icon {
+  color: var(--primary-color);
+  filter: drop-shadow(0 0 2px var(--primary-color));
+}
+.placement-hub-page-root .coding-profiles-icon-card .icon {
+  color: #00bcd4;
+  filter: drop-shadow(0 0 2px #00bcd4);
+}
+.placement-hub-page-root .education-icon-card .icon {
+  color: #66bb6a;
+  filter: drop-shadow(0 0 2px #66bb6a);
+}
+.placement-hub-page-root .documents-icon-card .icon {
+  color: #ffeb3b;
+  filter: drop-shadow(0 0 2px #ffeb3b);
+}
+.placement-hub-page-root .infocopy-icon-card .icon {
+  color: #9c27b0;
+  filter: drop-shadow(0 0 2px #9c27b0);
+}
+.placement-hub-page-root .importantnote-icon-card .icon {
+  color: #f48fb1;
+  filter: drop-shadow(0 0 2px #f48fb1);
+}
+
+@media (max-width: 900px) {
+  .placement-hub-page-root .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+  }
+  .placement-hub-page-root h1 {
+    font-size: 1.8em;
+  }
+}
+
+@media (max-width: 600px) {
+  .placement-hub-page-root .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 15px;
+  }
+  .placement-hub-page-root .app-container {
+    border-radius: 10px;
+  }
+  .placement-hub-page-root .dashboard-card {
+    padding: 25px 15px;
+  }
+  .placement-hub-page-root .header-container {
+    padding: 0 5px;
+  }
+  .placement-hub-page-root .back-to-dashboard-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

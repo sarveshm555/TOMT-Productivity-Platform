@@ -1,0 +1,171 @@
+.notifications-page-root {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  color: var(--text-color);
+  transition: background-color 0.3s;
+  min-height: 100vh;
+
+  --primary-color: #3f51b5;
+  --secondary-color: #ff9800;
+  --danger-color: #dc3545;
+  --bg-color: #1a1a1a;
+  --card-bg: #2a2a2a;
+  --text-color: #e0e0e0;
+  --border-color: #4f4f4f;
+  --success-color: #28a745;
+  --muted-text: #999999;
+  --header-color: #37ff8b;
+}
+
+.notifications-page-root .app-container {
+  width: 95%;
+  max-width: 700px;
+  background: var(--card-bg);
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  padding: 25px;
+  transition: background-color 0.3s;
+}
+
+.notifications-page-root h2 {
+  color: var(--header-color);
+  border-bottom: 3px solid var(--header-color);
+  padding-bottom: 10px;
+  margin-top: 0;
+  font-weight: 700;
+  text-align: center;
+  transition: color 0.3s;
+}
+
+.notifications-page-root .btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 0.9em;
+}
+.notifications-page-root .btn-clear {
+  background-color: var(--danger-color);
+  color: white;
+}
+.notifications-page-root .btn-clear:hover {
+  background-color: #c82333;
+}
+
+.notifications-page-root #notification-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 15px;
+  min-height: 100px;
+}
+.notifications-page-root .notification-item {
+  padding: 15px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border-left: 5px solid;
+  background-color: #333333;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+.notifications-page-root .notification-schedule {
+  border-left-color: var(--secondary-color);
+}
+.notifications-page-root .notification-daily-routine {
+  border-left-color: var(--primary-color);
+}
+.notifications-page-root .notification-pending-task-summary {
+  border-left-color: var(--danger-color);
+}
+.notifications-page-root .notification-info {
+  border-left-color: var(--success-color);
+}
+
+.notifications-page-root .notification-header {
+  font-weight: 700;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--header-color);
+}
+.notifications-page-root .notification-time {
+  font-size: 0.8em;
+  color: var(--muted-text);
+}
+.notifications-page-root .notification-body {
+  font-size: 0.95em;
+  line-height: 1.4;
+  color: var(--text-color);
+}
+.notifications-page-root .notification-body a {
+  color: var(--header-color);
+  text-decoration: none;
+  font-weight: 600;
+}
+.notifications-page-root .notification-body a:hover {
+  text-decoration: underline;
+}
+
+.notifications-page-root #pending-works-list {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px dashed var(--border-color);
+  border-radius: 5px;
+  background-color: #444;
+  list-style-type: none;
+}
+.notifications-page-root #pending-works-list li {
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
+
+.notifications-page-root .dashboard-footer {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.notifications-page-root .go-to-dashboard-btn {
+  padding: 10px 20px;
+  background-color: var(--header-color);
+  color: var(--card-bg);
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 1em;
+  display: inline-block;
+  transition: background-color 0.3s, filter 0.2s;
+  box-shadow: 0 0 10px rgba(55, 255, 139, 0.5);
+}
+.notifications-page-root .go-to-dashboard-btn:hover {
+  filter: brightness(1.2);
+  box-shadow: 0 0 15px rgba(55, 255, 139, 0.8);
+}
+
+/* New, minimal - see TargetsPage.css for why. */
+.notifications-page-root .notifications-error {
+  color: var(--danger-color);
+  margin-bottom: 15px;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .notifications-page-root {
+    padding: 10px;
+  }
+  .notifications-page-root .app-container {
+    padding: 20px 15px;
+  }
+  .notifications-page-root #clear-notifications-btn,
+  .notifications-page-root .go-to-dashboard-btn {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 10px;
+  }
+}

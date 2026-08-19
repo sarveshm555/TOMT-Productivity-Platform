@@ -1,0 +1,275 @@
+.important-note-page-root {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vH;
+  color: var(--text-color);
+
+  --primary-color: #e91e63;
+  --secondary-color: #ff9800;
+  --bg-color: #101010;
+  --card-bg: #16171d;
+  --input-bg: #1f202a;
+  --text-color: #bdbecb;
+  --heading-color: #f0f4f8;
+  --danger-color: #e91e63;
+  --border-color: #2f303d;
+  --muted: #888;
+  --shadow-light: 0 0 0 1.5px #2b2c37, 0 0 25px -17px rgba(0, 0, 0, 0.7);
+}
+
+.important-note-page-root * {
+  box-sizing: border-box;
+}
+
+.important-note-page-root .app-container {
+  width: 100%;
+  max-width: 850px;
+  background: var(--card-bg);
+  border-radius: 15px;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  border: 1px solid var(--border-color);
+}
+
+.important-note-page-root .header-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.important-note-page-root .back-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  background-color: #2f303d;
+  color: var(--heading-color);
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  border: 1px solid #3f404e;
+  transition: 0.25s;
+}
+
+.important-note-page-root .btn-toggle-form {
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.important-note-page-root h2 {
+  color: var(--primary-color);
+  border-bottom: 3px solid var(--primary-color);
+  padding-bottom: 10px;
+  margin: 10px 0 20px 0;
+  font-size: 1.8em;
+  text-shadow: 0 0 5px rgba(233, 30, 99, 0.3);
+}
+
+.important-note-page-root .search-box {
+  margin-bottom: 20px;
+}
+.important-note-page-root .search-box input {
+  width: 100%;
+  padding: 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  color: white;
+  border-radius: 8px;
+  outline: none;
+}
+.important-note-page-root .search-box input:focus {
+  border-color: var(--secondary-color);
+}
+
+.important-note-page-root #note-form-container {
+  border: 1px solid var(--secondary-color);
+  padding: 18px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  background-color: var(--input-bg);
+  box-shadow: 0 0 15px rgba(255, 152, 0, 0.1);
+  animation: important-note-slideDown 0.3s ease-out;
+}
+
+@keyframes important-note-slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.important-note-page-root .form-group {
+  margin-bottom: 15px;
+}
+.important-note-page-root .form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 700;
+  color: var(--heading-color);
+}
+.important-note-page-root .form-group input,
+.important-note-page-root .form-group textarea {
+  width: 100%;
+  padding: 10px;
+  background: var(--card-bg);
+  border: 1px solid #555;
+  border-radius: 6px;
+  color: white;
+}
+
+.important-note-page-root #image-preview-container {
+  width: 100%;
+  height: 100px;
+  border: 2px dashed #444;
+  border-radius: 6px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: var(--muted);
+}
+
+.important-note-page-root .btn-submit {
+  background: var(--secondary-color);
+  color: white;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.important-note-page-root #notes-list {
+  list-style: none;
+  padding: 0;
+}
+
+.important-note-page-root .note-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background: var(--input-bg);
+  border-left: 6px solid var(--primary-color);
+  gap: 15px;
+  overflow: hidden;
+}
+
+.important-note-page-root .note-details {
+  flex: 1;
+  min-width: 0;
+}
+.important-note-page-root .note-name {
+  font-weight: bold;
+  font-size: 1.1em;
+  color: var(--heading-color);
+  word-break: break-word;
+}
+.important-note-page-root .note-message-snippet {
+  font-size: 0.9em;
+  color: var(--text-color);
+  margin-top: 5px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.important-note-page-root .note-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.important-note-page-root .action-btn {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.8em;
+}
+.important-note-page-root .btn-view {
+  background: var(--primary-color);
+  color: white;
+}
+.important-note-page-root .btn-delete {
+  background: none;
+  color: var(--danger-color);
+  font-size: 1.2em;
+}
+
+.important-note-page-root .modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+}
+.important-note-page-root .modal-content {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 500px;
+  border: 1px solid var(--primary-color);
+  overflow-y: auto;
+  max-height: 90vh;
+}
+.important-note-page-root .modal-image {
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+/* New, minimal - see TargetsPage.css for why. */
+.important-note-page-root .important-note-error {
+  color: var(--danger-color);
+  margin-bottom: 15px;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .important-note-page-root .header-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .important-note-page-root .note-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .important-note-page-root .note-actions {
+    width: 100%;
+    justify-content: space-between;
+    border-top: 1px solid #333;
+    padding-top: 10px;
+  }
+}

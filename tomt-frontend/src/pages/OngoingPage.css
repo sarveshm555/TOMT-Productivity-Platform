@@ -1,0 +1,209 @@
+.ongoing-page-root {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 15px;
+  color: var(--text-color);
+  min-height: 100vh;
+
+  --primary-color: #9c27b0;
+  --secondary-color: #00bcd4;
+  --bg-color: #101010;
+  --card-bg: #16171d;
+  --input-bg: #1f202a;
+  --text-color: #bdbecb;
+  --heading-color: #f0f4f8;
+  --success-color: #2e7d32;
+  --border-color: #2f303d;
+  --priority-color: #ff5252;
+  --done-color: #4caf50;
+}
+
+.ongoing-page-root * {
+  box-sizing: border-box;
+}
+
+.ongoing-page-root .app-container {
+  width: 100%;
+  max-width: 800px;
+  margin: auto;
+  background: var(--card-bg);
+  border-radius: 15px;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+}
+
+.ongoing-page-root .back-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 15px;
+  background: #2f303d;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #3f404e;
+  transition: 0.2s;
+}
+.ongoing-page-root .back-button:hover {
+  background: #3f404e;
+}
+
+.ongoing-page-root .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.ongoing-page-root .btn-add {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.ongoing-page-root #form-container {
+  background: var(--input-bg);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  border: 1px solid var(--border-color);
+}
+.ongoing-page-root input,
+.ongoing-page-root textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  background: #000;
+  border: 1px solid var(--border-color);
+  color: white;
+  border-radius: 6px;
+}
+
+.ongoing-page-root .task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ongoing-page-root .task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: #1a1b23;
+  border-radius: 10px;
+  border-left: 6px solid var(--primary-color);
+  transition: all 0.4s ease;
+}
+
+.ongoing-page-root .task-item.high-priority {
+  border-left-color: var(--priority-color);
+}
+.ongoing-page-root .priority-badge {
+  background: var(--priority-color);
+  color: white;
+  font-size: 0.7em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: inline-block;
+}
+
+.ongoing-page-root .task-item.completed {
+  background-color: var(--success-color) !important;
+  border-left-color: #1b5e20 !important;
+  opacity: 1;
+}
+.ongoing-page-root .task-item.completed strong,
+.ongoing-page-root .task-item.completed small,
+.ongoing-page-root .task-item.completed p {
+  color: white !important;
+}
+
+.ongoing-page-root .task-info {
+  flex: 1;
+  margin-right: 15px;
+  min-width: 0;
+}
+.ongoing-page-root .task-info strong {
+  display: block;
+  font-size: 1.2em;
+  margin-bottom: 3px;
+}
+
+.ongoing-page-root .task-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.ongoing-page-root .btn-status {
+  background: #fff;
+  color: var(--success-color);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.ongoing-page-root .btn-edit {
+  background: #444;
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.ongoing-page-root .btn-delete {
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.ongoing-page-root .btn-link-action {
+  background: #333;
+  border: 1px solid #444;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.85em;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.ongoing-page-root .btn-link-action:hover {
+  background: #444;
+}
+
+/* New, minimal - see TargetsPage.css for why. */
+.ongoing-page-root .ongoing-form-error {
+  color: var(--priority-color);
+  margin-top: 10px;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .ongoing-page-root .task-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .ongoing-page-root .task-actions {
+    margin-top: 15px;
+    width: 100%;
+    justify-content: flex-end;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 10px;
+  }
+}

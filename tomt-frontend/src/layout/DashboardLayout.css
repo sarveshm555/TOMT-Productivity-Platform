@@ -1,0 +1,23 @@
+.app-dashboard-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #101010;
+}
+
+.app-dashboard-layout-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.app-dashboard-layout-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .app-dashboard-layout-body {
+    flex-direction: column;
+  }
+}
