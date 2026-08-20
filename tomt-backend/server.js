@@ -32,7 +32,7 @@ async function start() {
 
     const app = createApp();
 
-    const server = app.listen(PORT, () => {
+    const server = app.listen(PORT, '0.0.0.0', () => {
       console.log(`[server] Listening on port ${PORT} (${process.env.NODE_ENV || 'development'})`);
     });
 
