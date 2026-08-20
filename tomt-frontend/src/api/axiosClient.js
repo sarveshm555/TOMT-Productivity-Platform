@@ -1,6 +1,15 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+function resolveApiUrl() {
+  let url = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').trim();
+  url = url.replace(/\/+$/, '');
+  if (!url.endsWith('/api')) {
+    url = `${url}/api`;
+  }
+  return url;
+}
+
+const API_URL = resolveApiUrl();
 
 // Access tokens live in memory only (never localStorage/sessionStorage - see
 // AuthContext.jsx for why). This module keeps a plain reference to the
