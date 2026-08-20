@@ -35,6 +35,10 @@ function createApp() {
     app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
   }
 
+  app.get('/', (req, res) => {
+    res.status(200).json({ success: true, message: 'TOMT backend is running' });
+  });
+
   app.use('/api', routes);
 
   app.use(notFound);

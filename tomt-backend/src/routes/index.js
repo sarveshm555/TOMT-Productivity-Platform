@@ -16,7 +16,7 @@ const router = express.Router();
 
 // Simple liveness check - useful for Render health checks and manual smoke testing.
 router.get('/health', (req, res) => {
-  res.status(200).json({ success: true, message: 'API is running.' });
+  res.status(200).json({ success: true, message: 'TOMT backend is running' });
 });
 
 router.use('/auth', authRoutes);
