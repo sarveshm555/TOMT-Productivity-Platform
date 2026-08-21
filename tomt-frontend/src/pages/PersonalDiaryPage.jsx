@@ -38,6 +38,20 @@ function isColorDark(color) {
   return false;
 }
 
+function getFormattedCurrentDateTime() {
+  const now = new Date();
+  const day = now.getDate();
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const month = monthNames[now.getMonth()];
+  const year = now.getFullYear();
+  let hours = now.getHours();
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  return `${day} ${month} ${year} at ${hours}:${minutes} ${ampm}`;
+}
+
 /**
  * Personal Diary Page:
  * - Clean, distraction-free writing environment on the main page.
@@ -55,6 +69,14 @@ export default function PersonalDiaryPage() {
 
   const [content, setContent] = useState('');
   const [saving, setSaving] = useState(false);
+  const [currentDateTime, setCurrentDateTime] = useState(getFormattedCurrentDateTime());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDateTime(getFormattedCurrentDateTime());
+    }, 30000);
+    return () => clearInterval(timer);
+  }, []);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editEntryMeta, setEditEntryMeta] = useState(null);
@@ -305,17 +327,20 @@ export default function PersonalDiaryPage() {
         {error && <div className="personal-diary-error">{error}</div>}
 
         <form id="diary-write-form" onSubmit={handleSaveEntry}>
+          <div className="diary-entry-timestamp">
+            {isEditing && editEntryMeta ? editEntryMeta.displayDateTime : currentDateTime}
+          </div>
           <textarea
             id="diary-textarea"
             className={`diary-textarea ${settings.penStyle === 'pen-caret-thick' ? 'pen-caret-thick' : ''}`}
             style={writingAreaStyle}
-            placeholder="Dear Diary..."
+            placeholder="Start writing your thoughts here..."
             required
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
           <button type="submit" className="btn-save-entry" id="save-entry-btn" disabled={saving}>
-            {saving ? (isEditing ? 'Updating...' : 'Saving...') : (isEditing ? '💾 Update Entry' : '💾 Save Entry')}
+            {saving ? (isEditing ? 'Updating...' : 'Saving...') : (isEditing ? '✅ Update Entry' : '✅ Save Entry')}
           </button>
         </form>
       </div>

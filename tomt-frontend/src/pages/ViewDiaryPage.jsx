@@ -96,6 +96,7 @@ export default function ViewDiaryPage() {
   const [entryBgUrls, setEntryBgUrls] = useState({});
 
   const pdfExportRef = useRef(null);
+  const blobCacheRef = useRef({});
   const [pdfBusy, setPdfBusy] = useState(false);
 
   useEffect(function () {
@@ -122,9 +123,14 @@ export default function ViewDiaryPage() {
 
   async function fetchBlobUrl(url) {
     if (!url) return null;
+    if (blobCacheRef.current[url]) {
+      return blobCacheRef.current[url];
+    }
     try {
       const res = await apiClient.get(url, { responseType: 'blob' });
-      return URL.createObjectURL(res.data);
+      const blobUrl = URL.createObjectURL(res.data);
+      blobCacheRef.current[url] = blobUrl;
+      return blobUrl;
     } catch (err) {
       return null;
     }
@@ -165,11 +171,13 @@ export default function ViewDiaryPage() {
     setCurrentPage(0);
   }
 
-  const bookEntries = entries
-    .slice()
-    .sort(function (a, b) {
-      return new Date(a.dateTime) - new Date(b.dateTime);
-    });
+  const bookEntries = React.useMemo(function () {
+    return entries
+      .slice()
+      .sort(function (a, b) {
+        return new Date(a.dateTime) - new Date(b.dateTime);
+      });
+  }, [entries]);
   const pageCount = bookEntries.length + 2;
 
   async function openEntryInBook(entryId) {
@@ -197,14 +205,19 @@ export default function ViewDiaryPage() {
     }
   }
 
-  function nextPage() {
-    if (currentPage < pageCount - 1) setCurrentPage(function (p) { return p + 1; });
-  }
-  function prevPage() {
-    if (currentPage > 0) setCurrentPage(function (p) { return p - 1; });
-  }
+  const nextPage = React.useCallback(function () {
+    setCurrentPage(function (p) {
+      return p < pageCount - 1 ? p + 1 : p;
+    });
+  }, [pageCount]);
 
-  function pageStyle(index, extra) {
+  const prevPage = React.useCallback(function () {
+    setCurrentPage(function (p) {
+      return p > 0 ? p - 1 : p;
+    });
+  }, []);
+
+  const pageStyle = React.useCallback(function (index, extra) {
     let transform;
     let zIndex;
     if (index <= currentPage) {
@@ -219,7 +232,7 @@ export default function ViewDiaryPage() {
       zIndex = pageCount + 1;
     }
     return Object.assign({ transform: transform, zIndex: zIndex }, extra || {});
-  }
+  }, [currentPage, pageCount]);
 
   async function downloadFullDiaryPDF() {
     await loadScript(JSPDF_SRC, function () {
