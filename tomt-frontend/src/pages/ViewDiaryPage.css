@@ -87,13 +87,33 @@
   padding: 8px 12px;
 }
 
+.view-diary-page-root .book-view-wrapper {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.view-diary-page-root .book-stage-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 10px 0;
+  isolation: isolate;
+}
+
 .view-diary-page-root #book-container {
   position: relative;
   width: 90vw;
   max-width: 650px;
-  height: 75vh;
-  max-height: 850px;
-  margin: 30px auto;
+  height: 70vh;
+  max-height: 750px;
+  margin: 10px auto;
   perspective: 1500px;
   transform-style: preserve-3d;
   z-index: 1;
@@ -152,15 +172,34 @@
   border-color: #999;
 }
 
+.view-diary-page-root .book-controls-bar {
+  width: 100%;
+  max-width: 650px;
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  z-index: 100;
+}
+
+.view-diary-page-root .page-indicator {
+  color: var(--text-color);
+  font-size: 0.9em;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
 .view-diary-page-root .action-buttons {
-  margin-top: 20px;
+  width: 100%;
   text-align: center;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
   position: relative;
-  z-index: 9999;
+  z-index: 101;
 }
 
 .view-diary-page-root .btn {

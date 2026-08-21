@@ -180,6 +180,73 @@ export default function ViewDiaryPage() {
   }, [entries]);
   const pageCount = bookEntries.length + 2;
 
+  // Virtualized page window (renders only active page and adjacent pages)
+  const visiblePages = React.useMemo(function () {
+    if (mode !== 'book') return [];
+    const pages = [];
+
+    // Front cover when at start of book
+    if (currentPage <= 1) {
+      pages.push({ index: 0, type: 'front' });
+    }
+
+    // Active entry page range
+    const start = Math.max(1, currentPage - 1);
+    const end = Math.min(bookEntries.length, currentPage + 1);
+
+    for (let idx = start; idx <= end; idx++) {
+      pages.push({
+        index: idx,
+        type: 'entry',
+        entry: bookEntries[idx - 1],
+      });
+    }
+
+    // Back cover when at end of book
+    if (currentPage >= pageCount - 2) {
+      pages.push({ index: pageCount - 1, type: 'back' });
+    }
+
+    return pages;
+  }, [currentPage, bookEntries, pageCount, mode]);
+
+  // Preload background images for active and adjacent pages
+  useEffect(function () {
+    if (mode !== 'book') return;
+    const indicesToPreload = [currentPage - 1, currentPage, currentPage + 1];
+    indicesToPreload.forEach(function (idx) {
+      if (idx >= 1 && idx <= bookEntries.length) {
+        const entry = bookEntries[idx - 1];
+        if (entry && entry.theme && entry.theme.bgImageUrl) {
+          fetchBlobUrl(entry.theme.bgImageUrl).then(function (blobUrl) {
+            if (blobUrl) {
+              setEntryBgUrls(function (prev) {
+                if (prev[entry.id] === blobUrl) return prev;
+                const next = Object.assign({}, prev);
+                next[entry.id] = blobUrl;
+                return next;
+              });
+            }
+          });
+        }
+      }
+    });
+  }, [currentPage, mode, bookEntries]);
+
+  // Clean up cached blob URLs on component unmount
+  useEffect(function () {
+    return function () {
+      if (blobCacheRef.current) {
+        Object.values(blobCacheRef.current).forEach(function (blobUrl) {
+          if (blobUrl && typeof blobUrl === 'string' && blobUrl.startsWith('blob:')) {
+            URL.revokeObjectURL(blobUrl);
+          }
+        });
+        blobCacheRef.current = {};
+      }
+    };
+  }, []);
+
   async function openEntryInBook(entryId) {
     const targetIndex = bookEntries.findIndex(function (e) {
       return e.id === entryId;
@@ -207,29 +274,28 @@ export default function ViewDiaryPage() {
 
   const nextPage = React.useCallback(function () {
     setCurrentPage(function (p) {
-      return p < pageCount - 1 ? p + 1 : p;
+      return Math.min(pageCount - 1, p + 1);
     });
   }, [pageCount]);
 
   const prevPage = React.useCallback(function () {
     setCurrentPage(function (p) {
-      return p > 0 ? p - 1 : p;
+      return Math.max(0, p - 1);
     });
   }, []);
 
   const pageStyle = React.useCallback(function (index, extra) {
     let transform;
     let zIndex;
-    if (index <= currentPage) {
+    if (index < currentPage) {
       transform = 'rotateY(-180deg)';
       zIndex = index + 1;
+    } else if (index === currentPage) {
+      transform = 'rotateY(0deg)';
+      zIndex = pageCount + 1;
     } else {
       transform = 'rotateY(0deg)';
       zIndex = pageCount - index;
-    }
-    if (index === currentPage) {
-      transform = 'rotateY(0deg)';
-      zIndex = pageCount + 1;
     }
     return Object.assign({ transform: transform, zIndex: zIndex }, extra || {});
   }, [currentPage, pageCount]);
@@ -427,72 +493,112 @@ export default function ViewDiaryPage() {
       )}
 
       {mode === 'book' && (
-        <>
-          <div id="book-container" style={{ display: 'block' }}>
-            <div
-              id="cover-front"
-              className="page"
-              style={pageStyle(0, {
-                backgroundImage: "url('" + (frontCoverUrl || '/diary_front.jpeg') + "')",
-                backgroundColor: 'transparent',
-              })}
-            />
+        <div className="book-view-wrapper">
+          <div className="book-stage-container">
+            <div id="book-container" style={{ display: 'block' }}>
+              {visiblePages.map(function (pageItem) {
+                const index = pageItem.index;
+                const type = pageItem.type;
+                const entry = pageItem.entry;
 
-            {bookEntries.map(function (entry, i) {
-              const index = i + 1;
-              const bgUrl = entryBgUrls[entry.id];
-              const textColor = getViewerTextColor(entry);
-              const fontFamily = (entry.theme && entry.theme.fontFamily) || 'Georgia, serif';
-              return (
-                <div
-                  key={entry.id}
-                  className="page page-content dynamic-page"
-                  style={pageStyle(index, {
-                    backgroundImage: bgUrl ? 'url(' + bgUrl + ')' : 'none',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundColor: 'var(--print-page-bg)',
-                    color: textColor,
-                    fontFamily: fontFamily,
-                  })}
-                >
-                  <div style={{ color: textColor, fontFamily: fontFamily }}>
-                    <strong>Date:</strong> {entry.displayDateTime}
-                  </div>
-                  <hr style={{ borderColor: '#999' }} />
-                  <div style={{ whiteSpace: 'pre-wrap', color: textColor, fontFamily: fontFamily }}>
-                    {entry.content}
-                  </div>
-                  <div style={{ position: 'absolute', bottom: '10px', right: '30px', fontSize: '0.8em', color: '#666', opacity: 0.6 }}>
-                    Page {index}
-                  </div>
-                </div>
-              );
-            })}
+                if (type === 'front') {
+                  return (
+                    <div
+                      key="cover-front"
+                      id="cover-front"
+                      className="page"
+                      style={pageStyle(0, {
+                        backgroundImage: "url('" + (frontCoverUrl || '/diary_front.jpeg') + "')",
+                        backgroundColor: 'transparent',
+                      })}
+                    />
+                  );
+                }
 
-            <div
-              id="cover-back"
-              className="page"
-              style={pageStyle(pageCount - 1, {
-                backgroundImage: "url('" + (backCoverUrl || '/diary_back.jpeg') + "')",
-                backgroundColor: 'transparent',
+                if (type === 'back') {
+                  return (
+                    <div
+                      key="cover-back"
+                      id="cover-back"
+                      className="page"
+                      style={pageStyle(pageCount - 1, {
+                        backgroundImage: "url('" + (backCoverUrl || '/diary_back.jpeg') + "')",
+                        backgroundColor: 'transparent',
+                      })}
+                    />
+                  );
+                }
+
+                const bgUrl = entryBgUrls[entry.id];
+                const textColor = getViewerTextColor(entry);
+                const fontFamily = (entry.theme && entry.theme.fontFamily) || 'Georgia, serif';
+
+                return (
+                  <div
+                    key={entry.id}
+                    className="page page-content dynamic-page"
+                    style={pageStyle(index, {
+                      backgroundImage: bgUrl ? 'url(' + bgUrl + ')' : 'none',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundColor: 'var(--print-page-bg)',
+                      color: textColor,
+                      fontFamily: fontFamily,
+                    })}
+                  >
+                    <div style={{ color: textColor, fontFamily: fontFamily }}>
+                      <strong>Date:</strong> {entry.displayDateTime}
+                    </div>
+                    <hr style={{ borderColor: '#999' }} />
+                    <div style={{ whiteSpace: 'pre-wrap', color: textColor, fontFamily: fontFamily }}>
+                      {entry.content}
+                    </div>
+                    <div
+                      style={{
+                        position: 'absolute',
+                        bottom: '10px',
+                        right: '30px',
+                        fontSize: '0.8em',
+                        color: '#666',
+                        opacity: 0.6,
+                      }}
+                    >
+                      Page {index} of {bookEntries.length}
+                    </div>
+                  </div>
+                );
               })}
-            />
+            </div>
           </div>
 
-          <div className="action-buttons" id="book-navigation-actions" style={{ display: 'flex' }}>
-            <button type="button" className="btn btn-nav" onClick={prevPage} disabled={currentPage === 0}>
-              Previous Page
-            </button>
-            <button type="button" className="btn btn-nav" onClick={nextPage} disabled={currentPage === pageCount - 1}>
-              Next Page
-            </button>
-            <button type="button" className="btn btn-nav" onClick={renderHistoryIndex}>
-              Back to List
-            </button>
+          <div className="book-controls-bar">
+            <div className="action-buttons" id="book-navigation-actions" style={{ display: 'flex' }}>
+              <button
+                type="button"
+                className="btn btn-nav"
+                onClick={prevPage}
+                disabled={currentPage === 0}
+              >
+                Previous Page
+              </button>
+              <button
+                type="button"
+                className="btn btn-nav"
+                onClick={nextPage}
+                disabled={currentPage === pageCount - 1}
+              >
+                Next Page
+              </button>
+              <button type="button" className="btn btn-nav" onClick={renderHistoryIndex}>
+                Back to List
+              </button>
+            </div>
+            <div className="page-indicator">
+              Page {currentPage === 0 ? 'Cover' : currentPage === pageCount - 1 ? 'End Cover' : `${currentPage} of ${bookEntries.length}`}
+            </div>
           </div>
-        </>
+        </div>
       )}
 
       <div id="pdf-export-container" ref={pdfExportRef} />
