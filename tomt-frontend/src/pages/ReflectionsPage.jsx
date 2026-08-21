@@ -51,6 +51,7 @@ export default function ReflectionsPage() {
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [viewedEntry, setViewedEntry] = useState(null);
   const viewCardRef = useRef(null);
+  const viewerBodyRef = useRef(null);
 
   // Edit questions modal
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -59,6 +60,20 @@ export default function ReflectionsPage() {
   useEffect(() => {
     document.title = 'Life Manager App - Ask Powerful Questions';
   }, []);
+
+  useEffect(() => {
+    if (viewModalOpen) {
+      document.body.style.overflow = 'hidden';
+      if (viewerBodyRef.current) {
+        viewerBodyRef.current.scrollTop = 0;
+      }
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [viewModalOpen, viewedEntry]);
 
   useEffect(() => {
     refresh();
@@ -290,35 +305,70 @@ export default function ReflectionsPage() {
         </div>
       </div>
 
-      {/* View entry modal */}
-      <div id="view-entry-modal" className={`modal-backdrop${viewModalOpen ? ' visible' : ''}`}>
-        <div className="modal-content" style={{ maxWidth: '700px', padding: 0, background: 'none' }}>
-          <div id="entry-view-card" className="entry-image-card" ref={viewCardRef}>
-            {viewedEntry && (
-              <>
-                <h2>{viewedEntry.dateKey}</h2>
-                <hr />
-                {viewedEntry.answers.map((a, i) => (
-                  <React.Fragment key={i}>
-                    <strong>
-                      {i + 1}. {a.question}
-                    </strong>
-                    <p>{a.answer}</p>
-                  </React.Fragment>
-                ))}
-              </>
-            )}
-          </div>
-          <div style={{ textAlign: 'center', marginTop: '20px' }}>
-            <button type="button" id="download-entry-pdf" className="action-button primary" onClick={downloadEntryPdf}>
-              Download PDF
+      {/* Dedicated Full-Screen Reflection Viewer */}
+      {viewModalOpen && viewedEntry && (
+        <div id="view-entry-modal" className="reflection-viewer-overlay">
+          <div className="reflection-viewer-header">
+            <button
+              type="button"
+              id="close-view-modal"
+              className="btn-back-reflection"
+              onClick={() => setViewModalOpen(false)}
+            >
+              ← Back
             </button>
-            <button type="button" id="close-view-modal" className="action-button secondary" onClick={() => setViewModalOpen(false)}>
-              Close
+
+            <span className="reflection-viewer-title">Reflection Details</span>
+
+            <button
+              type="button"
+              className="btn-close-x"
+              onClick={() => setViewModalOpen(false)}
+              aria-label="Close reflection view"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="reflection-viewer-body" ref={viewerBodyRef}>
+            <div id="entry-view-card" className="entry-image-card" ref={viewCardRef}>
+              <div className="reflection-meta-header">
+                <h2>🗓️ {viewedEntry.dateKey}</h2>
+                {viewedEntry.timestamp && (
+                  <p className="reflection-meta-time">
+                    ⏰ {new Date(viewedEntry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                )}
+              </div>
+              <hr className="reflection-divider" />
+
+              <div className="reflection-qa-list">
+                {viewedEntry.answers && viewedEntry.answers.map((a, i) => (
+                  <div key={i} className="reflection-qa-item">
+                    <div className="reflection-question">
+                      <span className="question-number">Q{i + 1}:</span> {a.question}
+                    </div>
+                    <div className="reflection-answer">
+                      {a.answer || <em style={{ opacity: 0.6 }}>No answer provided</em>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="reflection-viewer-footer">
+            <button
+              type="button"
+              id="download-entry-pdf"
+              className="btn-download-reflection"
+              onClick={downloadEntryPdf}
+            >
+              📥 Download PNG / PDF
             </button>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Edit questions modal */}
       <div id="edit-questions-modal" className={`modal-backdrop${editModalOpen ? ' visible' : ''}`}>
