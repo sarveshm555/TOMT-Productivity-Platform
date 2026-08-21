@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import * as routineService from '../api/routineService.js';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './RoutineTrackerPage.css';
 
 // The two variants are genuinely identical in structure/logic (see
@@ -63,6 +64,8 @@ export default function RoutineTrackerPage({ type }) {
   const [fieldValues, setFieldValues] = useState({}); // { [query.key]: value }
   const [fieldNotes, setFieldNotes] = useState({}); // { [query.key]: note }
 
+  const [deletingQueryId, setDeletingQueryId] = useState(null);
+
   useEffect(() => {
     document.title = variant.documentTitle;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -120,8 +123,6 @@ export default function RoutineTrackerPage({ type }) {
   }
 
   async function deleteQuery(queryId) {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm(variant.deleteConfirmText)) return;
     try {
       const updated = await routineService.deleteConfigQuery(type, queryId);
       setQueries(updated);
@@ -164,6 +165,8 @@ export default function RoutineTrackerPage({ type }) {
       setError(message);
     }
   }
+
+  const activeDeletingQuery = queries.find((q) => q.queryId === deletingQueryId);
 
   return (
     <div className={`routine-page-root routine-type-${type}`}>
@@ -346,7 +349,7 @@ export default function RoutineTrackerPage({ type }) {
               queries.map((q) => (
                 <div className="query-item" key={q.queryId}>
                   <span>{q.name}</span>
-                  <button type="button" className="btn btn-danger" onClick={() => deleteQuery(q.queryId)}>
+                  <button type="button" className="btn btn-danger" onClick={() => setDeletingQueryId(q.queryId)}>
                     Delete
                   </button>
                 </div>
@@ -358,6 +361,20 @@ export default function RoutineTrackerPage({ type }) {
           </button>
         </div>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={deletingQueryId !== null}
+        title="Delete Custom Metric?"
+        message={variant.deleteConfirmText}
+        itemPreview={activeDeletingQuery ? `"${activeDeletingQuery.name}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingQueryId(null)}
+        onConfirm={async () => {
+          const id = deletingQueryId;
+          setDeletingQueryId(null);
+          await deleteQuery(id);
+        }}
+      />
     </div>
   );
 }

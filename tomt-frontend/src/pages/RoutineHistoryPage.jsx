@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import * as routineService from '../api/routineService.js';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './RoutineHistoryPage.css';
 
 // Real, confirmed differences between health-routine-history.html and
@@ -59,6 +60,8 @@ export default function RoutineHistoryPage({ type }) {
   const [error, setError] = useState('');
   const [searchText, setSearchText] = useState('');
 
+  const [deletingEntryId, setDeletingEntryId] = useState(null);
+
   useEffect(() => {
     document.title = variant.documentTitle;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,8 +87,6 @@ export default function RoutineHistoryPage({ type }) {
   }
 
   async function deleteEntry(id) {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm(variant.deleteConfirmText)) return;
     try {
       await routineService.deleteHistoryEntry(type, id);
       setHistory((prev) => prev.filter((item) => item.id !== id));
@@ -101,6 +102,11 @@ export default function RoutineHistoryPage({ type }) {
       variant.filterScope === 'entry' ? JSON.stringify(entry).toLowerCase() : JSON.stringify(entry.data).toLowerCase();
     return contentString.includes(filterLower) || dateString.includes(filterLower);
   });
+
+  const activeDeletingEntry = history.find((e) => e.id === deletingEntryId);
+  const activeEntryDateStr = activeDeletingEntry
+    ? new Date(activeDeletingEntry.date).toLocaleDateString('en-GB', variant.dateFormatOptions)
+    : null;
 
   return (
     <div className={`routine-history-page-root routine-type-${type}`}>
@@ -136,7 +142,7 @@ export default function RoutineHistoryPage({ type }) {
               return (
                 <div className="history-entry" key={item.id}>
                   <span className="date-stamp">{dateStr}</span>
-                  <button type="button" className="btn-delete" onClick={() => deleteEntry(item.id)}>
+                  <button type="button" className="btn-delete" onClick={() => setDeletingEntryId(item.id)}>
                     🗑️
                   </button>
                   <ul className="data-grid">
@@ -178,6 +184,20 @@ export default function RoutineHistoryPage({ type }) {
           )}
         </div>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={deletingEntryId !== null}
+        title="Delete History Entry?"
+        message={variant.deleteConfirmText}
+        itemPreview={activeEntryDateStr ? `Entry from ${activeEntryDateStr}` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingEntryId(null)}
+        onConfirm={async () => {
+          const id = deletingEntryId;
+          setDeletingEntryId(null);
+          await deleteEntry(id);
+        }}
+      />
     </div>
   );
 }

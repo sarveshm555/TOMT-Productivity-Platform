@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import * as monitoringService from '../api/monitoringService.js';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './OngoingPage.css';
 
 /**
@@ -21,6 +22,8 @@ export default function OngoingPage() {
   const [procLink, setProcLink] = useState('');
   const [procMsg, setProcMsg] = useState('');
   const [formError, setFormError] = useState('');
+
+  const [deletingTaskId, setDeletingTaskId] = useState(null);
 
   useEffect(() => {
     document.title = 'Ongoing Processes';
@@ -100,8 +103,6 @@ export default function OngoingPage() {
   }
 
   async function deleteTask(id) {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm('Delete this record permanently?')) return;
     try {
       await monitoringService.deleteOngoingTask(id);
       setTasks((prev) => prev.filter((t) => t.id !== id));
@@ -119,6 +120,8 @@ export default function OngoingPage() {
     setFormVisible(true);
     window.scrollTo(0, 0);
   }
+
+  const activeDeletingTask = tasks.find((t) => t.id === deletingTaskId);
 
   return (
     <div className="ongoing-page-root">
@@ -205,7 +208,7 @@ export default function OngoingPage() {
                       <span style={{ color: 'white', fontWeight: 'bold', alignSelf: 'center', marginRight: '10px' }}>
                         Process Finished
                       </span>
-                      <button type="button" className="btn-delete" onClick={() => deleteTask(t.id)}>
+                      <button type="button" className="btn-delete" onClick={() => setDeletingTaskId(t.id)}>
                         🗑️
                       </button>
                     </>
@@ -216,6 +219,20 @@ export default function OngoingPage() {
           )}
         </div>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={deletingTaskId !== null}
+        title="Delete Ongoing Process?"
+        message="Are you sure you want to permanently delete this process record? This action cannot be undone."
+        itemPreview={activeDeletingTask ? `"${activeDeletingTask.name}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingTaskId(null)}
+        onConfirm={async () => {
+          const id = deletingTaskId;
+          setDeletingTaskId(null);
+          await deleteTask(id);
+        }}
+      />
     </div>
   );
 }

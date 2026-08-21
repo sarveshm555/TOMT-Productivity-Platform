@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import * as monitoringService from '../api/monitoringService.js';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './NeedToApplyPage.css';
 
 /**
@@ -21,6 +22,8 @@ export default function NeedToApplyPage() {
   const [appDeadline, setAppDeadline] = useState('');
   const [appLink, setAppLink] = useState('');
   const [formError, setFormError] = useState('');
+
+  const [deletingAppId, setDeletingAppId] = useState(null);
 
   useEffect(() => {
     document.title = 'Need to Apply';
@@ -102,8 +105,6 @@ export default function NeedToApplyPage() {
   }
 
   async function deleteApp(id) {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm('Delete this record?')) return;
     try {
       await monitoringService.deleteApplyTask(id);
       setApps((prev) => prev.filter((a) => a.id !== id));
@@ -120,6 +121,8 @@ export default function NeedToApplyPage() {
     setFormVisible(true);
     window.scrollTo(0, 0);
   }
+
+  const activeDeletingApp = apps.find((a) => a.id === deletingAppId);
 
   return (
     <div className="apply-page-root">
@@ -206,7 +209,7 @@ export default function NeedToApplyPage() {
                       <span style={{ color: 'white', fontWeight: 'bold', alignSelf: 'center', marginRight: '10px' }}>
                         Success!
                       </span>
-                      <button type="button" className="btn-action" style={{ background: 'rgba(0,0,0,0.3)' }} onClick={() => deleteApp(a.id)}>
+                      <button type="button" className="btn-action" style={{ background: 'rgba(0,0,0,0.3)' }} onClick={() => setDeletingAppId(a.id)}>
                         🗑️
                       </button>
                     </>
@@ -217,6 +220,20 @@ export default function NeedToApplyPage() {
           )}
         </div>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={deletingAppId !== null}
+        title="Delete Application Record?"
+        message="Are you sure you want to permanently delete this application record? This action cannot be undone."
+        itemPreview={activeDeletingApp ? `"${activeDeletingApp.name}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingAppId(null)}
+        onConfirm={async () => {
+          const id = deletingAppId;
+          setDeletingAppId(null);
+          await deleteApp(id);
+        }}
+      />
     </div>
   );
 }

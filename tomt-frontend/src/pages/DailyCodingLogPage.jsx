@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import * as codingProfileService from '../api/codingProfileService.js';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './DailyCodingLogPage.css';
 
 function getTodayDateString() {
@@ -37,6 +38,8 @@ export default function DailyCodingLogPage() {
   const [learnings, setLearnings] = useState('');
 
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [deletingLogId, setDeletingLogId] = useState(null);
 
   useEffect(() => {
     refresh();
@@ -120,8 +123,6 @@ export default function DailyCodingLogPage() {
   }
 
   async function deleteEntry(id) {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm('Delete this log?')) return;
     try {
       await codingProfileService.deleteLog(profileId, id);
       setLogs((prev) => prev.filter((l) => l.id !== id));
@@ -129,6 +130,8 @@ export default function DailyCodingLogPage() {
       setError('Could not delete log entry. Please try again.');
     }
   }
+
+  const activeDeletingLog = logs.find((l) => l.id === deletingLogId);
 
   return (
     <div className="daily-coding-log-page-root">
@@ -228,7 +231,7 @@ export default function DailyCodingLogPage() {
                     <button type="button" onClick={() => editEntry(log)}>
                       ✏️
                     </button>
-                    <button type="button" onClick={() => deleteEntry(log.id)}>
+                    <button type="button" onClick={() => setDeletingLogId(log.id)}>
                       🗑️
                     </button>
                   </div>
@@ -244,6 +247,20 @@ export default function DailyCodingLogPage() {
           )}
         </ul>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={deletingLogId !== null}
+        title="Delete Problem Log?"
+        message="Are you sure you want to permanently delete this problem log entry? This action cannot be undone."
+        itemPreview={activeDeletingLog ? `"${activeDeletingLog.question}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingLogId(null)}
+        onConfirm={async () => {
+          const id = deletingLogId;
+          setDeletingLogId(null);
+          await deleteEntry(id);
+        }}
+      />
     </div>
   );
 }

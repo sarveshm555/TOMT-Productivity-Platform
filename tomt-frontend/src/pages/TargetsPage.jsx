@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 import * as targetService from '../api/targetService.js';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './TargetsPage.css';
 
 /**
@@ -27,6 +28,7 @@ export default function TargetsPage() {
   const [submitting, setSubmitting] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [deletingGoalId, setDeletingGoalId] = useState(null);
 
   useEffect(() => {
     document.title = 'Life Manager App - Future Goals Tracker';
@@ -124,8 +126,6 @@ export default function TargetsPage() {
   }
 
   async function deleteGoal(id) {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm('Are you sure you want to delete this goal?')) return;
     try {
       await targetService.deleteTarget(id);
       setGoals((prev) => prev.filter((g) => g.id !== id));
@@ -133,6 +133,8 @@ export default function TargetsPage() {
       setLoadError('Could not delete target. Please try again.');
     }
   }
+
+  const activeDeletingGoal = goals.find((g) => g.id === deletingGoalId);
 
   return (
     <div className="targets-page-root">
@@ -232,7 +234,7 @@ export default function TargetsPage() {
                     <button type="button" className="action-btn btn-edit" onClick={() => editGoal(goal)}>
                       ✏️ Edit
                     </button>
-                    <button type="button" className="action-btn btn-delete" onClick={() => deleteGoal(goal.id)}>
+                    <button type="button" className="action-btn btn-delete" onClick={() => setDeletingGoalId(goal.id)}>
                       🗑️
                     </button>
                   </div>
@@ -242,6 +244,20 @@ export default function TargetsPage() {
           )}
         </ul>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={deletingGoalId !== null}
+        title="Delete Goal?"
+        message="Are you sure you want to permanently delete this goal? This action cannot be undone."
+        itemPreview={activeDeletingGoal ? `"${activeDeletingGoal.name}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingGoalId(null)}
+        onConfirm={async () => {
+          const id = deletingGoalId;
+          setDeletingGoalId(null);
+          await deleteGoal(id);
+        }}
+      />
     </div>
   );
 }

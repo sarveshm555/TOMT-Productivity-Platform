@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import * as profileLinkService from '../api/profileLinkService.js';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './InfoCopyPage.css';
 
 /**
@@ -25,6 +26,8 @@ export default function InfoCopyPage() {
 
   const [visibleUrlIds, setVisibleUrlIds] = useState({});
   const [copiedButtonKey, setCopiedButtonKey] = useState(null);
+
+  const [deletingProfileId, setDeletingProfileId] = useState(null);
 
   useEffect(() => {
     document.title = 'Life Manager App - Private Info';
@@ -82,8 +85,6 @@ export default function InfoCopyPage() {
   }
 
   async function deleteProfile(id) {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm('Delete this profile?')) return;
     try {
       await profileLinkService.deleteProfileLink(id);
       setProfiles((prev) => prev.filter((p) => p.id !== id));
@@ -91,6 +92,8 @@ export default function InfoCopyPage() {
       setError('Could not delete profile. Please try again.');
     }
   }
+
+  const activeDeletingProfile = profiles.find((p) => p.id === deletingProfileId);
 
   return (
     <div className="infocopy-page-root">
@@ -193,7 +196,7 @@ export default function InfoCopyPage() {
                         {copiedButtonKey === `${profile.id}-pass` ? '✅' : '📋 Pass'}
                       </button>
                     )}
-                    <button type="button" className="action-icon-btn" style={{ color: 'var(--danger-color)' }} title="Delete" onClick={() => deleteProfile(profile.id)}>
+                    <button type="button" className="action-icon-btn" style={{ color: 'var(--danger-color)' }} title="Delete" onClick={() => setDeletingProfileId(profile.id)}>
                       🗑️
                     </button>
                   </div>
@@ -203,6 +206,20 @@ export default function InfoCopyPage() {
           )}
         </ul>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={deletingProfileId !== null}
+        title="Delete Profile Link?"
+        message="Are you sure you want to permanently delete this profile? This action cannot be undone."
+        itemPreview={activeDeletingProfile ? `"${activeDeletingProfile.name}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingProfileId(null)}
+        onConfirm={async () => {
+          const id = deletingProfileId;
+          setDeletingProfileId(null);
+          await deleteProfile(id);
+        }}
+      />
     </div>
   );
 }

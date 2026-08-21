@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import * as noteService from '../api/noteService.js';
 import apiClient from '../api/axiosClient.js';
 import AuthenticatedImage from '../components/AuthenticatedImage.jsx';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './ImportantNotePage.css';
 
 /**
@@ -35,6 +36,8 @@ export default function ImportantNotePage() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalNote, setModalNote] = useState(null);
+
+  const [deletingNoteId, setDeletingNoteId] = useState(null);
 
   useEffect(() => {
     document.title = 'Life Manager App - Important Note Log';
@@ -147,8 +150,6 @@ export default function ImportantNotePage() {
   }
 
   async function deleteNote(id) {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm('Delete note?')) return;
     try {
       await noteService.deleteNote(id);
       setNotes((prev) => prev.filter((n) => n.id !== id));
@@ -156,6 +157,8 @@ export default function ImportantNotePage() {
       setError('Could not delete note. Please try again.');
     }
   }
+
+  const activeDeletingNote = notes.find((n) => n.id === deletingNoteId);
 
   return (
     <div className="important-note-page-root">
@@ -237,7 +240,7 @@ export default function ImportantNotePage() {
                   <button type="button" className="action-btn btn-view" style={{ background: '#3f404e' }} onClick={() => editNote(note)}>
                     ✏️
                   </button>
-                  <button type="button" className="btn-delete" onClick={() => deleteNote(note.id)}>
+                  <button type="button" className="btn-delete" onClick={() => setDeletingNoteId(note.id)}>
                     🗑️
                   </button>
                 </div>
@@ -275,6 +278,20 @@ export default function ImportantNotePage() {
           </button>
         </div>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={deletingNoteId !== null}
+        title="Delete Note?"
+        message="Are you sure you want to permanently delete this note? This action cannot be undone."
+        itemPreview={activeDeletingNote ? `"${activeDeletingNote.name}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingNoteId(null)}
+        onConfirm={async () => {
+          const id = deletingNoteId;
+          setDeletingNoteId(null);
+          await deleteNote(id);
+        }}
+      />
     </div>
   );
 }

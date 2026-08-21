@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import * as reflectionService from '../api/reflectionService.js';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './ProblemPage.css';
 
 /**
@@ -18,6 +19,9 @@ export default function ProblemPage() {
   const [formVisible, setFormVisible] = useState(false);
   const [problemText, setProblemText] = useState('');
   const [solutionText, setSolutionText] = useState('');
+
+  const [deletingProblemId, setDeletingProblemId] = useState(null);
+  const [isClearingAll, setIsClearingAll] = useState(false);
 
   useEffect(() => {
     document.title = 'Life Manager App - Problem Solver';
@@ -73,8 +77,6 @@ export default function ProblemPage() {
   }
 
   async function clearAll() {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm('Clear all history?')) return;
     try {
       await reflectionService.clearProblems();
       setProblems([]);
@@ -82,6 +84,8 @@ export default function ProblemPage() {
       setError('Could not clear problems. Please try again.');
     }
   }
+
+  const activeDeletingProblem = problems.find((p) => p.id === deletingProblemId);
 
   return (
     <div className="problem-page-root">
@@ -94,7 +98,7 @@ export default function ProblemPage() {
             <button type="button" className="btn-toggle" id="toggle-form-btn" onClick={toggleForm}>
               {formVisible ? '✖ Close Form' : '➕ Report New Problem'}
             </button>
-            <button type="button" className="btn-clear-top" id="clear-all" onClick={clearAll}>
+            <button type="button" className="btn-clear-top" id="clear-all" onClick={() => setIsClearingAll(true)}>
               🗑️ Clear All
             </button>
           </div>
@@ -153,14 +157,40 @@ export default function ProblemPage() {
                   </div>
                 ) : null}
                 <span className="timestamp">Logged: {new Date(item.createdAt).toLocaleString()}</span>
-                <button type="button" className="btn-solved" onClick={() => deleteProblem(item.id)}>
-                  ✅ Now Solved
+                <button type="button" className="btn-solved" onClick={() => setDeletingProblemId(item.id)}>
+                  ✅ Now Solved / Remove
                 </button>
               </div>
             ))
           )}
         </div>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={deletingProblemId !== null}
+        title="Remove Problem Log?"
+        message="Are you sure you want to remove this problem entry? This action cannot be undone."
+        itemPreview={activeDeletingProblem ? `"${activeDeletingProblem.problem}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingProblemId(null)}
+        onConfirm={async () => {
+          const id = deletingProblemId;
+          setDeletingProblemId(null);
+          await deleteProblem(id);
+        }}
+      />
+
+      <ConfirmDeleteModal
+        isOpen={isClearingAll}
+        title="Clear All Problems?"
+        message="Are you sure you want to permanently delete all logged problems? This action cannot be undone."
+        confirmWord="DELETE"
+        onClose={() => setIsClearingAll(false)}
+        onConfirm={async () => {
+          setIsClearingAll(false);
+          await clearAll();
+        }}
+      />
     </div>
   );
 }

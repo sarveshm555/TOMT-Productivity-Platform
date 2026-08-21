@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import * as codingProfileService from '../api/codingProfileService.js';
 import AuthenticatedImage from '../components/AuthenticatedImage.jsx';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './CodingProfilesPage.css';
 
 /**
@@ -19,6 +20,8 @@ export default function CodingProfilesPage() {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const [deletingProfileId, setDeletingProfileId] = useState(null);
 
   useEffect(() => {
     document.title = 'Life Manager App - Coding Profiles';
@@ -46,9 +49,7 @@ export default function CodingProfilesPage() {
   function editProfile(id) {
     navigate(`/placement/coding-profiles/new?edit=${id}`);
   }
-  async function deleteProfile(id, name) {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm(`Delete ${name}?`)) return;
+  async function deleteProfile(id) {
     try {
       await codingProfileService.deleteCodingProfile(id);
       setProfiles((prev) => prev.filter((p) => p.id !== id));
@@ -56,6 +57,8 @@ export default function CodingProfilesPage() {
       setError('Could not delete profile. Please try again.');
     }
   }
+
+  const activeDeletingProfile = profiles.find((p) => p.id === deletingProfileId);
 
   return (
     <div className="coding-profiles-page-root">
@@ -101,7 +104,7 @@ export default function CodingProfilesPage() {
                   <button type="button" className="action-btn" style={{ background: '#3f404e', color: 'white' }} onClick={() => editProfile(profile.id)}>
                     ✏️
                   </button>
-                  <button type="button" className="btn-delete" onClick={() => deleteProfile(profile.id, profile.name)}>
+                  <button type="button" className="btn-delete" onClick={() => setDeletingProfileId(profile.id)}>
                     🗑️
                   </button>
                 </div>
@@ -110,6 +113,20 @@ export default function CodingProfilesPage() {
           )}
         </ul>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={deletingProfileId !== null}
+        title="Delete Coding Profile?"
+        message="Are you sure you want to permanently delete this coding profile and all its logged problems? This action cannot be undone."
+        itemPreview={activeDeletingProfile ? `"${activeDeletingProfile.name}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingProfileId(null)}
+        onConfirm={async () => {
+          const id = deletingProfileId;
+          setDeletingProfileId(null);
+          await deleteProfile(id);
+        }}
+      />
     </div>
   );
 }

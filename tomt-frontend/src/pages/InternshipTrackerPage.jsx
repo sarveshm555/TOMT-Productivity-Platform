@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import * as internshipService from '../api/internshipService.js';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './InternshipTrackerPage.css';
 
 const FILTERS = ['All', 'NeedToApply', 'Applied', 'Interview', 'Offer', 'Rejected'];
@@ -44,6 +45,8 @@ export default function InternshipTrackerPage() {
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [activeRejectId, setActiveRejectId] = useState(null);
   const [mistakeInput, setMistakeInput] = useState('');
+
+  const [deletingAppId, setDeletingAppId] = useState(null);
 
   useEffect(() => {
     document.title = 'Internship Tracker - Mobile Responsive';
@@ -109,8 +112,6 @@ export default function InternshipTrackerPage() {
   }
 
   async function deleteApp(id) {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm('Delete application?')) return;
     try {
       await internshipService.deleteInternship(id);
       setApps((prev) => prev.filter((a) => a.id !== id));
@@ -138,6 +139,8 @@ export default function InternshipTrackerPage() {
     setMistakeInput('');
     closeModal();
   }
+
+  const activeDeletingApp = apps.find((a) => a.id === deletingAppId);
 
   return (
     <div className="internship-page-root">
@@ -229,7 +232,7 @@ export default function InternshipTrackerPage() {
                       type="button"
                       className="btn-sm"
                       style={{ background: '#444' }}
-                      onClick={() => deleteApp(app.id)}
+                      onClick={() => setDeletingAppId(app.id)}
                     >
                       🗑️
                     </button>
@@ -267,6 +270,20 @@ export default function InternshipTrackerPage() {
           </div>
         </div>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={deletingAppId !== null}
+        title="Delete Application?"
+        message="Are you sure you want to permanently delete this application? This action cannot be undone."
+        itemPreview={activeDeletingApp ? `"${activeDeletingApp.company} - ${activeDeletingApp.role}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingAppId(null)}
+        onConfirm={async () => {
+          const id = deletingAppId;
+          setDeletingAppId(null);
+          await deleteApp(id);
+        }}
+      />
     </div>
   );
 }

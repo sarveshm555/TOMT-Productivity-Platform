@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import * as pendingTaskService from '../api/pendingTaskService.js';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './PendingTasksPage.css';
 
 /**
@@ -24,6 +25,8 @@ export default function PendingTasksPage() {
 
   const [historyVisible, setHistoryVisible] = useState(false);
   const [history, setHistory] = useState([]);
+
+  const [deletingTaskId, setDeletingTaskId] = useState(null);
 
   useEffect(() => {
     document.title = 'Life Manager App - Pending Tasks';
@@ -81,8 +84,6 @@ export default function PendingTasksPage() {
   }
 
   async function deleteTask(id) {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm('Delete permanently?')) return;
     try {
       await pendingTaskService.deletePendingTask(id);
       setTasks((prev) => prev.filter((t) => t.id !== id));
@@ -120,6 +121,8 @@ export default function PendingTasksPage() {
       }
     }
   }
+
+  const activeDeletingTask = tasks.find((t) => t.id === deletingTaskId);
 
   return (
     <div className="pending-tasks-page-root">
@@ -166,7 +169,7 @@ export default function PendingTasksPage() {
                         <button type="button" className="btn-complete" onClick={() => completeTask(t.id)}>
                           Complete
                         </button>
-                        <button type="button" className="delete-task-btn" onClick={() => deleteTask(t.id)}>
+                        <button type="button" className="delete-task-btn" onClick={() => setDeletingTaskId(t.id)}>
                           🗑️
                         </button>
                       </div>
@@ -235,6 +238,20 @@ export default function PendingTasksPage() {
           </form>
         </div>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={deletingTaskId !== null}
+        title="Delete Pending Task?"
+        message="Are you sure you want to permanently delete this pending task? This action cannot be undone."
+        itemPreview={activeDeletingTask ? `"${activeDeletingTask.task}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingTaskId(null)}
+        onConfirm={async () => {
+          const id = deletingTaskId;
+          setDeletingTaskId(null);
+          await deleteTask(id);
+        }}
+      />
     </div>
   );
 }

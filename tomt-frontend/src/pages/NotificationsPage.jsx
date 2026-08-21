@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import * as notificationService from '../api/notificationService.js';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './NotificationsPage.css';
 
 /**
@@ -24,6 +25,7 @@ export default function NotificationsPage() {
   const [userName, setUserName] = useState('Life Manager User');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [confirmClearOpen, setConfirmClearOpen] = useState(false);
 
   useEffect(() => {
     document.title = 'Life Manager App - Notifications';
@@ -52,8 +54,6 @@ export default function NotificationsPage() {
   }
 
   async function clearAllNotifications() {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm('Are you sure you want to clear ALL visible notifications?')) return;
     try {
       await notificationService.clearAllNotifications();
       setNotifications([]);
@@ -93,7 +93,7 @@ export default function NotificationsPage() {
           </ul>
 
           {notifications.length > 0 && (
-            <button type="button" className="btn btn-clear" id="clear-notifications-btn" onClick={clearAllNotifications}>
+            <button type="button" className="btn btn-clear" id="clear-notifications-btn" onClick={() => setConfirmClearOpen(true)}>
               🗑️ Clear All Notifications
             </button>
           )}
@@ -105,6 +105,18 @@ export default function NotificationsPage() {
           </Link>
         </div>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={confirmClearOpen}
+        title="Clear All Notifications?"
+        message="Are you sure you want to clear ALL visible notifications? This action cannot be undone."
+        confirmWord="DELETE"
+        onClose={() => setConfirmClearOpen(false)}
+        onConfirm={async () => {
+          setConfirmClearOpen(false);
+          await clearAllNotifications();
+        }}
+      />
     </div>
   );
 }

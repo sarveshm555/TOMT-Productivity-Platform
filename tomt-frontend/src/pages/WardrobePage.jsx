@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import * as dressCheckerService from '../api/dressCheckerService.js';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './WardrobePage.css';
 
 const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
@@ -27,6 +28,9 @@ export default function WardrobePage() {
   // Working copy of each day's <select multiple> selections, keyed like
   // the original's `s-${day}` / `p-${day}` element ids.
   const [selections, setSelections] = useState({});
+
+  const [deletingItem, setDeletingItem] = useState(null); // { type, name }
+  const [confirmResetOpen, setConfirmResetOpen] = useState(false);
 
   useEffect(() => {
     document.title = 'Life Manager App - Wardrobe Details';
@@ -76,8 +80,6 @@ export default function WardrobePage() {
   }
 
   async function deleteItem(type, name) {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm(`Remove ${name}?`)) return;
     try {
       setWardrobe(await dressCheckerService.deleteWardrobeItem(type, name));
     } catch (err) {
@@ -124,8 +126,6 @@ export default function WardrobePage() {
   }
 
   async function clearRules() {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm('Reset all daily selection rules?')) return;
     try {
       const reset = await dressCheckerService.resetRules();
       setRules(reset);
@@ -146,7 +146,7 @@ export default function WardrobePage() {
           <Link to="/dress-checker" className="back-btn">
             ⬅ Back to Generator
           </Link>
-          <button type="button" id="clear-rules-btn" className="btn btn-secondary" onClick={clearRules}>
+          <button type="button" id="clear-rules-btn" className="btn btn-secondary" onClick={() => setConfirmResetOpen(true)}>
             Reset All Rules
           </button>
         </div>
@@ -201,7 +201,7 @@ export default function WardrobePage() {
                     wardrobe.shirts.map((name) => (
                       <li key={name} className="row">
                         <span>👕 {name}</span>
-                        <button type="button" className="btn btn-secondary" onClick={() => deleteItem('shirt', name)}>
+                        <button type="button" className="btn btn-secondary" onClick={() => setDeletingItem({ type: 'shirt', name })}>
                           Delete
                         </button>
                       </li>
@@ -215,7 +215,7 @@ export default function WardrobePage() {
                     wardrobe.pants.map((name) => (
                       <li key={name} className="row">
                         <span>👖 {name}</span>
-                        <button type="button" className="btn btn-secondary" onClick={() => deleteItem('pant', name)}>
+                        <button type="button" className="btn btn-secondary" onClick={() => setDeletingItem({ type: 'pant', name })}>
                           Delete
                         </button>
                       </li>
@@ -268,6 +268,32 @@ export default function WardrobePage() {
           </div>
         </div>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={deletingItem !== null}
+        title="Remove Wardrobe Item?"
+        message="Are you sure you want to remove this item from your wardrobe? This action cannot be undone."
+        itemPreview={deletingItem ? `"${deletingItem.name}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingItem(null)}
+        onConfirm={async () => {
+          const { type, name } = deletingItem;
+          setDeletingItem(null);
+          await deleteItem(type, name);
+        }}
+      />
+
+      <ConfirmDeleteModal
+        isOpen={confirmResetOpen}
+        title="Reset All Weekly Rules?"
+        message="Are you sure you want to reset all daily outfit selection rules? This action cannot be undone."
+        confirmWord="DELETE"
+        onClose={() => setConfirmResetOpen(false)}
+        onConfirm={async () => {
+          setConfirmResetOpen(false);
+          await clearRules();
+        }}
+      />
     </div>
   );
 }

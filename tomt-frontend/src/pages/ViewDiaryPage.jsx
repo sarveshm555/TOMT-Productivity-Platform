@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import * as diaryService from '../api/diaryService.js';
 import apiClient from '../api/axiosClient.js';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './ViewDiaryPage.css';
 
 const JSPDF_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
@@ -247,6 +248,8 @@ export default function ViewDiaryPage() {
     };
   }, []);
 
+  const [deletingEntryId, setDeletingEntryId] = useState(null);
+
   async function openEntryInBook(entryId) {
     const targetIndex = bookEntries.findIndex(function (e) {
       return e.id === entryId;
@@ -258,8 +261,6 @@ export default function ViewDiaryPage() {
   }
 
   async function deleteEntry(id) {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm('Are you sure you want to delete this diary entry?')) return;
     try {
       await diaryService.deleteEntry(id);
       setEntries(function (prev) {
@@ -479,7 +480,7 @@ export default function ViewDiaryPage() {
                         type="button"
                         className="btn btn-danger"
                         title="Delete this diary entry"
-                        onClick={function () { deleteEntry(entry.id); }}
+                        onClick={function () { setDeletingEntryId(entry.id); }}
                       >
                         🗑️ Delete
                       </button>
@@ -602,6 +603,19 @@ export default function ViewDiaryPage() {
       )}
 
       <div id="pdf-export-container" ref={pdfExportRef} />
+
+      <ConfirmDeleteModal
+        isOpen={deletingEntryId !== null}
+        title="Delete Diary Entry?"
+        message="Are you sure you want to permanently delete this diary entry? This action cannot be undone."
+        confirmWord="DELETE"
+        onClose={function () { setDeletingEntryId(null); }}
+        onConfirm={async function () {
+          const id = deletingEntryId;
+          setDeletingEntryId(null);
+          await deleteEntry(id);
+        }}
+      />
     </div>
   );
 }

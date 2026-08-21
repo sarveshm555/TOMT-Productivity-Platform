@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import './DashboardPage.css';
 
@@ -22,6 +23,7 @@ const MOTIVATE_TAG_KEY = 'motivateTag';
 export default function DashboardPage() {
   const { user, logout } = useAuth();
   const [tagText, setTagText] = useState('');
+  const [confirmDeleteTagOpen, setConfirmDeleteTagOpen] = useState(false);
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -50,11 +52,8 @@ export default function DashboardPage() {
   }
 
   function deleteTag() {
-    // eslint-disable-next-line no-alert
-    if (window.confirm("Delete today's motivation?")) {
-      window.localStorage.removeItem(MOTIVATE_TAG_KEY);
-      setTagText('');
-    }
+    window.localStorage.removeItem(MOTIVATE_TAG_KEY);
+    setTagText('');
   }
 
   return (
@@ -80,7 +79,7 @@ export default function DashboardPage() {
           <div className="terminal-controls">
             <div className="control minimize" />
             <div className="control maximize" />
-            <div className="control close" onClick={deleteTag} />
+            <div className="control close" onClick={() => setConfirmDeleteTagOpen(true)} />
           </div>
         </div>
         <div className="text" id="tag-text">
@@ -127,6 +126,19 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={confirmDeleteTagOpen}
+        title="Delete Today's Motivation?"
+        message="Are you sure you want to delete today's motivation tag? This action cannot be undone."
+        itemPreview={tagText ? `"${tagText}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setConfirmDeleteTagOpen(false)}
+        onConfirm={async () => {
+          setConfirmDeleteTagOpen(false);
+          deleteTag();
+        }}
+      />
     </div>
   );
 }

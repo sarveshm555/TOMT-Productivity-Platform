@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import * as scheduleService from '../api/scheduleService.js';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './SchedulePage.css';
 
 const HTML2PDF_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
@@ -93,6 +94,10 @@ export default function SchedulePage() {
   const [historyVisible, setHistoryVisible] = useState(false);
   const [history, setHistory] = useState([]);
 
+  const [confirmClearOpen, setConfirmClearOpen] = useState(false);
+  const [deletingDailyTask, setDeletingDailyTask] = useState(null);
+  const [deletingPendingTask, setDeletingPendingTask] = useState(null);
+
   const exportWrapperRef = useRef(null);
   const dayInfoRef = useRef(null);
 
@@ -169,8 +174,6 @@ export default function SchedulePage() {
   }
 
   async function clearAllTasks() {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm('WARNING: This will clear ALL tasks for today\u2019s schedule. Proceed?')) return;
     try {
       await scheduleService.clearAllTasks();
       setDailyTasks([]);
@@ -207,8 +210,6 @@ export default function SchedulePage() {
   }
 
   async function handleDeleteDaily(task) {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm('Are you sure you want to permanently delete this task?')) return;
     try {
       await scheduleService.deleteTask(task.id);
       setDailyTasks((prev) => prev.filter((t) => t.id !== task.id));
@@ -218,8 +219,6 @@ export default function SchedulePage() {
   }
 
   async function handleDeletePending(task) {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm('Are you sure you want to permanently delete this task?')) return;
     try {
       await scheduleService.deletePendingTask(task.id);
       setPastPendingTasks((prev) => prev.filter((t) => t.id !== task.id));
@@ -306,7 +305,7 @@ export default function SchedulePage() {
                 <button type="button" className="add-button" id="open-task-modal" onClick={openModal}>
                   ➕ Add Task
                 </button>
-                <button type="button" className="action-button secondary" id="clear-all-tasks" onClick={clearAllTasks}>
+                <button type="button" className="action-button secondary" id="clear-all-tasks" onClick={() => setConfirmClearOpen(true)}>
                   🗑️ Clear All Tasks
                 </button>
                 <button type="button" className="action-button primary" id="download-schedule" onClick={downloadSchedule}>
@@ -339,7 +338,7 @@ export default function SchedulePage() {
                         >
                           {task.priority}
                         </span>
-                        <button type="button" className="delete-task-btn" onClick={() => handleDeletePending(task)}>
+                        <button type="button" className="delete-task-btn" onClick={() => setDeletingPendingTask(task)}>
                           🗑️
                         </button>
                       </div>
@@ -386,7 +385,7 @@ export default function SchedulePage() {
                             <button type="button" className="task-action-btn btn-complete" onClick={() => handleComplete(task)}>
                               Complete
                             </button>
-                            <button type="button" className="delete-task-btn" onClick={() => handleDeleteDaily(task)}>
+                            <button type="button" className="delete-task-btn" onClick={() => setDeletingDailyTask(task)}>
                               🗑️
                             </button>
                           </div>
@@ -466,6 +465,46 @@ export default function SchedulePage() {
           </form>
         </div>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={confirmClearOpen}
+        title="Clear All Today's Tasks?"
+        message="WARNING: This will clear ALL tasks for today's schedule. Proceed?"
+        confirmWord="DELETE"
+        onClose={() => setConfirmClearOpen(false)}
+        onConfirm={async () => {
+          setConfirmClearOpen(false);
+          await clearAllTasks();
+        }}
+      />
+
+      <ConfirmDeleteModal
+        isOpen={deletingDailyTask !== null}
+        title="Delete Schedule Task?"
+        message="Are you sure you want to permanently delete this task? This action cannot be undone."
+        itemPreview={deletingDailyTask ? `"${deletingDailyTask.task}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingDailyTask(null)}
+        onConfirm={async () => {
+          const task = deletingDailyTask;
+          setDeletingDailyTask(null);
+          await handleDeleteDaily(task);
+        }}
+      />
+
+      <ConfirmDeleteModal
+        isOpen={deletingPendingTask !== null}
+        title="Delete Past Pending Task?"
+        message="Are you sure you want to permanently delete this task? This action cannot be undone."
+        itemPreview={deletingPendingTask ? `"${deletingPendingTask.task}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingPendingTask(null)}
+        onConfirm={async () => {
+          const task = deletingPendingTask;
+          setDeletingPendingTask(null);
+          await handleDeletePending(task);
+        }}
+      />
     </div>
   );
 }

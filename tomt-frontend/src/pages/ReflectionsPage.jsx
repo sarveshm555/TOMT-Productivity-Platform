@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 
 import * as reflectionService from '../api/reflectionService.js';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './ReflectionsPage.css';
 
 // html2pdf is loaded from the same CDN the original used (via a <script>
@@ -453,76 +454,35 @@ export default function ReflectionsPage() {
         document.body
       )}
 
-      {/* Safe Question Deletion Confirmation Dialog via React Portal */}
-      {deletingQuestionIndex !== null && createPortal(
-        <div className="modal-backdrop visible confirm-dialog-backdrop">
-          <div className="modal-content confirm-dialog-content">
-            <h3>Delete this question?</h3>
-            <p className="confirm-dialog-text">
-              Are you sure you want to delete this question? This action cannot be undone.
-            </p>
-            {questions[deletingQuestionIndex] && (
-              <div className="confirm-question-preview">
-                "{questions[deletingQuestionIndex]}"
-              </div>
-            )}
-            <div className="confirm-dialog-actions">
-              <button
-                type="button"
-                className="action-button secondary"
-                onClick={() => setDeletingQuestionIndex(null)}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="action-button danger-btn"
-                onClick={async () => {
-                  const idx = deletingQuestionIndex;
-                  setDeletingQuestionIndex(null);
-                  await handleRemoveQuestion(idx);
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>,
-        document.body
-      )}
+      {/* Safe Question Deletion Confirmation Dialog */}
+      <ConfirmDeleteModal
+        isOpen={deletingQuestionIndex !== null}
+        title="Delete Question?"
+        message="Are you sure you want to permanently delete this reflection question? This action cannot be undone."
+        itemPreview={deletingQuestionIndex !== null && questions[deletingQuestionIndex] ? `"${questions[deletingQuestionIndex]}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingQuestionIndex(null)}
+        onConfirm={async () => {
+          const idx = deletingQuestionIndex;
+          setDeletingQuestionIndex(null);
+          await handleRemoveQuestion(idx);
+        }}
+      />
 
-      {/* Safe Reflection Entry Deletion Confirmation Dialog via React Portal */}
-      {deletingEntryKey !== null && createPortal(
-        <div className="modal-backdrop visible confirm-dialog-backdrop">
-          <div className="modal-content confirm-dialog-content">
-            <h3>Delete this reflection?</h3>
-            <p className="confirm-dialog-text">
-              Are you sure you want to delete the reflection for <strong>{deletingEntryKey}</strong>? This action cannot be undone.
-            </p>
-            <div className="confirm-dialog-actions">
-              <button
-                type="button"
-                className="action-button secondary"
-                onClick={() => setDeletingEntryKey(null)}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="action-button danger-btn"
-                onClick={async () => {
-                  const key = deletingEntryKey;
-                  setDeletingEntryKey(null);
-                  await handleDeleteEntry(key);
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>,
-        document.body
-      )}
+      {/* Safe Reflection Entry Deletion Confirmation Dialog */}
+      <ConfirmDeleteModal
+        isOpen={deletingEntryKey !== null}
+        title="Delete Reflection?"
+        message={`Are you sure you want to permanently delete the reflection entry for date ${deletingEntryKey}? This action cannot be undone.`}
+        itemPreview={deletingEntryKey ? `Date: ${deletingEntryKey}` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingEntryKey(null)}
+        onConfirm={async () => {
+          const key = deletingEntryKey;
+          setDeletingEntryKey(null);
+          await handleDeleteEntry(key);
+        }}
+      />
     </div>
   );
 }

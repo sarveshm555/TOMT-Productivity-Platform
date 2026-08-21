@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import * as educationService from '../api/educationService.js';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './EducationNotesPage.css';
 
 /**
@@ -22,6 +23,8 @@ export default function EducationNotesPage() {
   const [editId, setEditId] = useState('');
   const [courseName, setCourseName] = useState('');
   const [courseSource, setCourseSource] = useState('');
+
+  const [deletingCourseId, setDeletingCourseId] = useState(null);
 
   useEffect(() => {
     document.title = 'Life Manager App - Education Notes';
@@ -94,9 +97,7 @@ export default function EducationNotesPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  async function deleteCourse(id, name) {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm(`Delete course: ${name}?`)) return;
+  async function deleteCourse(id) {
     try {
       await educationService.deleteCourse(id);
       setCourses((prev) => prev.filter((c) => c.id !== id));
@@ -104,6 +105,8 @@ export default function EducationNotesPage() {
       setError('Could not delete course. Please try again.');
     }
   }
+
+  const activeDeletingCourse = courses.find((c) => c.id === deletingCourseId);
 
   return (
     <div className="education-notes-page-root">
@@ -192,7 +195,7 @@ export default function EducationNotesPage() {
                   <button type="button" className="action-btn" onClick={() => editCourse(course)}>
                     ✏️
                   </button>
-                  <button type="button" className="btn-delete" onClick={() => deleteCourse(course.id, course.name)}>
+                  <button type="button" className="btn-delete" onClick={() => setDeletingCourseId(course.id)}>
                     🗑️
                   </button>
                 </div>
@@ -201,6 +204,20 @@ export default function EducationNotesPage() {
           )}
         </ul>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={deletingCourseId !== null}
+        title="Delete Education Course?"
+        message="Are you sure you want to permanently delete this course and all associated logs? This action cannot be undone."
+        itemPreview={activeDeletingCourse ? `"${activeDeletingCourse.name}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingCourseId(null)}
+        onConfirm={async () => {
+          const id = deletingCourseId;
+          setDeletingCourseId(null);
+          await deleteCourse(id);
+        }}
+      />
     </div>
   );
 }

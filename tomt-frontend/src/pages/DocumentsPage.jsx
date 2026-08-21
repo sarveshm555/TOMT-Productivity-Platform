@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import * as documentService from '../api/documentService.js';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './DocumentsPage.css';
 
 /**
@@ -32,6 +33,8 @@ export default function DocumentsPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState('Preview');
   const [modalContent, setModalContent] = useState(null); // { kind: 'image'|'pdf', url: string }
+
+  const [deletingDocId, setDeletingDocId] = useState(null);
 
   useEffect(() => {
     document.title = 'Life Manager - Document Manager';
@@ -138,8 +141,6 @@ export default function DocumentsPage() {
   }
 
   async function deleteDoc(id) {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm('Delete this document?')) return;
     try {
       await documentService.deleteDocument(id);
       setDocuments((prev) => prev.filter((d) => d.id !== id));
@@ -147,6 +148,8 @@ export default function DocumentsPage() {
       setError('Could not delete document. Please try again.');
     }
   }
+
+  const activeDeletingDoc = documents.find((d) => d.id === deletingDocId);
 
   return (
     <div className="documents-page-root">
@@ -213,7 +216,7 @@ export default function DocumentsPage() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => deleteDoc(doc.id)}
+                    onClick={() => setDeletingDocId(doc.id)}
                     style={{ background: 'none', border: 'none', color: 'var(--danger-color)', cursor: 'pointer', fontSize: '1.2em' }}
                   >
                     🗑️
@@ -241,6 +244,20 @@ export default function DocumentsPage() {
           {modalContent && modalContent.kind === 'image' && <img src={modalContent.url} alt={modalTitle} />}
         </div>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={deletingDocId !== null}
+        title="Delete Document?"
+        message="Are you sure you want to permanently delete this document? This action cannot be undone."
+        itemPreview={activeDeletingDoc ? `"${activeDeletingDoc.name}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingDocId(null)}
+        onConfirm={async () => {
+          const id = deletingDocId;
+          setDeletingDocId(null);
+          await deleteDoc(id);
+        }}
+      />
     </div>
   );
 }

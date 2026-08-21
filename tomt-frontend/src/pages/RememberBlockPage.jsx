@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 import * as rememberService from '../api/rememberService.js';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
 import './RememberBlockPage.css';
 
 /**
@@ -25,6 +26,8 @@ export default function RememberBlockPage() {
 
   const [historyVisible, setHistoryVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [deletingTaskId, setDeletingTaskId] = useState(null);
 
   useEffect(() => {
     document.title = 'Remember Block - Quick Notes';
@@ -102,8 +105,6 @@ export default function RememberBlockPage() {
   }
 
   async function deleteTask(id) {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm('Delete reminder?')) return;
     try {
       await rememberService.deleteRememberTask(id);
       setActiveTasks((prev) => prev.filter((t) => t.id !== id));
@@ -111,6 +112,8 @@ export default function RememberBlockPage() {
       setLoadError('Could not delete reminder. Please try again.');
     }
   }
+
+  const activeDeletingTask = activeTasks.find((t) => t.id === deletingTaskId);
 
   return (
     <div className="remember-page-root">
@@ -211,7 +214,7 @@ export default function RememberBlockPage() {
                     <button type="button" className="action-btn complete-btn" onClick={() => confirmComplete(task.id)}>
                       ✅ Done
                     </button>
-                    <button type="button" className="delete-btn" onClick={() => deleteTask(task.id)}>
+                    <button type="button" className="delete-btn" onClick={() => setDeletingTaskId(task.id)}>
                       🗑️
                     </button>
                   </div>
@@ -238,6 +241,20 @@ export default function RememberBlockPage() {
           )}
         </div>
       </div>
+
+      <ConfirmDeleteModal
+        isOpen={deletingTaskId !== null}
+        title="Delete Reminder?"
+        message="Are you sure you want to permanently delete this reminder? This action cannot be undone."
+        itemPreview={activeDeletingTask ? `"${activeDeletingTask.text}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingTaskId(null)}
+        onConfirm={async () => {
+          const id = deletingTaskId;
+          setDeletingTaskId(null);
+          await deleteTask(id);
+        }}
+      />
     </div>
   );
 }
