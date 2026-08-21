@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 
 import * as noteService from '../api/noteService.js';
@@ -46,6 +47,18 @@ export default function ImportantNotePage() {
   useEffect(() => {
     refresh();
   }, []);
+
+  // Lock body scroll when the modal is open
+  useEffect(() => {
+    if (modalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [modalOpen]);
 
   // Revoke any locally-created preview object URL on unmount/replace.
   useEffect(() => () => {
@@ -250,34 +263,51 @@ export default function ImportantNotePage() {
         </ul>
       </div>
 
-      <div id="note-modal" className="modal-backdrop" style={{ display: modalOpen ? 'flex' : 'none' }}>
-        <div className="modal-content">
-          <h3 id="modal-title">{modalNote ? modalNote.name : 'Note View'}</h3>
-          <div id="modal-body">
-            {modalNote && modalNote.imageUrl && <AuthenticatedImage src={modalNote.imageUrl} className="modal-image" alt={modalNote.name} />}
-            {modalNote && (
-              <>
-                <p>
-                  <strong>Message:</strong>
-                </p>
-                <p style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{modalNote.message}</p>
+      {modalOpen &&
+        modalNote &&
+        createPortal(
+          <div id="note-modal" className="important-note-modal-backdrop" onClick={closeModal}>
+            <div className="important-note-modal-card" onClick={(e) => e.stopPropagation()}>
+              <div className="important-note-modal-header">
+                <h3 className="important-note-modal-title">{modalNote.name}</h3>
+                <button type="button" className="important-note-modal-close-btn" onClick={closeModal} title="Close modal">
+                  ✕
+                </button>
+              </div>
+
+              <div className="important-note-modal-body">
+                {modalNote.imageUrl && (
+                  <div className="important-note-modal-image-wrapper">
+                    <AuthenticatedImage src={modalNote.imageUrl} className="modal-image" alt={modalNote.name} />
+                  </div>
+                )}
+
+                <div className="important-note-modal-field">
+                  <label className="important-note-modal-label">💡 Inspiration / Message</label>
+                  <div className="important-note-modal-text">{modalNote.message}</div>
+                </div>
+
                 {modalNote.link && (
-                  <p>
-                    <strong>Link:</strong>{' '}
-                    <a href={modalNote.link} target="_blank" rel="noreferrer" style={{ color: 'var(--secondary-color)', wordBreak: 'break-all' }}>
+                  <div className="important-note-modal-field">
+                    <label className="important-note-modal-label">🔗 Link</label>
+                    <a href={modalNote.link} target="_blank" rel="noreferrer" className="important-note-modal-link">
                       {modalNote.link}
                     </a>
-                  </p>
+                  </div>
                 )}
-                <p style={{ fontSize: '0.8em', color: 'var(--muted)' }}>Saved: {modalNote.date}</p>
-              </>
-            )}
-          </div>
-          <button type="button" className="btn-submit" style={{ marginTop: '20px', background: '#444' }} onClick={closeModal}>
-            Close
-          </button>
-        </div>
-      </div>
+
+                {modalNote.date && <div className="important-note-modal-date">Saved on: {modalNote.date}</div>}
+              </div>
+
+              <div className="important-note-modal-footer">
+                <button type="button" className="important-note-modal-footer-close" onClick={closeModal}>
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
 
       <ConfirmDeleteModal
         isOpen={deletingNoteId !== null}
