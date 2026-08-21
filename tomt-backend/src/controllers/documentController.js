@@ -4,12 +4,18 @@ const asyncHandler = require('../utils/asyncHandler');
 const { uploadBuffer, downloadToResponse, deleteFile } = require('../utils/gridfs');
 
 function serialize(doc) {
+  const isPdf =
+    doc.type === 'PDF' ||
+    (doc.mimeType && doc.mimeType.toLowerCase().includes('pdf')) ||
+    (doc.fileName && doc.fileName.toLowerCase().endsWith('.pdf'));
+
   return {
     id: doc._id,
     name: doc.name,
-    type: doc.type,
+    type: isPdf ? 'PDF' : 'Image',
     size: doc.size,
     fileName: doc.fileName,
+    mimeType: doc.mimeType,
   };
 }
 

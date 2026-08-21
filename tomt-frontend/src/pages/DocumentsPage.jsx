@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 
 import * as documentService from '../api/documentService.js';
@@ -100,7 +101,12 @@ export default function DocumentsPage() {
       const blob = await documentService.fetchDocumentBlob(doc.id);
       const url = URL.createObjectURL(blob);
 
-      if (doc.type === 'PDF') {
+      const isPdf =
+        doc.type === 'PDF' ||
+        (doc.mimeType && doc.mimeType.toLowerCase().includes('pdf')) ||
+        (doc.fileName && doc.fileName.toLowerCase().endsWith('.pdf'));
+
+      if (isPdf) {
         // Ported 1:1 from the original's mobile check - some mobile
         // browsers handle in-page PDF viewing poorly, so open a new tab
         // instead of showing the modal.
@@ -228,22 +234,24 @@ export default function DocumentsPage() {
         </ul>
       </div>
 
-      <div id="doc-viewer-modal" className="modal-backdrop" style={{ display: modalOpen ? 'flex' : 'none' }}>
-        <div className="modal-header">
-          <span id="modal-title">{modalTitle}</span>
-          <button
-            type="button"
-            onClick={closeViewer}
-            style={{ background: 'var(--danger-color)', color: 'white', border: 'none', padding: '5px 15px', borderRadius: '5px' }}
-          >
-            Close
-          </button>
-        </div>
-        <div id="modal-viewer-content" className="modal-viewer">
-          {modalContent && modalContent.kind === 'pdf' && <iframe src={modalContent.url} title="Document preview" />}
-          {modalContent && modalContent.kind === 'image' && <img src={modalContent.url} alt={modalTitle} />}
-        </div>
-      </div>
+      {modalOpen &&
+        createPortal(
+          <div id="doc-viewer-modal" className="modal-backdrop">
+            <div className="modal-content-container">
+              <div className="modal-header">
+                <span id="modal-title">{modalTitle}</span>
+                <button type="button" onClick={closeViewer} className="modal-close-btn">
+                  Close ✕
+                </button>
+              </div>
+              <div id="modal-viewer-content" className="modal-viewer">
+                {modalContent && modalContent.kind === 'pdf' && <iframe src={modalContent.url} title="Document preview" />}
+                {modalContent && modalContent.kind === 'image' && <img src={modalContent.url} alt={modalTitle} />}
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
 
       <ConfirmDeleteModal
         isOpen={deletingDocId !== null}
