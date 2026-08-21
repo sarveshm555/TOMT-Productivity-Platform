@@ -13,8 +13,10 @@ const MOTIVATE_TAG_KEY = 'motivateTag';
  * providing a premium, spacious, and inspiring daily quote experience.
  */
 export default function DashboardPage() {
-  const { user, logout } = useAuth();
-  const [tagText, setTagText] = useState('');
+  const { user, logout, updateMotivation } = useAuth();
+  const [tagText, setTagText] = useState(() => {
+    return window.localStorage.getItem(MOTIVATE_TAG_KEY) || '';
+  });
   const [confirmDeleteTagOpen, setConfirmDeleteTagOpen] = useState(false);
   const containerRef = useRef(null);
 
@@ -23,25 +25,43 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    const saved = window.localStorage.getItem(MOTIVATE_TAG_KEY);
-    if (saved) setTagText(saved);
-  }, []);
+    if (user && typeof user.motivateTag === 'string') {
+      setTagText(user.motivateTag);
+      if (user.motivateTag) {
+        window.localStorage.setItem(MOTIVATE_TAG_KEY, user.motivateTag);
+      } else {
+        window.localStorage.removeItem(MOTIVATE_TAG_KEY);
+      }
+    }
+  }, [user]);
 
-  function askForTag() {
+  async function askForTag() {
     // eslint-disable-next-line no-alert
     const tag = window.prompt('Enter your motivation for today:');
-    if (tag) {
+    if (tag !== null) {
       const trimmed = tag.trim();
+      setTagText(trimmed);
       if (trimmed) {
         window.localStorage.setItem(MOTIVATE_TAG_KEY, trimmed);
-        setTagText(trimmed);
+      } else {
+        window.localStorage.removeItem(MOTIVATE_TAG_KEY);
+      }
+      try {
+        await updateMotivation(trimmed);
+      } catch (err) {
+        console.error('Could not save motivation to server:', err);
       }
     }
   }
 
-  function deleteTag() {
+  async function deleteTag() {
     window.localStorage.removeItem(MOTIVATE_TAG_KEY);
     setTagText('');
+    try {
+      await updateMotivation('');
+    } catch (err) {
+      console.error('Could not clear motivation on server:', err);
+    }
   }
 
   return (

@@ -40,3 +40,7 @@ export function getMe() {
   return apiClient.get('/auth/me').then((res) => res.data);
 }
 
+export function updateMotivation(motivateTag) {
+  return apiClient.put('/auth/motivation', { motivateTag }).then((res) => res.data);
+}
+

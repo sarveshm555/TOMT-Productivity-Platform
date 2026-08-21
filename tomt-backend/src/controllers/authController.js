@@ -107,7 +107,7 @@ const register = asyncHandler(async (req, res) => {
     success: true,
     message: 'Account created successfully.',
     accessToken,
-    user: { id: user._id, username: user.username },
+    user: { id: user._id, username: user.username, motivateTag: user.motivateTag || '' },
   });
 });
 
@@ -142,7 +142,7 @@ const login = asyncHandler(async (req, res) => {
     success: true,
     message: 'Access granted.',
     accessToken,
-    user: { id: user._id, username: user.username },
+    user: { id: user._id, username: user.username, motivateTag: user.motivateTag || '' },
   });
 });
 
@@ -257,7 +257,30 @@ const me = asyncHandler(async (req, res) => {
   }
   res.status(200).json({
     success: true,
-    user: { id: user._id, username: user.username, createdAt: user.createdAt },
+    user: { id: user._id, username: user.username, motivateTag: user.motivateTag || '', createdAt: user.createdAt },
+  });
+});
+
+/**
+ * PUT /api/auth/motivation
+ * Updates the user's "Today's Motivation" string in MongoDB.
+ */
+const updateMotivation = asyncHandler(async (req, res) => {
+  const { motivateTag } = req.body;
+  const tag = typeof motivateTag === 'string' ? motivateTag.trim() : '';
+
+  const user = await User.findById(req.user.id);
+  if (!user) {
+    throw new ApiError(404, 'User not found.');
+  }
+
+  user.motivateTag = tag;
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    motivateTag: user.motivateTag,
+    user: { id: user._id, username: user.username, motivateTag: user.motivateTag, createdAt: user.createdAt },
   });
 });
 
@@ -270,4 +293,5 @@ module.exports = {
   logout,
   resetPassword,
   me,
+  updateMotivation,
 };

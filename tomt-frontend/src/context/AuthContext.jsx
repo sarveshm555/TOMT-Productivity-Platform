@@ -113,6 +113,16 @@ export function AuthProvider({ children }) {
     return authService.resetPassword(username, newPassword, confirmPassword);
   }, []);
 
+  const updateMotivation = useCallback(async (tagText) => {
+    const data = await authService.updateMotivation(tagText);
+    if (data && data.user) {
+      setUser(data.user);
+    } else {
+      setUser((prev) => (prev ? { ...prev, motivateTag: data.motivateTag } : prev));
+    }
+    return data.motivateTag;
+  }, []);
+
   const value = {
     user,
     accessToken,
@@ -123,6 +133,7 @@ export function AuthProvider({ children }) {
     login,
     logout,
     resetPassword,
+    updateMotivation,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

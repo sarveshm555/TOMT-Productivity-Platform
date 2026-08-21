@@ -27,6 +27,11 @@ const userSchema = new mongoose.Schema(
       default: null,
       select: false,
     },
+    // User's "Today's Motivation" string synced across all devices.
+    motivateTag: {
+      type: String,
+      default: '',
+    },
   },
   { timestamps: true }
 );
