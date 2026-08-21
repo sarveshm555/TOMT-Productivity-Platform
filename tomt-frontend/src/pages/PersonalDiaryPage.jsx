@@ -262,26 +262,31 @@ export default function PersonalDiaryPage() {
   return (
     <div className="personal-diary-page-root">
       <div className="app-container">
-        <div className="header-row">
+        <div className="top-nav-stack">
           <Link to="/hub" className="back-button">
             🏠 Back to Dashboard
           </Link>
-          <div className="header-actions">
-            <button
-              type="button"
-              className="btn-edit-appearance"
-              title="Customize diary appearance (font, colors, cover)"
-              onClick={() => setShowEditModal(true)}
-            >
-              ✏️ Edit
-            </button>
-            <button type="button" className="btn-view-history" onClick={() => navigate('/diary/view')}>
-              📖 View Diary
-            </button>
-          </div>
+          <button
+            type="button"
+            className="btn-view-history"
+            onClick={() => navigate('/diary/view')}
+          >
+            📖 View History
+          </button>
         </div>
 
-        <h2>{isEditing ? '✏️ Edit Diary Entry' : 'My Personal Diary'}</h2>
+        <h2>{isEditing ? '✏️ Edit Diary Entry' : '✍️ My Personal Diary'}</h2>
+
+        <div className="settings-trigger-row">
+          <button
+            type="button"
+            className="btn-edit-appearance"
+            title="Customize diary appearance (font, colors, cover)"
+            onClick={() => setShowEditModal(true)}
+          >
+            ⚙️ Edit Theme/Settings
+          </button>
+        </div>
 
         {isEditing && editEntryMeta && (
           <div className="diary-edit-banner">
