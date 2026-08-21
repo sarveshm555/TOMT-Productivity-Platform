@@ -53,18 +53,20 @@ export default function ReflectionsPage() {
   const viewCardRef = useRef(null);
   const viewerBodyRef = useRef(null);
 
-  // Edit questions modal
+  // Edit questions modal & safe deletion state
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [newQuestionText, setNewQuestionText] = useState('');
+  const [deletingQuestionIndex, setDeletingQuestionIndex] = useState(null);
 
   useEffect(() => {
     document.title = 'Life Manager App - Ask Powerful Questions';
   }, []);
 
   useEffect(() => {
-    if (viewModalOpen) {
+    const isAnyModalOpen = diaryModalOpen || viewModalOpen || editModalOpen || deletingQuestionIndex !== null;
+    if (isAnyModalOpen) {
       document.body.style.overflow = 'hidden';
-      if (viewerBodyRef.current) {
+      if (viewModalOpen && viewerBodyRef.current) {
         viewerBodyRef.current.scrollTop = 0;
       }
     } else {
@@ -73,7 +75,7 @@ export default function ReflectionsPage() {
     return () => {
       document.body.style.overflow = '';
     };
-  }, [viewModalOpen, viewedEntry]);
+  }, [diaryModalOpen, viewModalOpen, editModalOpen, deletingQuestionIndex, viewedEntry]);
 
   useEffect(() => {
     refresh();
@@ -372,29 +374,35 @@ export default function ReflectionsPage() {
 
       {/* Edit questions modal */}
       <div id="edit-questions-modal" className={`modal-backdrop${editModalOpen ? ' visible' : ''}`}>
-        <div className="modal-content">
-          <h3>✏️ Edit Your Questions</h3>
-          <ul id="question-list" style={{ padding: 0, listStyle: 'none' }}>
-            {questions.map((q, i) => (
-              <li key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px', borderBottom: '1px solid #333' }}>
-                <span>{q}</span>
-                <button
-                  type="button"
-                  className="action-button"
-                  style={{ background: 'red', color: 'white', padding: '2px 8px' }}
-                  onClick={() => handleRemoveQuestion(i)}
-                >
-                  X
-                </button>
-              </li>
-            ))}
-          </ul>
-          <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
+        <div className="modal-content edit-questions-modal-content">
+          <div className="edit-questions-modal-header">
+            <h3>✏️ Edit Your Questions</h3>
+          </div>
+
+          <div className="edit-questions-list-container">
+            <ul id="question-list">
+              {questions.map((q, i) => (
+                <li key={i} className="question-list-item">
+                  <span>{q}</span>
+                  <button
+                    type="button"
+                    className="btn-delete-q"
+                    title="Delete Question"
+                    onClick={() => setDeletingQuestionIndex(i)}
+                  >
+                    X
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="edit-questions-input-bar">
             <input
               type="text"
               id="new-question-input"
               placeholder="Enter new question..."
-              style={{ flex: 1, padding: '10px', background: '#1f202a', color: 'white', border: '1px solid #555', borderRadius: '5px' }}
+              className="new-question-input"
               value={newQuestionText}
               onChange={(e) => setNewQuestionText(e.target.value)}
             />
@@ -402,13 +410,51 @@ export default function ReflectionsPage() {
               Add
             </button>
           </div>
-          <div style={{ marginTop: '20px', textAlign: 'right' }}>
+
+          <div className="edit-questions-footer">
             <button type="button" id="close-edit-modal" className="action-button secondary" onClick={() => setEditModalOpen(false)}>
               Close
             </button>
           </div>
         </div>
       </div>
+
+      {/* Safe Question Deletion Confirmation Dialog */}
+      {deletingQuestionIndex !== null && (
+        <div className="modal-backdrop visible confirm-dialog-backdrop">
+          <div className="modal-content confirm-dialog-content">
+            <h3>Delete this question?</h3>
+            <p className="confirm-dialog-text">
+              Are you sure you want to delete this question? This action cannot be undone.
+            </p>
+            {questions[deletingQuestionIndex] && (
+              <div className="confirm-question-preview">
+                "{questions[deletingQuestionIndex]}"
+              </div>
+            )}
+            <div className="confirm-dialog-actions">
+              <button
+                type="button"
+                className="action-button secondary"
+                onClick={() => setDeletingQuestionIndex(null)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="action-button danger-btn"
+                onClick={async () => {
+                  const idx = deletingQuestionIndex;
+                  setDeletingQuestionIndex(null);
+                  await handleRemoveQuestion(idx);
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -182,11 +182,14 @@
   color: #f0f4f8;
   padding: 24px;
   border-radius: 12px;
-  border: 1px solid var(--primary-color);
+  border: 1.5px solid var(--primary-color);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   box-sizing: border-box;
   width: 100%;
   max-width: 720px;
+  height: auto;
+  min-height: min-content;
+  margin-bottom: 20px;
 }
 
 /* Dedicated Full-Screen Reflection Viewer */
@@ -265,9 +268,10 @@
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 20px 16px 100px;
+  padding: 20px 16px 120px;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
 }
 
 .reflections-page-root .reflection-meta-header {
@@ -367,7 +371,164 @@
   transform: translateY(-1px);
 }
 
-/* New, minimal - see TargetsPage.css for why. */
+/* Edit Questions Modal Styles */
+.reflections-page-root .edit-questions-modal-content {
+  max-height: 85dvh;
+  width: 90%;
+  max-width: 550px;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+
+.reflections-page-root .edit-questions-modal-header {
+  flex-shrink: 0;
+  margin-bottom: 15px;
+}
+
+.reflections-page-root .edit-questions-modal-header h3 {
+  margin: 0;
+  color: var(--heading-color);
+  font-size: 1.2rem;
+}
+
+.reflections-page-root .edit-questions-list-container {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 4px;
+  margin-bottom: 15px;
+  max-height: 50dvh;
+}
+
+.reflections-page-root #question-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reflections-page-root .question-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background-color: #1f202a;
+  border-radius: 6px;
+  border: 1px solid #3f404e;
+}
+
+.reflections-page-root .question-list-item span {
+  flex: 1;
+  color: #f0f4f8;
+  font-size: 0.95rem;
+  word-break: break-word;
+}
+
+.reflections-page-root .btn-delete-q {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-weight: bold;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.2s;
+}
+
+.reflections-page-root .btn-delete-q:hover {
+  background-color: #bd2130;
+}
+
+.reflections-page-root .edit-questions-input-bar {
+  flex-shrink: 0;
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.reflections-page-root .new-question-input {
+  flex: 1;
+  padding: 10px 14px;
+  background-color: #1f202a;
+  color: white;
+  border: 1px solid #3f404e;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.reflections-page-root .new-question-input:focus {
+  border-color: var(--primary-color);
+}
+
+.reflections-page-root .edit-questions-footer {
+  flex-shrink: 0;
+  margin-top: 15px;
+  text-align: right;
+}
+
+/* Confirmation Dialog */
+.reflections-page-root .confirm-dialog-backdrop {
+  z-index: 100000;
+}
+
+.reflections-page-root .confirm-dialog-content {
+  max-width: 440px;
+  width: 90%;
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--danger-color);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+}
+
+.reflections-page-root .confirm-dialog-content h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: var(--heading-color);
+  font-size: 1.2rem;
+}
+
+.reflections-page-root .confirm-dialog-text {
+  color: var(--text-color);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.reflections-page-root .confirm-question-preview {
+  background-color: #1f202a;
+  border-left: 3px solid var(--secondary-color);
+  padding: 10px 14px;
+  color: #f0f4f8;
+  font-style: italic;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  word-break: break-word;
+}
+
+.reflections-page-root .confirm-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.reflections-page-root .danger-btn {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.reflections-page-root .danger-btn:hover {
+  background-color: #bd2130;
+}
+
 .reflections-page-root .reflections-error {
   color: var(--danger-color);
   margin-bottom: 15px;
