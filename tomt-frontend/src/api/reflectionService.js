@@ -16,6 +16,9 @@ export function listEntries() {
 export function saveEntry(answers) {
   return apiClient.post('/reflections/entries', { answers }).then((res) => res.data.entry);
 }
+export function deleteEntry(dateKey) {
+  return apiClient.delete(`/reflections/entries/${dateKey}`).then((res) => res.data);
+}
 export function clearEntries() {
   return apiClient.delete('/reflections/entries').then((res) => res.data);
 }

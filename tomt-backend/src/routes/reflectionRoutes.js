@@ -6,6 +6,7 @@ const {
   removeQuestion,
   listEntries,
   saveEntry,
+  deleteEntry,
   clearEntries,
 } = require('../controllers/reflectionController');
 const { listProblems, createProblem, deleteProblem, clearProblems } = require('../controllers/problemController');
@@ -22,6 +23,7 @@ router.delete('/questions/:index', removeQuestion);
 // /api/reflections/entries - powerful_questions.html's diary entries
 router.get('/entries', listEntries);
 router.post('/entries', saveEntry);
+router.delete('/entries/:dateKey', deleteEntry);
 router.delete('/entries', clearEntries);
 
 // /api/reflections/problems - problem.html

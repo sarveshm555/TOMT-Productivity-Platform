@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 
 import * as reflectionService from '../api/reflectionService.js';
@@ -52,22 +53,27 @@ export default function ReflectionsPage() {
   const [viewedEntry, setViewedEntry] = useState(null);
   const viewCardRef = useRef(null);
   const viewerBodyRef = useRef(null);
+  const diaryBodyRef = useRef(null);
 
   // Edit questions modal & safe deletion state
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [newQuestionText, setNewQuestionText] = useState('');
   const [deletingQuestionIndex, setDeletingQuestionIndex] = useState(null);
+  const [deletingEntryKey, setDeletingEntryKey] = useState(null);
 
   useEffect(() => {
     document.title = 'Life Manager App - Ask Powerful Questions';
   }, []);
 
   useEffect(() => {
-    const isAnyModalOpen = diaryModalOpen || viewModalOpen || editModalOpen || deletingQuestionIndex !== null;
+    const isAnyModalOpen = diaryModalOpen || viewModalOpen || editModalOpen || deletingQuestionIndex !== null || deletingEntryKey !== null;
     if (isAnyModalOpen) {
       document.body.style.overflow = 'hidden';
       if (viewModalOpen && viewerBodyRef.current) {
         viewerBodyRef.current.scrollTop = 0;
+      }
+      if (diaryModalOpen && diaryBodyRef.current) {
+        diaryBodyRef.current.scrollTop = 0;
       }
     } else {
       document.body.style.overflow = '';
@@ -75,7 +81,7 @@ export default function ReflectionsPage() {
     return () => {
       document.body.style.overflow = '';
     };
-  }, [diaryModalOpen, viewModalOpen, editModalOpen, deletingQuestionIndex, viewedEntry]);
+  }, [diaryModalOpen, viewModalOpen, editModalOpen, deletingQuestionIndex, deletingEntryKey, viewedEntry, currentStep]);
 
   useEffect(() => {
     refresh();
@@ -128,7 +134,7 @@ export default function ReflectionsPage() {
   }
 
   async function handleDiarySubmit(e) {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     const finalAnswers = { ...currentAnswers, [currentStep]: answerDraft.trim() };
     const answersPayload = questions.map((q, i) => ({ question: q, answer: finalAnswers[i] || '' }));
 
@@ -178,14 +184,20 @@ export default function ReflectionsPage() {
     }
   }
 
-  async function handleClearAllData() {
-    // eslint-disable-next-line no-alert
-    if (!window.confirm('Clear all data?')) return;
+  async function handleDeleteEntry(dateKey) {
     try {
-      await reflectionService.clearEntries();
-      setEntries({});
+      await reflectionService.deleteEntry(dateKey);
+      setEntries((prev) => {
+        const copy = { ...prev };
+        delete copy[dateKey];
+        return copy;
+      });
+      if (viewedEntry && viewedEntry.dateKey === dateKey) {
+        setViewModalOpen(false);
+        setViewedEntry(null);
+      }
     } catch (err) {
-      setError('Could not clear data. Please try again.');
+      setError('Could not delete reflection entry. Please try again.');
     }
   }
 
@@ -220,15 +232,6 @@ export default function ReflectionsPage() {
                   ⚠️ Problem Solver
                 </button>
               </Link>
-              <button
-                type="button"
-                className="action-button secondary"
-                id="clear-diary-data"
-                style={{ backgroundColor: '#dc3545' }}
-                onClick={handleClearAllData}
-              >
-                Clear All Data
-              </button>
             </div>
 
             <div className="search-container">
@@ -262,20 +265,40 @@ export default function ReflectionsPage() {
         </div>
       </div>
 
-      {/* Diary (question-answering) modal */}
-      <div id="diary-modal" className={`modal-backdrop${diaryModalOpen ? ' visible' : ''}`}>
-        <div className="modal-content">
-          <h3 id="form-title">📓 Question ({currentStep + 1}/{questions.length})</h3>
-          <form id="diary-form" onSubmit={handleDiarySubmit}>
-            <p id="current-datetime">{currentDatetime}</p>
-            <textarea
-              id="diary-answer"
-              required
-              placeholder={questions[currentStep] || ''}
-              value={answerDraft}
-              onChange={(e) => setAnswerDraft(e.target.value)}
-            />
-            <div className="modal-actions" style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+      {/* Diary (New Reflection) modal via React Portal */}
+      {diaryModalOpen && createPortal(
+        <div id="diary-modal" className="modal-backdrop visible">
+          <div className="modal-content new-reflection-modal-content">
+            <div className="new-reflection-header">
+              <h3 id="form-title">📓 Question ({currentStep + 1}/{questions.length})</h3>
+              <button
+                type="button"
+                className="btn-close-x"
+                onClick={() => setDiaryModalOpen(false)}
+                aria-label="Close form"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="new-reflection-body" ref={diaryBodyRef}>
+              <p id="current-datetime">📅 {currentDatetime}</p>
+
+              <div className="current-question-box">
+                <span className="question-label">Question {currentStep + 1}:</span>
+                <p className="question-text">{questions[currentStep] || 'Reflect on your day...'}</p>
+              </div>
+
+              <textarea
+                id="diary-answer"
+                required
+                placeholder="Type your answer here..."
+                value={answerDraft}
+                onChange={(e) => setAnswerDraft(e.target.value)}
+              />
+            </div>
+
+            <div className="new-reflection-footer">
               <button
                 type="button"
                 className="action-button secondary"
@@ -295,20 +318,22 @@ export default function ReflectionsPage() {
                 Next Question
               </button>
               <button
-                type="submit"
+                type="button"
                 id="save-entry"
                 style={{ display: currentStep === questions.length - 1 ? 'inline-block' : 'none' }}
                 className="action-button primary"
+                onClick={handleDiarySubmit}
               >
                 Save Reflection
               </button>
             </div>
-          </form>
-        </div>
-      </div>
+          </div>
+        </div>,
+        document.body
+      )}
 
-      {/* Dedicated Full-Screen Reflection Viewer */}
-      {viewModalOpen && viewedEntry && (
+      {/* Dedicated Full-Screen Reflection Viewer via React Portal */}
+      {viewModalOpen && viewedEntry && createPortal(
         <div id="view-entry-modal" className="reflection-viewer-overlay">
           <div className="reflection-viewer-header">
             <button
@@ -356,6 +381,16 @@ export default function ReflectionsPage() {
                   </div>
                 ))}
               </div>
+
+              <div className="entry-card-actions" style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #2f303d', textAlign: 'right' }}>
+                <button
+                  type="button"
+                  className="action-button danger-btn"
+                  onClick={() => setDeletingEntryKey(viewedEntry.dateKey)}
+                >
+                  🗑️ Delete Reflection
+                </button>
+              </div>
             </div>
           </div>
 
@@ -368,59 +403,76 @@ export default function ReflectionsPage() {
             >
               📥 Download PNG / PDF
             </button>
+            <button
+              type="button"
+              className="btn-delete-reflection"
+              onClick={() => setDeletingEntryKey(viewedEntry.dateKey)}
+            >
+              🗑️ Delete Reflection
+            </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
-      {/* Edit questions modal */}
-      <div id="edit-questions-modal" className={`modal-backdrop${editModalOpen ? ' visible' : ''}`}>
-        <div className="modal-content edit-questions-modal-content">
-          <div className="edit-questions-modal-header">
-            <h3>✏️ Edit Your Questions</h3>
-          </div>
+      {/* Edit questions modal via React Portal */}
+      {editModalOpen && createPortal(
+        <div id="edit-questions-modal" className="modal-backdrop visible">
+          <div className="modal-content edit-questions-modal-content">
+            <div className="edit-questions-modal-header">
+              <h3>✏️ Edit Your Questions</h3>
+            </div>
 
-          <div className="edit-questions-list-container">
-            <ul id="question-list">
-              {questions.map((q, i) => (
-                <li key={i} className="question-list-item">
-                  <span>{q}</span>
-                  <button
-                    type="button"
-                    className="btn-delete-q"
-                    title="Delete Question"
-                    onClick={() => setDeletingQuestionIndex(i)}
-                  >
-                    X
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
+            <div className="edit-questions-list-container">
+              <ul id="question-list">
+                {questions.map((q, i) => (
+                  <li key={i} className="question-list-item">
+                    <span>{i + 1}. {q}</span>
+                    <button
+                      type="button"
+                      className="btn-delete-q"
+                      title="Delete Question"
+                      onClick={() => setDeletingQuestionIndex(i)}
+                    >
+                      X
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <div className="edit-questions-input-bar">
-            <input
-              type="text"
-              id="new-question-input"
-              placeholder="Enter new question..."
-              className="new-question-input"
-              value={newQuestionText}
-              onChange={(e) => setNewQuestionText(e.target.value)}
-            />
-            <button type="button" id="add-question-btn" className="action-button primary" onClick={handleAddQuestion}>
-              Add
-            </button>
-          </div>
+            <div className="edit-questions-input-bar">
+              <input
+                type="text"
+                id="new-question-input"
+                placeholder="Enter new question..."
+                className="new-question-input"
+                value={newQuestionText}
+                onChange={(e) => setNewQuestionText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleAddQuestion();
+                  }
+                }}
+              />
+              <button type="button" id="add-question-btn" className="action-button primary" onClick={handleAddQuestion}>
+                Add
+              </button>
+            </div>
 
-          <div className="edit-questions-footer">
-            <button type="button" id="close-edit-modal" className="action-button secondary" onClick={() => setEditModalOpen(false)}>
-              Close
-            </button>
+            <div className="edit-questions-footer">
+              <button type="button" id="close-edit-modal" className="action-button secondary" onClick={() => setEditModalOpen(false)}>
+                Close
+              </button>
+            </div>
           </div>
-        </div>
-      </div>
+        </div>,
+        document.body
+      )}
 
-      {/* Safe Question Deletion Confirmation Dialog */}
-      {deletingQuestionIndex !== null && (
+      {/* Safe Question Deletion Confirmation Dialog via React Portal */}
+      {deletingQuestionIndex !== null && createPortal(
         <div className="modal-backdrop visible confirm-dialog-backdrop">
           <div className="modal-content confirm-dialog-content">
             <h3>Delete this question?</h3>
@@ -453,7 +505,41 @@ export default function ReflectionsPage() {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Safe Reflection Entry Deletion Confirmation Dialog via React Portal */}
+      {deletingEntryKey !== null && createPortal(
+        <div className="modal-backdrop visible confirm-dialog-backdrop">
+          <div className="modal-content confirm-dialog-content">
+            <h3>Delete this reflection?</h3>
+            <p className="confirm-dialog-text">
+              Are you sure you want to delete the reflection for <strong>{deletingEntryKey}</strong>? This action cannot be undone.
+            </p>
+            <div className="confirm-dialog-actions">
+              <button
+                type="button"
+                className="action-button secondary"
+                onClick={() => setDeletingEntryKey(null)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="action-button danger-btn"
+                onClick={async () => {
+                  const key = deletingEntryKey;
+                  setDeletingEntryKey(null);
+                  await handleDeleteEntry(key);
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
       )}
     </div>
   );

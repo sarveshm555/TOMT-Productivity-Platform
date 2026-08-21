@@ -107,6 +107,19 @@ const saveEntry = asyncHandler(async (req, res) => {
 });
 
 /**
+ * DELETE /api/reflections/entries/:dateKey
+ * Deletes a single reflection entry for the user.
+ */
+const deleteEntry = asyncHandler(async (req, res) => {
+  const { dateKey } = req.params;
+  const deleted = await ReflectionEntry.findOneAndDelete({ userId: req.user.id, dateKey });
+  if (!deleted) {
+    throw new ApiError(404, 'Reflection entry not found.');
+  }
+  res.status(200).json({ success: true, message: 'Reflection entry deleted.' });
+});
+
+/**
  * DELETE /api/reflections/entries
  * Ported from clear-diary-data's handler (the confirm() dialog itself is a
  * frontend concern).
@@ -122,5 +135,6 @@ module.exports = {
   removeQuestion,
   listEntries,
   saveEntry,
+  deleteEntry,
   clearEntries,
 };
