@@ -336,20 +336,12 @@ export default function ReflectionsPage() {
       {viewModalOpen && viewedEntry && createPortal(
         <div id="view-entry-modal" className="reflection-viewer-overlay">
           <div className="reflection-viewer-header">
-            <button
-              type="button"
-              id="close-view-modal"
-              className="btn-back-reflection"
-              onClick={() => setViewModalOpen(false)}
-            >
-              ← Back
-            </button>
-
             <span className="reflection-viewer-title">Reflection Details</span>
 
             <button
               type="button"
               className="btn-close-x"
+              id="close-view-modal"
               onClick={() => setViewModalOpen(false)}
               aria-label="Close reflection view"
             >
@@ -380,16 +372,6 @@ export default function ReflectionsPage() {
                     </div>
                   </div>
                 ))}
-              </div>
-
-              <div className="entry-card-actions" style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #2f303d', textAlign: 'right' }}>
-                <button
-                  type="button"
-                  className="action-button danger-btn"
-                  onClick={() => setDeletingEntryKey(viewedEntry.dateKey)}
-                >
-                  🗑️ Delete Reflection
-                </button>
               </div>
             </div>
           </div>

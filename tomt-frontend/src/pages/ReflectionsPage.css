@@ -224,6 +224,16 @@
   gap: 12px;
 }
 
+#current-datetime,
+.reflections-page-root #current-datetime {
+  color: #e0e6ed;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 4px;
+  display: block;
+}
+
 .new-reflection-footer {
   flex-shrink: 0;
   display: flex;
@@ -453,24 +463,30 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 12px;
   padding: 0 16px;
   z-index: 10;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.4);
+  box-sizing: border-box;
 }
 
 .btn-download-reflection {
-  width: 100%;
-  max-width: 450px;
-  padding: 12px 24px;
+  flex: 1;
+  max-width: 300px;
+  padding: 12px 16px;
   background-color: var(--primary-color, #9c27b0);
   color: #ffffff;
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
   box-shadow: 0 4px 10px rgba(156, 39, 176, 0.3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
 }
 
 .btn-download-reflection:hover {
@@ -479,7 +495,9 @@
 }
 
 .btn-delete-reflection {
-  padding: 12px 20px;
+  flex: 1;
+  max-width: 220px;
+  padding: 12px 16px;
   background-color: var(--danger-color, #dc3545);
   color: #ffffff;
   border: none;
@@ -489,11 +507,28 @@
   cursor: pointer;
   transition: all 0.2s;
   box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
 }
 
 .btn-delete-reflection:hover {
   background-color: #bd2130;
   transform: translateY(-1px);
+}
+
+@media (max-width: 600px) {
+  .reflection-viewer-footer {
+    height: 64px;
+    padding: 0 10px;
+    gap: 8px;
+  }
+  .btn-download-reflection,
+  .btn-delete-reflection {
+    font-size: 0.85rem;
+    padding: 10px 8px;
+  }
 }
 
 /* Edit Questions Modal Styles */
