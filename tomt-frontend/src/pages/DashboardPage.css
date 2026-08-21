@@ -272,18 +272,83 @@
 }
 
 @media (max-width: 600px) {
+  .dashboard-page-root .dashboard-container {
+    width: calc(100% - 32px);
+    max-width: 600px;
+    box-sizing: border-box;
+    padding: 28px 16px 32px;
+    margin: auto;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .dashboard-page-root h1 {
+    font-size: clamp(1.4rem, 6.5vw, 2.2rem);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .dashboard-page-root .modules-layout {
+    gap: 16px;
+    width: 100%;
+  }
+
+  .dashboard-page-root .modules-row {
+    width: 100%;
+  }
+
   .dashboard-page-root .modules-row.row-top {
     flex-direction: column;
-    gap: 15px;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .dashboard-page-root .modules-row.row-middle {
+    margin-top: 0;
+    width: 100%;
+  }
+
+  .dashboard-page-root .modules-row.row-bottom {
+    margin-top: 36px;
+    justify-content: center;
   }
 
   .dashboard-page-root .notification-button {
     width: 100%;
+    min-height: 56px;
+    border-radius: 14px;
+    padding: 0 16px;
+    font-size: 0.9rem;
+    box-sizing: border-box;
   }
 
   .dashboard-page-root .btn-remember,
   .dashboard-page-root .btn-target {
-    width: 180px;
+    width: 100%;
+    min-height: 56px;
+    border-radius: 32px;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 16px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    box-sizing: border-box;
+  }
+
+  .dashboard-page-root .action-button .btn-label {
+    flex: initial;
+  }
+
+  .dashboard-page-root .go-to-dashboard-btn {
+    padding: 12px 22px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    display: inline-block;
+    width: auto;
   }
 
   .dashboard-page-root .tag-btn-container {
