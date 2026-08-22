@@ -118,31 +118,18 @@ export default function RememberBlockPage() {
   return (
     <div className="remember-page-root">
       <div className="app-container">
-        <h2>📌 Quick Remember Block</h2>
-        <div className="content">
-          <div className="header-controls">
-            <Link
-              to="/dashboard"
-              className="go-to-dashboard-btn"
-              style={{
-                padding: '10px 15px',
-                backgroundColor: '#5c6bc0',
-                color: 'white',
-                borderRadius: '6px',
-                textDecoration: 'none',
-                fontWeight: 'bold',
-                fontSize: '0.9em',
-                flex: 1,
-                textAlign: 'center',
-              }}
-            >
-              🏠 Back to Dashboard
-            </Link>
-            <button type="button" className="btn-toggle-add" onClick={toggleAddForm}>
-              {formVisible ? '❌ Close Form' : '➕ Add New Task'}
-            </button>
-          </div>
+        <div className="top-nav-stack">
+          <Link to="/dashboard" className="go-to-dashboard-btn">
+            🏠 Back to Dashboard
+          </Link>
+          <button type="button" className="btn-toggle-add" onClick={toggleAddForm}>
+            {formVisible ? '❌ Close Form' : '➕ Add Priority Task'}
+          </button>
+        </div>
 
+        <h2>📌 Quick Remember Block</h2>
+
+        <div className="content">
           <div className="search-box">
             <input
               type="text"
@@ -154,7 +141,7 @@ export default function RememberBlockPage() {
           </div>
 
           {formVisible && (
-            <div id="add-form-container" style={{ display: 'block' }}>
+            <div id="add-form-container">
               <textarea
                 id="task-input"
                 placeholder="Enter new note or task to remember..."
@@ -183,7 +170,7 @@ export default function RememberBlockPage() {
                 </div>
               </div>
               <button id="add-note-btn" type="button" onClick={addTask}>
-                Add Priority Task
+                ✨ Save Priority Task
               </button>
               {addError && <div className="remember-form-error">{addError}</div>}
             </div>
@@ -195,9 +182,15 @@ export default function RememberBlockPage() {
 
           <ul id="active-tasks-container">
             {loading ? (
-              <li style={{ textAlign: 'center', color: '#666', padding: '15px' }}>Loading...</li>
+              <li className="remember-empty-state">
+                <div className="empty-text">Loading reminders...</div>
+              </li>
             ) : filteredActiveTasks.length === 0 ? (
-              <li style={{ textAlign: 'center', color: '#666', padding: '15px' }}>No reminders found.</li>
+              <li className="remember-empty-state">
+                <div className="empty-icon">📌</div>
+                <div className="empty-text">No active reminders found</div>
+                <div className="empty-subtext">Click "Add Priority Task" above to save quick notes & reminders.</div>
+              </li>
             ) : (
               filteredActiveTasks.map((task) => (
                 <li
@@ -205,16 +198,19 @@ export default function RememberBlockPage() {
                   className={`task-item priority-${task.priority.toLowerCase().replace(' ', '-')}`}
                 >
                   <div className="task-details">
-                    <span style={{ fontWeight: 'bold' }}>{task.text}</span>
+                    <span className="task-title-text">{task.text}</span>
                     <div className="task-meta">
-                      <strong>{task.priority}</strong> | Due: {formatDueDateForDisplay(task.dueDate)}
+                      <span className={`priority-badge badge-${task.priority.toLowerCase().replace(' ', '-')}`}>
+                        {task.priority}
+                      </span>
+                      <span className="due-date-label">Due: {formatDueDateForDisplay(task.dueDate)}</span>
                     </div>
                   </div>
                   <div className="task-actions">
                     <button type="button" className="action-btn complete-btn" onClick={() => confirmComplete(task.id)}>
                       ✅ Done
                     </button>
-                    <button type="button" className="delete-btn" onClick={() => setDeletingTaskId(task.id)}>
+                    <button type="button" className="delete-btn" onClick={() => setDeletingTaskId(task.id)} title="Delete Reminder">
                       🗑️
                     </button>
                   </div>
@@ -224,18 +220,24 @@ export default function RememberBlockPage() {
           </ul>
 
           <button id="toggle-history-btn" type="button" onClick={toggleHistory}>
-            {historyVisible ? 'Hide History' : 'View History'}
+            {historyVisible ? '🔒 Hide History' : '📜 View Completed History'}
           </button>
 
           {historyVisible && (
-            <div id="history-section" style={{ display: 'block' }}>
+            <div id="history-section">
               <ul id="history-container">
-                {historyTasks.map((t) => (
-                  <li key={t.id} className="history-item">
-                    <span style={{ textDecoration: 'line-through', opacity: 0.6 }}>{t.text}</span>
-                    <div style={{ fontSize: '0.8em', color: '#37FF8B', marginTop: '5px' }}>✅ Completed</div>
+                {historyTasks.length === 0 ? (
+                  <li className="remember-empty-state">
+                    <div className="empty-subtext">No completed history records yet.</div>
                   </li>
-                ))}
+                ) : (
+                  historyTasks.map((t) => (
+                    <li key={t.id} className="history-item">
+                      <span className="history-text">{t.text}</span>
+                      <div className="history-completed-tag">✅ Completed</div>
+                    </li>
+                  ))
+                )}
               </ul>
             </div>
           )}

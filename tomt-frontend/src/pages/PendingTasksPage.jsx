@@ -127,112 +127,125 @@ export default function PendingTasksPage() {
   return (
     <div className="pending-tasks-page-root">
       <div className="app-container">
-        <div className="back-home-container">
-          <Link to="/hub" className="back-home-button">
+        <div className="top-nav-stack">
+          <Link to="/dashboard" className="go-to-dashboard-btn">
             🏠 Back to Dashboard
           </Link>
         </div>
 
-        <div className="flip-wrapper">
-          <div className="content-wrapper">
-            <div id="pending-tasks">
-              <h2>⏳ Past Pending Task Manager</h2>
-              <p>Carry over incomplete goals or manually add tasks from previous sessions.</p>
+        <h2>⏳ Past Pending Task Manager</h2>
 
-              <div className="btn-container">
-                <button type="button" className="btn-stylized" id="open-past-task-modal" onClick={openModal}>
-                  ➕ Add Past Pending Task
-                </button>
-                <button type="button" className="btn-stylized" id="move-all-pending" onClick={moveAllPending}>
-                  🔄 Move All to Today&rsquo;s Schedule
-                </button>
+        <div className="content-wrapper">
+          <p className="subtitle">Carry over incomplete goals or manually add tasks from previous sessions.</p>
+
+          <div className="btn-container">
+            <button type="button" className="btn-stylized btn-primary" id="open-past-task-modal" onClick={openModal}>
+              ➕ Add Past Pending Task
+            </button>
+            <button type="button" className="btn-stylized btn-secondary" id="move-all-pending" onClick={moveAllPending}>
+              🔄 Move All to Today&rsquo;s Schedule
+            </button>
+          </div>
+
+          <div className="tasks-heading">Current Pending List</div>
+
+          {error && <div className="pending-tasks-error">{error}</div>}
+
+          <ul id="pending-tasks-list" className="tasks-list">
+            {loading ? (
+              <li className="pending-empty-state">
+                <div className="empty-text">Loading pending tasks...</div>
+              </li>
+            ) : tasks.length === 0 ? (
+              <li className="pending-empty-state">
+                <div className="empty-icon">⏳</div>
+                <div className="empty-text">No pending tasks</div>
+                <div className="empty-subtext">All past tasks have been moved or completed!</div>
+              </li>
+            ) : (
+              tasks.map((t) => (
+                <li className="task-item" key={t.id}>
+                  <div className="task-details">
+                    <span className="task-name">{t.task}</span>
+                    {t.dueDate && <span className="task-due-date">Due: {t.dueDate}</span>}
+                  </div>
+                  <div className="task-actions">
+                    <span className={`priority-tag priority-${t.priority.replace(' ', '-')}`}>{t.priority}</span>
+                    <button type="button" className="btn-complete" onClick={() => completeTask(t.id)}>
+                      ✅ Complete
+                    </button>
+                    <button type="button" className="delete-task-btn" onClick={() => setDeletingTaskId(t.id)} title="Delete Task">
+                      🗑️
+                    </button>
+                  </div>
+                </li>
+              ))
+            )}
+          </ul>
+
+          <button type="button" id="toggle-history-btn" onClick={toggleHistory}>
+            {historyVisible ? '🔒 Hide History' : '⌚ View Completed History'}
+          </button>
+          {historyVisible && (
+            <div id="history-section">
+              <div className="tasks-heading history-heading">
+                Completed History
               </div>
-
-              <h3 className="tasks-heading">Current Pending List</h3>
-
-              {error && <div className="pending-tasks-error">{error}</div>}
-
-              <ul id="pending-tasks-list" className="tasks-list">
-                {loading ? (
-                  <li style={{ textAlign: 'center', padding: '20px', color: '#555' }}>Loading...</li>
-                ) : tasks.length === 0 ? (
-                  <li style={{ textAlign: 'center', padding: '20px', color: '#555' }}>No pending tasks.</li>
+              <ul id="pending-history-list" className="tasks-list">
+                {history.length === 0 ? (
+                  <li className="pending-empty-state">
+                    <div className="empty-subtext">No completed pending task history yet.</div>
+                  </li>
                 ) : (
-                  tasks.map((t) => (
-                    <li className="task-item" key={t.id}>
-                      <span className="task-name">
-                        {t.task} <br />
-                        <small style={{ color: '#666' }}>{t.dueDate || ''}</small>
-                      </span>
-                      <div className="task-actions">
-                        <span className={`priority-tag priority-${t.priority.replace(' ', '-')}`}>{t.priority}</span>
-                        <button type="button" className="btn-complete" onClick={() => completeTask(t.id)}>
-                          Complete
-                        </button>
-                        <button type="button" className="delete-task-btn" onClick={() => setDeletingTaskId(t.id)}>
-                          🗑️
-                        </button>
-                      </div>
+                  history.map((h) => (
+                    <li className="task-item history-item" key={h.id}>
+                      <span className="history-task-name">✅ {h.task}</span>
+                      <small className="history-task-date">{new Date(h.completedAt).toLocaleDateString('en-GB')}</small>
                     </li>
                   ))
                 )}
               </ul>
-
-              <button type="button" id="toggle-history-btn" onClick={toggleHistory}>
-                ⌚ View History
-              </button>
-              <div id="history-section" style={{ display: historyVisible ? 'block' : 'none' }}>
-                <h3 className="tasks-heading" style={{ borderBottomColor: 'var(--history-color)', color: 'var(--history-color)' }}>
-                  Completed History
-                </h3>
-                <ul id="pending-history-list" className="tasks-list">
-                  {history.map((h) => (
-                    <li className="task-item" style={{ opacity: 0.6 }} key={h.id}>
-                      <span>
-                        ✅ {h.task} <br />
-                        <small>{new Date(h.completedAt).toLocaleDateString('en-GB')}</small>
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
       <div id="past-task-modal" className={`modal-backdrop${modalOpen ? ' visible' : ''}`}>
         <div className="modal-content">
-          <h3>Add Past Pending Task</h3>
+          <h3>➕ Add Past Pending Task</h3>
           <form id="add-past-form" onSubmit={handleAddSubmit}>
-            <input
-              type="text"
-              id="past-task-name"
-              placeholder="Task description..."
-              required
-              value={taskName}
-              onChange={(e) => setTaskName(e.target.value)}
-            />
-            <label>Due Date</label>
-            <input type="date" id="past-task-date" value={taskDate} onChange={(e) => setTaskDate(e.target.value)} />
-            <label>Priority</label>
-            <select id="past-task-priority" value={taskPriority} onChange={(e) => setTaskPriority(e.target.value)}>
-              <option value="No Priority">No Priority</option>
-              <option value="High">High</option>
-              <option value="Medium">Medium</option>
-              <option value="Low">Low</option>
-            </select>
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '15px' }}>
-              <button type="submit" className="btn-complete" style={{ padding: '10px 20px' }}>
-                Add
-              </button>
-              <button
-                type="button"
-                className="close-modal"
-                style={{ background: '#444', border: 'none', color: 'white', borderRadius: '4px', padding: '10px 20px', cursor: 'pointer' }}
-                onClick={closeModal}
-              >
+            <div className="modal-field">
+              <label htmlFor="past-task-name">Task Description</label>
+              <input
+                type="text"
+                id="past-task-name"
+                placeholder="Enter task details..."
+                required
+                value={taskName}
+                onChange={(e) => setTaskName(e.target.value)}
+              />
+            </div>
+            <div className="modal-row">
+              <div className="modal-field">
+                <label htmlFor="past-task-date">Due Date</label>
+                <input type="date" id="past-task-date" value={taskDate} onChange={(e) => setTaskDate(e.target.value)} />
+              </div>
+              <div className="modal-field">
+                <label htmlFor="past-task-priority">Priority</label>
+                <select id="past-task-priority" value={taskPriority} onChange={(e) => setTaskPriority(e.target.value)}>
+                  <option value="No Priority">No Priority</option>
+                  <option value="High">High</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+              </div>
+            </div>
+            <div className="modal-actions">
+              <button type="button" className="close-modal-btn" onClick={closeModal}>
                 Cancel
+              </button>
+              <button type="submit" className="submit-modal-btn">
+                ✨ Add Task
               </button>
             </div>
           </form>

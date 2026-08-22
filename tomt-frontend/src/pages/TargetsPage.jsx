@@ -139,110 +139,125 @@ export default function TargetsPage() {
   return (
     <div className="targets-page-root">
       <div className="app-container">
-        <div className="header-actions">
+        <div className="top-nav-stack">
           <Link to="/dashboard" className="go-to-dashboard-btn">
-            ⬅️ Back to Dashboard
+            🏠 Back to Dashboard
           </Link>
           <button type="button" className="btn-toggle-add" onClick={toggleAddForm}>
             {formVisible ? '❌ Close Form' : '➕ Add New Target'}
           </button>
         </div>
 
-        <h2>🎯 Future Goals &amp; Targets Tracker</h2>
+        <h2>🎯 Future Goals &amp; Target Tracker</h2>
 
-        <div className="search-container">
-          <input
-            type="text"
-            id="search-input"
-            placeholder="🔍 Search goals..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-
-        {formVisible && (
-          <div id="goal-form-container" style={{ display: 'block' }}>
-            <form id="goal-form" onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label htmlFor="goal-name">Target / Goal Name (e.g., Buy Tata Sierra, Save ₹5 Lakhs)</label>
-                <input
-                  type="text"
-                  id="goal-name"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-
-              <div className="form-row">
-                <div className="form-group" style={{ flexGrow: 0 }}>
-                  <label htmlFor="target-date">Target Date (Deadline)</label>
-                  <input
-                    type="date"
-                    id="target-date"
-                    required
-                    value={targetDate}
-                    onChange={(e) => setTargetDate(e.target.value)}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="progress-note">Progress Note (Optional)</label>
-                  <textarea
-                    id="progress-note"
-                    rows="1"
-                    placeholder="e.g., Saved 20%, Need to research models."
-                    value={progressNote}
-                    onChange={(e) => setProgressNote(e.target.value)}
-                  />
-                </div>
-
-                <button type="submit" className="btn btn-add" id="submit-button" disabled={submitting}>
-                  {editingId ? '💾 Save Changes' : '➕ Add Target'}
-                </button>
-              </div>
-              {formError && <div className="targets-form-error">{formError}</div>}
-            </form>
+        <div className="content">
+          <div className="search-container">
+            <input
+              type="text"
+              id="search-input"
+              placeholder="🔍 Search goals & targets..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
-        )}
 
-        <h3>Active Goals</h3>
+          {formVisible && (
+            <div id="goal-form-container">
+              <form id="goal-form" onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label htmlFor="goal-name">Target / Goal Name (e.g., Save ₹5 Lakhs, Learn Rust)</label>
+                  <input
+                    type="text"
+                    id="goal-name"
+                    required
+                    placeholder="Enter target description..."
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
 
-        {loadError && <div className="targets-form-error">{loadError}</div>}
-
-        <ul id="goals-list">
-          {loading ? (
-            <li style={{ color: '#666', textAlign: 'center', padding: '15px' }}>Loading...</li>
-          ) : filteredGoals.length === 0 ? (
-            <li style={{ color: '#666', textAlign: 'center', padding: '15px' }}>No matches found.</li>
-          ) : (
-            filteredGoals.map((goal) => {
-              const isOverdue = goal.status === 'Overdue';
-              return (
-                <li key={goal.id} className={`goal-item${isOverdue ? ' status-overdue' : ''}`}>
-                  <div className="goal-header">
-                    <div className="goal-name">{goal.name}</div>
-                    <div
-                      className="goal-date"
-                      style={{ color: isOverdue ? 'var(--danger-color)' : 'var(--primary-color)' }}
-                    >
-                      Deadline: {formatDate(goal.targetDate)}
-                    </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="target-date">Target Date (Deadline)</label>
+                    <input
+                      type="date"
+                      id="target-date"
+                      required
+                      value={targetDate}
+                      onChange={(e) => setTargetDate(e.target.value)}
+                    />
                   </div>
-                  {goal.progressNote ? <div className="progress-note">{goal.progressNote}</div> : null}
-                  <div className="goal-actions" style={{ marginTop: '10px' }}>
-                    <button type="button" className="action-btn btn-edit" onClick={() => editGoal(goal)}>
-                      ✏️ Edit
-                    </button>
-                    <button type="button" className="action-btn btn-delete" onClick={() => setDeletingGoalId(goal.id)}>
-                      🗑️
-                    </button>
+
+                  <div className="form-group full-flex">
+                    <label htmlFor="progress-note">Progress Note (Optional)</label>
+                    <textarea
+                      id="progress-note"
+                      rows="1"
+                      placeholder="e.g., Saved 20%, researching models."
+                      value={progressNote}
+                      onChange={(e) => setProgressNote(e.target.value)}
+                    />
                   </div>
-                </li>
-              );
-            })
+                </div>
+
+                <button type="submit" className="btn-save-target" id="submit-button" disabled={submitting}>
+                  {editingId ? '💾 Save Changes' : '✨ Add Target Goal'}
+                </button>
+                {formError && <div className="targets-form-error">{formError}</div>}
+              </form>
+            </div>
           )}
-        </ul>
+
+          <div className="list-header">Active Goals &amp; Targets</div>
+
+          {loadError && <div className="targets-form-error">{loadError}</div>}
+
+          <ul id="goals-list">
+            {loading ? (
+              <li className="targets-empty-state">
+                <div className="empty-text">Loading goals...</div>
+              </li>
+            ) : filteredGoals.length === 0 ? (
+              <li className="targets-empty-state">
+                <div className="empty-icon">🎯</div>
+                <div className="empty-text">No active goals found</div>
+                <div className="empty-subtext">Click "Add New Target" above to set your future milestones.</div>
+              </li>
+            ) : (
+              filteredGoals.map((goal) => {
+                const isOverdue = goal.status === 'Overdue';
+                return (
+                  <li key={goal.id} className={`goal-item${isOverdue ? ' status-overdue' : ''}`}>
+                    <div className="goal-header">
+                      <div className="goal-title-wrapper">
+                        <span className="goal-name">{goal.name}</span>
+                        <span className={`goal-status-badge ${isOverdue ? 'badge-overdue' : 'badge-active'}`}>
+                          {isOverdue ? '⚠️ Overdue' : '🎯 In Progress'}
+                        </span>
+                      </div>
+                      <div className="goal-date">
+                        🗓️ Deadline: <strong>{formatDate(goal.targetDate)}</strong>
+                      </div>
+                    </div>
+                    {goal.progressNote ? (
+                      <div className="progress-note-box">
+                        <span className="note-label">Note:</span> {goal.progressNote}
+                      </div>
+                    ) : null}
+                    <div className="goal-actions">
+                      <button type="button" className="action-btn btn-edit" onClick={() => editGoal(goal)}>
+                        ✏️ Edit Goal
+                      </button>
+                      <button type="button" className="delete-btn" onClick={() => setDeletingGoalId(goal.id)} title="Delete Goal">
+                        🗑️
+                      </button>
+                    </div>
+                  </li>
+                );
+              })
+            )}
+          </ul>
+        </div>
       </div>
 
       <ConfirmDeleteModal

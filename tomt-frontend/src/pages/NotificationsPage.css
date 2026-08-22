@@ -1,171 +1,231 @@
 .notifications-page-root {
-  font-family: 'Arial', sans-serif;
-  background-color: var(--bg-color);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #121316;
+  background-image: radial-gradient(circle at 50% 0%, #1c2230 0%, #121316 75%);
   margin: 0;
-  padding: 20px;
+  padding: 24px 16px 40px;
   display: flex;
   justify-content: center;
-  color: var(--text-color);
-  transition: background-color 0.3s;
+  align-items: flex-start;
   min-height: 100vh;
+  color: var(--text-color);
+  box-sizing: border-box;
 
-  --primary-color: #3f51b5;
+  --primary-color: #00bcd4;
   --secondary-color: #ff9800;
-  --danger-color: #dc3545;
-  --bg-color: #1a1a1a;
-  --card-bg: #2a2a2a;
-  --text-color: #e0e0e0;
-  --border-color: #4f4f4f;
-  --success-color: #28a745;
-  --muted-text: #999999;
-  --header-color: #37ff8b;
+  --bg-color: #121316;
+  --card-bg: #1e2026;
+  --text-color: #bdbecb;
+  --heading-color: #f0f4f8;
+
+  --danger-color: #ef5350;
+  --success-color: #4caf50;
+  --border-color: #2f303d;
+}
+
+.notifications-page-root * {
+  box-sizing: border-box;
 }
 
 .notifications-page-root .app-container {
-  width: 95%;
+  width: 100%;
   max-width: 700px;
   background: var(--card-bg);
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-  padding: 25px;
-  transition: background-color 0.3s;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.notifications-page-root .top-nav-stack {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px 24px 0;
+}
+
+.notifications-page-root .go-to-dashboard-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background-color: #2f303d;
+  color: var(--heading-color);
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  transition: all 0.2s ease;
+  border: 1px solid #3f404e;
+}
+
+.notifications-page-root .go-to-dashboard-btn:hover {
+  background-color: #3f404e;
+  transform: translateY(-1px);
+  color: #ffffff;
 }
 
 .notifications-page-root h2 {
-  color: var(--header-color);
-  border-bottom: 3px solid var(--header-color);
-  padding-bottom: 10px;
-  margin-top: 0;
-  font-weight: 700;
-  text-align: center;
-  transition: color 0.3s;
+  color: var(--primary-color);
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin: 16px 24px 0;
+  text-shadow: 0 0 12px rgba(0, 188, 212, 0.2);
 }
 
-.notifications-page-root .btn {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  font-size: 0.9em;
+.notifications-page-root .content {
+  padding: 20px 24px 28px;
 }
-.notifications-page-root .btn-clear {
-  background-color: var(--danger-color);
-  color: white;
-}
-.notifications-page-root .btn-clear:hover {
-  background-color: #c82333;
+
+.notifications-page-root .list-header {
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 6px;
+  font-weight: 800;
+  color: var(--heading-color);
 }
 
 .notifications-page-root #notification-list {
   list-style: none;
   padding: 0;
-  margin-top: 15px;
+  margin: 0 0 20px;
   min-height: 100px;
 }
+
 .notifications-page-root .notification-item {
-  padding: 15px;
+  background-color: #16171d;
+  border: 1px solid #2f303d;
+  border-left: 5px solid var(--primary-color);
+  padding: 16px 18px;
   margin-bottom: 12px;
-  border-radius: 8px;
-  border-left: 5px solid;
-  background-color: #333333;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease;
+}
+
+.notifications-page-root .notification-item:hover {
+  background-color: #1d1e26;
+  border-color: #3f404e;
+  transform: translateY(-1px);
 }
 
 .notifications-page-root .notification-schedule {
   border-left-color: var(--secondary-color);
 }
+
 .notifications-page-root .notification-daily-routine {
   border-left-color: var(--primary-color);
 }
+
 .notifications-page-root .notification-pending-task-summary {
   border-left-color: var(--danger-color);
 }
+
 .notifications-page-root .notification-info {
   border-left-color: var(--success-color);
 }
 
 .notifications-page-root .notification-header {
-  font-weight: 700;
-  margin-bottom: 5px;
+  font-weight: 800;
+  font-size: 1rem;
+  margin-bottom: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: var(--header-color);
+  color: #f0f4f8;
+  gap: 10px;
 }
+
+.notifications-page-root .header-title {
+  color: #f0f4f8;
+}
+
 .notifications-page-root .notification-time {
-  font-size: 0.8em;
-  color: var(--muted-text);
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-weight: 500;
 }
+
 .notifications-page-root .notification-body {
-  font-size: 0.95em;
-  line-height: 1.4;
-  color: var(--text-color);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #bdbecb;
 }
+
 .notifications-page-root .notification-body a {
-  color: var(--header-color);
+  color: var(--primary-color);
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
+  transition: color 0.2s;
 }
+
 .notifications-page-root .notification-body a:hover {
+  color: #37ff8b;
   text-decoration: underline;
 }
 
-.notifications-page-root #pending-works-list {
-  margin-top: 10px;
-  padding: 10px;
-  border: 1px dashed var(--border-color);
-  border-radius: 5px;
-  background-color: #444;
-  list-style-type: none;
-}
-.notifications-page-root #pending-works-list li {
-  margin-bottom: 5px;
-  font-size: 0.9em;
+.notifications-page-root .empty-notification-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px;
+  background: #16171d;
+  border: 1px dashed #2f303d;
+  border-left: 5px solid var(--success-color);
 }
 
-.notifications-page-root .dashboard-footer {
-  margin-top: 25px;
-  text-align: center;
+.notifications-page-root .notification-icon {
+  font-size: 1.8rem;
 }
 
-.notifications-page-root .go-to-dashboard-btn {
-  padding: 10px 20px;
-  background-color: var(--header-color);
-  color: var(--card-bg);
-  text-decoration: none;
-  border-radius: 5px;
-  font-weight: bold;
-  font-size: 1em;
-  display: inline-block;
-  transition: background-color 0.3s, filter 0.2s;
-  box-shadow: 0 0 10px rgba(55, 255, 139, 0.5);
-}
-.notifications-page-root .go-to-dashboard-btn:hover {
-  filter: brightness(1.2);
-  box-shadow: 0 0 15px rgba(55, 255, 139, 0.8);
+.notifications-page-root .btn-clear {
+  width: 100%;
+  padding: 12px;
+  background-color: rgba(239, 83, 80, 0.15);
+  color: var(--danger-color);
+  border: 1px solid rgba(239, 83, 80, 0.3);
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-/* New, minimal - see TargetsPage.css for why. */
+.notifications-page-root .btn-clear:hover {
+  background-color: var(--danger-color);
+  color: #ffffff;
+}
+
 .notifications-page-root .notifications-error {
   color: var(--danger-color);
-  margin-bottom: 15px;
-  font-size: 0.9em;
-  font-weight: 600;
+  margin-bottom: 14px;
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
 @media (max-width: 600px) {
   .notifications-page-root {
-    padding: 10px;
+    padding: 16px 12px 32px;
   }
-  .notifications-page-root .app-container {
-    padding: 20px 15px;
+  .notifications-page-root .content {
+    padding: 16px;
   }
-  .notifications-page-root #clear-notifications-btn,
+  .notifications-page-root .top-nav-stack {
+    padding: 16px 16px 0;
+  }
   .notifications-page-root .go-to-dashboard-btn {
     width: 100%;
-    box-sizing: border-box;
-    margin-top: 10px;
+    justify-content: center;
+  }
+  .notifications-page-root h2 {
+    margin: 14px 16px 0;
+    font-size: 1.4rem;
+  }
+  .notifications-page-root .notification-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
   }
 }
+

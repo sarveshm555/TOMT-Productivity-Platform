@@ -65,44 +65,49 @@ export default function NotificationsPage() {
   return (
     <div className="notifications-page-root">
       <div className="app-container">
-        <h2>🔔 Notification Center</h2>
-
-        <div id="notifications-area">
-          <h3>Current Notifications</h3>
-
-          {error && <div className="notifications-error">{error}</div>}
-
-          <ul id="notification-list">
-            {!loading && notifications.length === 0 ? (
-              <li className="notification-item notification-info">
-                <div className="notification-header">All Clear, {userName}!</div>
-                <div className="notification-body">No pending notifications at this time. All systems nominal.</div>
-              </li>
-            ) : (
-              notifications.map((n) => (
-                <li className={`notification-item notification-${n.type.replace(/\s/g, '-')}`} key={n.id}>
-                  <div className="notification-header">
-                    <span>{n.header}</span>
-                    <span className="notification-time">{n.timestamp}</span>
-                  </div>
-                  {/* eslint-disable-next-line react/no-danger */}
-                  <div className="notification-body" dangerouslySetInnerHTML={{ __html: n.body }} />
-                </li>
-              ))
-            )}
-          </ul>
-
-          {notifications.length > 0 && (
-            <button type="button" className="btn btn-clear" id="clear-notifications-btn" onClick={() => setConfirmClearOpen(true)}>
-              🗑️ Clear All Notifications
-            </button>
-          )}
+        <div className="top-nav-stack">
+          <Link to="/dashboard" className="go-to-dashboard-btn">
+            🏠 Back to Dashboard
+          </Link>
         </div>
 
-        <div className="dashboard-footer">
-          <Link to="/dashboard" className="go-to-dashboard-btn">
-            ⬅️ Back to Dashboard
-          </Link>
+        <h2>🔔 Notification Center</h2>
+
+        <div className="content">
+          <div id="notifications-area">
+            <div className="list-header">Current Notifications</div>
+
+            {error && <div className="notifications-error">{error}</div>}
+
+            <ul id="notification-list">
+              {!loading && notifications.length === 0 ? (
+                <li className="notification-item notification-info empty-notification-card">
+                  <div className="notification-icon">✨</div>
+                  <div className="notification-details">
+                    <div className="notification-header">All Clear, {userName}!</div>
+                    <div className="notification-body">No pending notifications at this time. All systems nominal.</div>
+                  </div>
+                </li>
+              ) : (
+                notifications.map((n) => (
+                  <li className={`notification-item notification-${n.type.replace(/\s/g, '-')}`} key={n.id}>
+                    <div className="notification-header">
+                      <span className="header-title">{n.header}</span>
+                      <span className="notification-time">{n.timestamp}</span>
+                    </div>
+                    {/* eslint-disable-next-line react/no-danger */}
+                    <div className="notification-body" dangerouslySetInnerHTML={{ __html: n.body }} />
+                  </li>
+                ))
+              )}
+            </ul>
+
+            {notifications.length > 0 && (
+              <button type="button" className="btn btn-clear" id="clear-notifications-btn" onClick={() => setConfirmClearOpen(true)}>
+                🗑️ Clear All Notifications
+              </button>
+            )}
+          </div>
         </div>
       </div>
 

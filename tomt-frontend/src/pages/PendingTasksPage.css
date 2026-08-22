@@ -1,32 +1,30 @@
 .pending-tasks-page-root {
-  font-family: 'Arial', sans-serif;
-  background-color: var(--bg-color);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #121316;
+  background-image: radial-gradient(circle at 50% 0%, #1c2230 0%, #121316 75%);
   margin: 0;
-  padding: 20px;
+  padding: 24px 16px 40px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   min-height: 100vh;
-  perspective: 1500px;
   color: var(--text-color);
+  box-sizing: border-box;
 
-  --primary-color: #ffc107;
-  --secondary-color: #00bcd4;
-  --danger-color: #e91e63;
-  --bg-color: #101010;
-  --card-bg: #16171d;
-  --input-bg: #1f202a;
+  --primary-color: #00bcd4;
+  --secondary-color: #ff9800;
+  --bg-color: #121316;
+  --card-bg: #1e2026;
   --text-color: #bdbecb;
   --heading-color: #f0f4f8;
+
+  --danger-color: #ef5350;
+  --success-color: #4caf50;
   --border-color: #2f303d;
-  --muted-text: #888;
   --high-priority: #ef5350;
   --medium-priority: #ffb300;
   --low-priority: #4dd0e1;
   --none-priority: #757575;
-  --history-color: #66bb6a;
-  --shadow-light: 0 0 0 1.5px #2b2c37, 0 0 25px -17px rgba(0, 0, 0, 0.7);
-  --shadow-medium: 0 0 0 2.5px #2f303d, 0px 0px 30px -10px rgba(0, 0, 0, 0.9);
 }
 
 .pending-tasks-page-root * {
@@ -34,253 +32,445 @@
 }
 
 .pending-tasks-page-root .app-container {
-  width: 90%;
+  width: 100%;
   max-width: 850px;
   background: var(--card-bg);
-  border-radius: 15px;
-  box-shadow: var(--shadow-medium);
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   overflow: hidden;
-  position: relative;
-  border: 1px solid var(--border-color);
 }
 
-.pending-tasks-page-root .flip-wrapper {
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-style: preserve-3d;
-  transform: rotateY(0deg);
+.pending-tasks-page-root .top-nav-stack {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px 24px 0;
 }
-.pending-tasks-page-root .back-home-container {
-  padding: 15px 20px 0;
-  text-align: left;
-}
-.pending-tasks-page-root .back-home-button {
-  display: inline-block;
-  padding: 10px 18px;
+
+.pending-tasks-page-root .go-to-dashboard-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
   background-color: #2f303d;
   color: var(--heading-color);
   text-decoration: none;
   border-radius: 8px;
-  font-weight: 500;
-  transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+  font-size: 0.88rem;
+  transition: all 0.2s ease;
   border: 1px solid #3f404e;
 }
-.pending-tasks-page-root .back-home-button:hover {
+
+.pending-tasks-page-root .go-to-dashboard-btn:hover {
   background-color: #3f404e;
   transform: translateY(-1px);
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+  color: #ffffff;
+}
+
+.pending-tasks-page-root h2 {
+  color: var(--primary-color);
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin: 16px 24px 0;
+  text-shadow: 0 0 12px rgba(0, 188, 212, 0.2);
 }
 
 .pending-tasks-page-root .content-wrapper {
-  padding: 25px;
-  position: relative;
-  height: auto;
-  min-height: 480px;
+  padding: 20px 24px 28px;
 }
 
-.pending-tasks-page-root .content-wrapper h2 {
-  color: var(--primary-color);
-  font-size: 2em;
-  margin-bottom: 5px;
-  text-shadow: 0 0 5px rgba(255, 193, 7, 0.4);
+.pending-tasks-page-root .subtitle {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  margin-top: 4px;
+  margin-bottom: 20px;
 }
 
 .pending-tasks-page-root .btn-container {
   display: flex;
-  gap: 15px;
-  margin-bottom: 25px;
+  gap: 14px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
 }
 
 .pending-tasks-page-root .btn-stylized {
   flex: 1;
   min-width: 200px;
-  padding: 12px 20px;
+  padding: 12px 18px;
   border: none;
   border-radius: 8px;
-  font-weight: bold;
+  font-weight: 800;
+  font-size: 0.92rem;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-size: 0.95em;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-.pending-tasks-page-root #open-past-task-modal {
+.pending-tasks-page-root .btn-primary {
   background-color: var(--primary-color);
-  color: #1a1a1a;
-  box-shadow: 0 0 12px rgba(255, 193, 7, 0.4);
-}
-.pending-tasks-page-root #open-past-task-modal:hover {
-  filter: brightness(1.1);
-  transform: translateY(-2px);
-  box-shadow: 0 0 18px rgba(255, 193, 7, 0.6);
+  color: #101010;
+  box-shadow: 0 4px 12px rgba(0, 188, 212, 0.25);
 }
 
-.pending-tasks-page-root #move-all-pending {
-  background-color: var(--secondary-color);
-  color: #1a1a1a;
-  box-shadow: 0 0 12px rgba(0, 188, 212, 0.4);
-}
-.pending-tasks-page-root #move-all-pending:hover {
+.pending-tasks-page-root .btn-primary:hover {
   filter: brightness(1.1);
-  transform: translateY(-2px);
-  box-shadow: 0 0 18px rgba(0, 188, 212, 0.6);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 188, 212, 0.35);
+}
+
+.pending-tasks-page-root .btn-secondary {
+  background-color: var(--secondary-color);
+  color: #101010;
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.25);
+}
+
+.pending-tasks-page-root .btn-secondary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(255, 152, 0, 0.35);
 }
 
 .pending-tasks-page-root .tasks-heading {
-  margin-top: 25px;
-  margin-bottom: 15px;
-  border-bottom: 2px solid var(--primary-color);
+  font-size: 1.2rem;
+  margin-top: 10px;
+  margin-bottom: 14px;
+  border-bottom: 2px solid var(--secondary-color);
+  padding-bottom: 6px;
+  font-weight: 800;
   color: var(--heading-color);
-  padding-bottom: 5px;
-  font-size: 1.3em;
+}
+
+.pending-tasks-page-root .history-heading {
+  border-bottom-color: var(--success-color);
+  color: var(--heading-color);
 }
 
 .pending-tasks-page-root .tasks-list {
   list-style: none;
   padding: 0;
-}
-.pending-tasks-page-root .task-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  background-color: var(--input-bg);
-  border-left: 5px solid var(--border-color);
-  transition: all 0.3s ease;
+  margin: 0 0 20px;
 }
 
-.pending-tasks-page-root .task-time {
-  font-weight: bold;
-  color: var(--primary-color);
-  width: 15%;
-  min-width: 70px;
+.pending-tasks-page-root .task-item {
+  background-color: #16171d;
+  border: 1px solid #2f303d;
+  border-left: 5px solid var(--secondary-color);
+  padding: 14px 18px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  gap: 14px;
+  transition: all 0.2s ease;
 }
+
+.pending-tasks-page-root .task-item:hover {
+  background-color: #1d1e26;
+  border-color: #3f404e;
+  transform: translateY(-1px);
+}
+
+.pending-tasks-page-root .task-item.history-item {
+  border-left-color: var(--success-color);
+  opacity: 0.85;
+}
+
+.pending-tasks-page-root .task-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 .pending-tasks-page-root .task-name {
-  flex-grow: 1;
-  text-align: left;
-  margin: 0 15px;
+  font-weight: 700;
+  font-size: 0.98rem;
+  color: #f0f4f8;
   word-break: break-word;
 }
 
-.pending-tasks-page-root .btn-complete {
-  background-color: var(--history-color);
-  color: white;
-  padding: 5px 12px;
-  font-size: 0.85em;
-  border-radius: 4px;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.pending-tasks-page-root .btn-complete:hover {
-  background-color: #558b2f;
-}
-.pending-tasks-page-root .delete-task-btn {
-  background: none;
-  border: none;
-  color: var(--danger-color);
-  cursor: pointer;
-  font-size: 1.2em;
-  padding: 5px;
+.pending-tasks-page-root .task-due-date {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  margin-top: 4px;
 }
 
 .pending-tasks-page-root .task-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
-  min-width: 220px;
-  justify-content: flex-end;
-}
-.pending-tasks-page-root .priority-tag {
-  font-size: 0.75em;
-  font-weight: bold;
-  padding: 4px 8px;
-  border-radius: 4px;
-  background-color: #2b2c37;
-  border: 1px solid var(--none-priority);
-}
-.pending-tasks-page-root .priority-High {
-  color: var(--high-priority);
-  border-color: var(--high-priority);
-}
-.pending-tasks-page-root .priority-Medium {
-  color: var(--medium-priority);
-  border-color: var(--medium-priority);
-}
-.pending-tasks-page-root .priority-Low {
-  color: var(--low-priority);
-  border-color: var(--low-priority);
+  gap: 10px;
 }
 
-.pending-tasks-page-root #history-section {
-  margin-top: 30px;
-  border-top: 1px dashed var(--border-color);
+.pending-tasks-page-root .priority-tag {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
+
+.pending-tasks-page-root .priority-High {
+  color: var(--high-priority);
+  background: rgba(239, 83, 80, 0.12);
+  border: 1px solid var(--high-priority);
+}
+
+.pending-tasks-page-root .priority-Medium {
+  color: var(--medium-priority);
+  background: rgba(255, 179, 0, 0.12);
+  border: 1px solid var(--medium-priority);
+}
+
+.pending-tasks-page-root .priority-Low {
+  color: var(--low-priority);
+  background: rgba(77, 208, 225, 0.12);
+  border: 1px solid var(--low-priority);
+}
+
+.pending-tasks-page-root .priority-No-Priority {
+  color: var(--none-priority);
+  background: rgba(117, 117, 117, 0.12);
+  border: 1px solid var(--none-priority);
+}
+
+.pending-tasks-page-root .btn-complete {
+  background-color: var(--success-color);
+  color: #ffffff;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pending-tasks-page-root .btn-complete:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.pending-tasks-page-root .delete-task-btn {
+  background: transparent;
+  border: none;
+  color: #7a8294;
+  font-size: 1.15rem;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.pending-tasks-page-root .delete-task-btn:hover {
+  color: var(--danger-color);
+  background: rgba(239, 83, 80, 0.12);
+}
+
+.pending-tasks-page-root .pending-empty-state {
+  text-align: center;
+  padding: 30px 20px;
+  background: #16171d;
+  border: 1px dashed #2f303d;
+  border-radius: 12px;
+  color: #94a3b8;
+  list-style: none;
+}
+
+.pending-tasks-page-root .empty-icon {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+}
+
+.pending-tasks-page-root .empty-text {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f0f4f8;
+  margin-bottom: 4px;
+}
+
+.pending-tasks-page-root .empty-subtext {
+  font-size: 0.88rem;
+  color: #94a3b8;
+}
+
 .pending-tasks-page-root #toggle-history-btn {
   width: 100%;
-  margin-top: 15px;
-  padding: 10px;
+  padding: 10px 16px;
   background-color: #2f303d;
   color: var(--heading-color);
   border: 1px solid #3f404e;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.pending-tasks-page-root #toggle-history-btn:hover {
+  background-color: #3f404e;
+  color: #ffffff;
+}
+
+.pending-tasks-page-root #history-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed #2f303d;
+}
+
+.pending-tasks-page-root .history-task-name {
+  font-weight: 600;
+  color: #bdbecb;
+}
+
+.pending-tasks-page-root .history-task-date {
+  font-size: 0.8rem;
+  color: #94a3b8;
 }
 
 .pending-tasks-page-root .modal-backdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 100;
   visibility: hidden;
   opacity: 0;
-  transition: 0.3s;
+  transition: all 0.25s ease;
 }
+
 .pending-tasks-page-root .modal-backdrop.visible {
   visibility: visible;
   opacity: 1;
 }
+
 .pending-tasks-page-root .modal-content {
   background: var(--card-bg);
-  padding: 30px;
-  border-radius: 10px;
+  padding: 24px 28px;
+  border-radius: 14px;
   width: 90%;
   max-width: 500px;
-  border: 1px solid var(--primary-color);
-}
-.pending-tasks-page-root #add-past-form input,
-.pending-tasks-page-root #add-past-form select {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  background: var(--input-bg);
-  border: 1px solid #555;
-  color: white;
-  border-radius: 6px;
+  border: 1px solid rgba(0, 188, 212, 0.3);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
 }
 
-/* New, minimal - see TargetsPage.css for why. */
+.pending-tasks-page-root .modal-content h3 {
+  color: var(--primary-color);
+  margin-top: 0;
+  margin-bottom: 18px;
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.pending-tasks-page-root .modal-field {
+  margin-bottom: 14px;
+  flex: 1;
+}
+
+.pending-tasks-page-root .modal-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.pending-tasks-page-root .modal-field input,
+.pending-tasks-page-root .modal-field select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #2f303d;
+  border-radius: 8px;
+  background-color: #16171d;
+  color: #f0f4f8;
+  font-size: 0.92rem;
+  outline: none;
+  font-family: inherit;
+}
+
+.pending-tasks-page-root .modal-field input:focus,
+.pending-tasks-page-root .modal-field select:focus {
+  border-color: var(--primary-color);
+}
+
+.pending-tasks-page-root .modal-row {
+  display: flex;
+  gap: 12px;
+}
+
+.pending-tasks-page-root .modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.pending-tasks-page-root .close-modal-btn {
+  padding: 9px 18px;
+  background: #2f303d;
+  border: 1px solid #3f404e;
+  color: #f0f4f8;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.88rem;
+  transition: all 0.2s ease;
+}
+
+.pending-tasks-page-root .close-modal-btn:hover {
+  background: #3f404e;
+}
+
+.pending-tasks-page-root .submit-modal-btn {
+  padding: 9px 18px;
+  background: var(--primary-color);
+  border: none;
+  color: #101010;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 0.88rem;
+  transition: all 0.2s ease;
+}
+
+.pending-tasks-page-root .submit-modal-btn:hover {
+  filter: brightness(1.1);
+}
+
 .pending-tasks-page-root .pending-tasks-error {
   color: var(--danger-color);
-  margin-bottom: 15px;
-  font-size: 0.9em;
-  font-weight: 600;
+  margin-bottom: 14px;
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
 @media (max-width: 600px) {
+  .pending-tasks-page-root {
+    padding: 16px 12px 32px;
+  }
+  .pending-tasks-page-root .content-wrapper {
+    padding: 16px;
+  }
+  .pending-tasks-page-root .top-nav-stack {
+    padding: 16px 16px 0;
+  }
+  .pending-tasks-page-root .go-to-dashboard-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .pending-tasks-page-root h2 {
+    margin: 14px 16px 0;
+    font-size: 1.4rem;
+  }
   .pending-tasks-page-root .btn-stylized {
     width: 100%;
     flex: none;
@@ -289,14 +479,14 @@
     flex-direction: column;
     align-items: flex-start;
   }
-  .pending-tasks-page-root .task-time,
-  .pending-tasks-page-root .task-name {
-    width: 100%;
-    margin: 0;
-  }
   .pending-tasks-page-root .task-actions {
     width: 100%;
-    justify-content: space-between;
+    justify-content: flex-end;
     margin-top: 10px;
   }
+  .pending-tasks-page-root .modal-row {
+    flex-direction: column;
+    gap: 0;
+  }
 }
+
