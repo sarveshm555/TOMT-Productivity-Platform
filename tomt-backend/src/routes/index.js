@@ -11,6 +11,7 @@ const scheduleRoutes = require('./scheduleRoutes');
 const notificationRoutes = require('./notificationRoutes');
 const placementRoutes = require('./placementRoutes');
 const diaryRoutes = require('./diaryRoutes');
+const spaceForYouRoutes = require('./spaceForYouRoutes');
 
 const router = express.Router();
 
@@ -31,6 +32,7 @@ router.use('/schedule', scheduleRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/placement', placementRoutes);
 router.use('/diary', diaryRoutes);
+router.use('/space-for-you', spaceForYouRoutes);
 
 // ---------------------------------------------------------------------
 // Every business module from the approved architecture is now mounted.

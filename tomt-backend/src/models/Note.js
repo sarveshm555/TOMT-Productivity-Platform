@@ -13,6 +13,12 @@ const noteSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
+    scope: {
+      type: String,
+      enum: ['placement', 'space_for_you'],
+      default: 'space_for_you',
+      index: true,
+    },
     name: {
       type: String,
       required: [true, 'Name / Title is required.'],

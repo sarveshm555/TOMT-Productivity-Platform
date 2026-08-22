@@ -81,6 +81,12 @@ export default function HubPage() {
               <h3>Personal Diary</h3>
               <p>Fill your thoughts, reflections, and memories.</p>
             </Link>
+
+            <Link to="/space-for-you" className="dashboard-card space-for-you-icon-card" style={{ borderLeft: '5px solid #8b5cf6' }}>
+              <span className="icon">🌌</span>
+              <h3>Space for You</h3>
+              <p>Personal learning, knowledge, thoughts, links, and notes.</p>
+            </Link>
           </div>
         </div>
       </div>

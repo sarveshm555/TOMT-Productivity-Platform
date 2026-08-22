@@ -37,6 +37,7 @@ import InfoCopyPage from './pages/InfoCopyPage.jsx';
 import ImportantNotePage from './pages/ImportantNotePage.jsx';
 import PersonalDiaryPage from './pages/PersonalDiaryPage.jsx';
 import ViewDiaryPage from './pages/ViewDiaryPage.jsx';
+import SpaceForYouPage from './pages/SpaceForYouPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
 /**
@@ -321,6 +322,14 @@ export default function App() {
         element={
           <ProtectedRoute>
             <ViewDiaryPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/space-for-you"
+        element={
+          <ProtectedRoute>
+            <SpaceForYouPage />
           </ProtectedRoute>
         }
       />

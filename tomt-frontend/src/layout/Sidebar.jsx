@@ -21,6 +21,7 @@ const MODULE_LINKS = [
   { to: '/pending-tasks', label: 'Pending Tasks', icon: '⏳' },
   { to: '/placement', label: 'Placement Progress', icon: '💼' },
   { to: '/diary', label: 'Personal Diary', icon: '📖' },
+  { to: '/space-for-you', label: 'Space for You', icon: '🌌' },
 ];
 
 /**

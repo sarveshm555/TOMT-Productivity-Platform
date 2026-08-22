@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const createApp = require('./src/app');
 const { connectDB, disconnectDB } = require('./src/config/db');
+const Note = require('./src/models/Note');
 
 const PORT = process.env.PORT || 5000;
 
@@ -24,11 +25,26 @@ function assertRequiredEnv() {
   }
 }
 
+async function migrateNotesToSpaceForYou() {
+  try {
+    const result = await Note.updateMany(
+      { $or: [{ scope: { $exists: false } }, { scope: 'placement' }] },
+      { $set: { scope: 'space_for_you' } }
+    );
+    if (result.modifiedCount > 0) {
+      console.log(`[migration] Migrated ${result.modifiedCount} existing note(s) to Space for You.`);
+    }
+  } catch (err) {
+    console.error('[migration] Note migration error:', err);
+  }
+}
+
 async function start() {
   assertRequiredEnv();
 
   try {
     await connectDB();
+    await migrateNotesToSpaceForYou();
 
     const app = createApp();
 
