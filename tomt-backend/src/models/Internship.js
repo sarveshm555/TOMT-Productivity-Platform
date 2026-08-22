@@ -33,6 +33,20 @@ const internshipSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    trackLinks: [
+      {
+        label: {
+          type: String,
+          default: '',
+          trim: true,
+        },
+        url: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );

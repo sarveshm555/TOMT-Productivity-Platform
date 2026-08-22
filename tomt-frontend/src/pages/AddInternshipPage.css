@@ -94,6 +94,93 @@
   color: white;
 }
 
+/* Track Links Section */
+.add-internship-page-root .track-links-section {
+  margin-top: 20px;
+  background: #111217;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.add-internship-page-root .track-links-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.add-internship-page-root .track-links-title {
+  font-weight: 700;
+  font-size: 0.95em;
+  color: #ff9800;
+}
+
+.add-internship-page-root .track-links-subtitle {
+  font-size: 0.82em;
+  color: #888;
+}
+
+.add-internship-page-root .track-link-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  background: #191a24;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #272836;
+}
+
+.add-internship-page-root .track-link-label-group {
+  flex: 1;
+  min-width: 140px;
+}
+
+.add-internship-page-root .track-link-url-group {
+  flex: 2;
+  min-width: 200px;
+}
+
+.add-internship-page-root .btn-remove-link {
+  background: #2f303d;
+  color: #ef4444;
+  border: 1px solid #3f404e;
+  padding: 11px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  height: 43px;
+}
+
+.add-internship-page-root .btn-remove-link:hover {
+  background: #ef4444;
+  color: #ffffff;
+  border-color: #ef4444;
+}
+
+.add-internship-page-root .btn-add-link-row {
+  align-self: flex-start;
+  background: rgba(255, 152, 0, 0.1);
+  color: #ff9800;
+  border: 1px solid rgba(255, 152, 0, 0.3);
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.88em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-internship-page-root .btn-add-link-row:hover {
+  background: rgba(255, 152, 0, 0.2);
+  border-color: #ff9800;
+}
+
 /* New, minimal - see TargetsPage.css for why. */
 .add-internship-page-root .add-internship-error {
   color: #e91e63;
@@ -105,6 +192,14 @@
 @media (max-width: 600px) {
   .add-internship-page-root .form-row {
     grid-template-columns: 1fr;
+  }
+  .add-internship-page-root .track-link-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .add-internship-page-root .btn-remove-link {
+    align-self: flex-end;
+    width: 100%;
   }
   .add-internship-page-root .btn {
     width: 100%;

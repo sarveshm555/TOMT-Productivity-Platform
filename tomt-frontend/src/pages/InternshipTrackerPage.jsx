@@ -47,6 +47,8 @@ export default function InternshipTrackerPage() {
   const [mistakeInput, setMistakeInput] = useState('');
 
   const [deletingAppId, setDeletingAppId] = useState(null);
+  const [activeTrackApp, setActiveTrackApp] = useState(null);
+  const [deletingTrackLinkIndex, setDeletingTrackLinkIndex] = useState(null);
 
   useEffect(() => {
     document.title = 'Internship Tracker - Mobile Responsive';
@@ -120,6 +122,35 @@ export default function InternshipTrackerPage() {
     }
   }
 
+  function openTrackModal(app) {
+    setActiveTrackApp(app);
+    setDeletingTrackLinkIndex(null);
+  }
+
+  async function confirmDeleteTrackLink() {
+    if (!activeTrackApp || deletingTrackLinkIndex === null) return;
+    const indexToRemove = deletingTrackLinkIndex;
+    const updatedLinks = (activeTrackApp.trackLinks || []).filter((_, i) => i !== indexToRemove);
+
+    const payload = {
+      company: activeTrackApp.company,
+      role: activeTrackApp.role,
+      dateApplied: activeTrackApp.dateApplied,
+      status: activeTrackApp.status,
+      trackLinks: updatedLinks,
+    };
+
+    try {
+      const updatedApp = await internshipService.updateInternship(activeTrackApp.id, payload);
+      setApps((prev) => prev.map((a) => (a.id === activeTrackApp.id ? { ...a, ...updatedApp } : a)));
+      setActiveTrackApp((prev) => (prev ? { ...prev, ...updatedApp } : null));
+    } catch (err) {
+      setError('Could not delete track link. Please try again.');
+    } finally {
+      setDeletingTrackLinkIndex(null);
+    }
+  }
+
   function openRejectModal(id) {
     setActiveRejectId(id);
     setMistakeInput('');
@@ -141,6 +172,10 @@ export default function InternshipTrackerPage() {
   }
 
   const activeDeletingApp = apps.find((a) => a.id === deletingAppId);
+  const deletingTrackItem =
+    activeTrackApp && deletingTrackLinkIndex !== null && activeTrackApp.trackLinks
+      ? activeTrackApp.trackLinks[deletingTrackLinkIndex]
+      : null;
 
   return (
     <div className="internship-page-root">
@@ -187,64 +222,75 @@ export default function InternshipTrackerPage() {
           ) : filtered.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>No applications found.</div>
           ) : (
-            filtered.map((app) => (
-              <div className="app-item" key={app.id}>
-                <div>
-                  <strong>{app.company}</strong>
-                  <br />
-                  <small style={{ color: '#888' }}>{app.role}</small>
-                </div>
-                <div style={{ fontSize: '0.85em' }}>📅 {app.dateApplied}</div>
-                <div>
-                  <span style={{ fontWeight: 'bold', color: getStatusColor(app.status) }}>{app.status}</span>
-                </div>
-                <div className="item-actions">
-                  <div className="action-group">
-                    {(app.status === 'Applied' || app.status === 'Interview') && (
-                      <>
-                        <button
-                          type="button"
-                          className="btn-sm"
-                          style={{ background: 'var(--success-color)' }}
-                          onClick={() => updateStatus(app.id, 'Offer')}
-                        >
-                          Success
-                        </button>
-                        <button
-                          type="button"
-                          className="btn-sm"
-                          style={{ background: 'var(--danger-color)' }}
-                          onClick={() => openRejectModal(app.id)}
-                        >
-                          Failed
-                        </button>
-                      </>
-                    )}
-                    <button
-                      type="button"
-                      className="btn-sm"
-                      style={{ background: 'var(--secondary-color)' }}
-                      onClick={() => editApp(app.id)}
-                    >
-                      ✏️ Edit
-                    </button>
-                    <button
-                      type="button"
-                      className="btn-sm"
-                      style={{ background: '#444' }}
-                      onClick={() => setDeletingAppId(app.id)}
-                    >
-                      🗑️
-                    </button>
+            filtered.map((app) => {
+              const linkCount = Array.isArray(app.trackLinks) ? app.trackLinks.length : 0;
+              return (
+                <div className="app-item" key={app.id}>
+                  <div>
+                    <strong>{app.company}</strong>
+                    <br />
+                    <small style={{ color: '#888' }}>{app.role}</small>
                   </div>
-                </div>
-                {app.mistakeMessage && (
-                  <div className="mistake-tag">
-                    <strong>🚨 Mistake Analysis:</strong> {app.mistakeMessage}
+                  <div style={{ fontSize: '0.85em' }}>📅 {app.dateApplied}</div>
+                  <div>
+                    <span style={{ fontWeight: 'bold', color: getStatusColor(app.status) }}>{app.status}</span>
                   </div>
-                )}
-              </div>
-            ))
+                  <div className="item-actions">
+                    <div className="action-group">
+                      {(app.status === 'Applied' || app.status === 'Interview') && (
+                        <>
+                          <button
+                            type="button"
+                            className="btn-sm"
+                            style={{ background: 'var(--success-color)' }}
+                            onClick={() => updateStatus(app.id, 'Offer')}
+                          >
+                            Success
+                          </button>
+                          <button
+                            type="button"
+                            className="btn-sm"
+                            style={{ background: 'var(--danger-color)' }}
+                            onClick={() => openRejectModal(app.id)}
+                          >
+                            Failed
+                          </button>
+                        </>
+                      )}
+                      <button
+                        type="button"
+                        className="btn-sm btn-track"
+                        onClick={() => openTrackModal(app)}
+                        title="View Track Links"
+                      >
+                        🔗 Track {linkCount > 0 ? `(${linkCount})` : ''}
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-sm"
+                        style={{ background: 'var(--secondary-color)' }}
+                        onClick={() => editApp(app.id)}
+                      >
+                        ✏️ Edit
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-sm"
+                        style={{ background: '#444' }}
+                        onClick={() => setDeletingAppId(app.id)}
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                  </div>
+                  {app.mistakeMessage && (
+                    <div className="mistake-tag">
+                      <strong>🚨 Mistake Analysis:</strong> {app.mistakeMessage}
+                    </div>
+                  )}
+                </div>
+              );
+            })
           )}
         </div>
       </div>
@@ -271,6 +317,77 @@ export default function InternshipTrackerPage() {
         </div>
       </div>
 
+      {activeTrackApp && (
+        <div className="modal track-links-modal-overlay" style={{ display: 'flex' }}>
+          <div className="modal-content track-modal-card">
+            <div className="track-modal-header">
+              <h3 style={{ color: '#ff9800', margin: 0 }}>
+                🔗 Track Links - {activeTrackApp.company}
+              </h3>
+              <div style={{ color: '#aaa', fontSize: '0.88em', marginTop: '2px' }}>{activeTrackApp.role}</div>
+            </div>
+
+            <div className="track-modal-body">
+              {!activeTrackApp.trackLinks || activeTrackApp.trackLinks.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '20px 0', color: '#888' }}>
+                  No track links saved for this application yet.
+                </div>
+              ) : (
+                <div className="track-links-list">
+                  {activeTrackApp.trackLinks.map((link, idx) => (
+                    <div key={idx} className="track-link-item">
+                      <div className="track-link-info">
+                        <span className="track-link-icon">🔗</span>
+                        <a
+                          href={link.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="track-link-anchor"
+                          title={link.url}
+                        >
+                          {link.label ? link.label : link.url}
+                        </a>
+                      </div>
+                      <button
+                        type="button"
+                        className="btn-sm btn-delete-track-link"
+                        onClick={() => setDeletingTrackLinkIndex(idx)}
+                        title="Delete Track Link"
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="track-modal-footer">
+              <button
+                type="button"
+                className="btn-sm"
+                style={{ background: '#ff9800', color: '#fff' }}
+                onClick={() => {
+                  const id = activeTrackApp.id;
+                  setActiveTrackApp(null);
+                  editApp(id);
+                }}
+              >
+                ✏️ Manage / Add Links
+              </button>
+              <button
+                type="button"
+                className="btn-sm"
+                style={{ background: '#444' }}
+                onClick={() => setActiveTrackApp(null)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <ConfirmDeleteModal
         isOpen={deletingAppId !== null}
         title="Delete Application?"
@@ -283,6 +400,16 @@ export default function InternshipTrackerPage() {
           setDeletingAppId(null);
           await deleteApp(id);
         }}
+      />
+
+      <ConfirmDeleteModal
+        isOpen={deletingTrackLinkIndex !== null}
+        title="Delete Track Link?"
+        message="Are you sure you want to permanently delete this track link? This action cannot be undone."
+        itemPreview={deletingTrackItem ? `"${deletingTrackItem.label || deletingTrackItem.url}"` : null}
+        confirmWord="DELETE"
+        onClose={() => setDeletingTrackLinkIndex(null)}
+        onConfirm={confirmDeleteTrackLink}
       />
     </div>
   );

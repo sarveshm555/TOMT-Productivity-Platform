@@ -188,3 +188,99 @@
   max-width: 400px;
   border: 1px solid var(--primary-color);
 }
+
+.internship-page-root .btn-track {
+  background: #ff9800;
+  color: #ffffff;
+  border: 1px solid #e08600;
+  transition: all 0.2s ease;
+}
+
+.internship-page-root .btn-track:hover {
+  background: #f57c00;
+}
+
+/* Track Links Modal Styling */
+.internship-page-root .track-modal-card {
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.internship-page-root .track-modal-header {
+  border-bottom: 1px solid #2f303d;
+  padding-bottom: 12px;
+}
+
+.internship-page-root .track-modal-body {
+  max-height: 55vh;
+  overflow-y: auto;
+}
+
+.internship-page-root .track-links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.internship-page-root .track-link-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #101117;
+  border: 1px solid #272836;
+  padding: 12px 14px;
+  border-radius: 8px;
+}
+
+.internship-page-root .track-link-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.internship-page-root .track-link-icon {
+  font-size: 1.1em;
+  flex-shrink: 0;
+}
+
+.internship-page-root .track-link-anchor {
+  color: #4fc3f7;
+  text-decoration: underline;
+  font-weight: 600;
+  font-size: 0.92em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.internship-page-root .track-link-anchor:hover {
+  color: #81d4fa;
+}
+
+.internship-page-root .btn-delete-track-link {
+  background: #2a2b37;
+  color: #ef4444;
+  border: 1px solid #3f404e;
+  padding: 6px 10px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.internship-page-root .btn-delete-track-link:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.internship-page-root .track-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid #2f303d;
+  padding-top: 14px;
+}
