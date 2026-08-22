@@ -17,6 +17,7 @@ function serializeSettings(doc) {
     textColor: doc.textColor,
     fontFamily: doc.fontFamily,
     penStyle: doc.penStyle,
+    dailyAwarenessCheck: doc.dailyAwarenessCheck ?? false,
     // null -> frontend falls back to the bundled default asset
     // (/diary_front.jpeg, /diary_back.jpeg), matching the original's
     // DEFAULT_FRONT_COVER_PATH / DEFAULT_BACK_COVER_PATH.
@@ -47,12 +48,15 @@ const getSettings = asyncHandler(async (req, res) => {
  * capability.
  */
 const updateSettings = asyncHandler(async (req, res) => {
-  const { textColor, fontFamily, penStyle, resetFrontCover, resetBackCover, clearBgImage } = req.body;
+  const { textColor, fontFamily, penStyle, dailyAwarenessCheck, resetFrontCover, resetBackCover, clearBgImage } = req.body;
   const doc = await getOrCreateSettings(req.user.id);
 
   if (textColor) doc.textColor = textColor;
   if (fontFamily) doc.fontFamily = fontFamily;
   if (penStyle) doc.penStyle = penStyle;
+  if (typeof dailyAwarenessCheck !== 'undefined') {
+    doc.dailyAwarenessCheck = dailyAwarenessCheck === 'true' || dailyAwarenessCheck === true;
+  }
 
   const files = req.files || {};
 

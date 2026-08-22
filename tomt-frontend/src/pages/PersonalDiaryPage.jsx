@@ -4,6 +4,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import * as diaryService from '../api/diaryService.js';
 import apiClient from '../api/axiosClient.js';
 import { formatLocalDateTime } from '../utils/dateTimeUtils.js';
+import { validateDateAnswer, validateDayAnswer, getTodayAwarenessAnswers } from '../utils/awarenessUtils.js';
 import './PersonalDiaryPage.css';
 
 const FONT_OPTIONS = [
@@ -72,6 +73,11 @@ export default function PersonalDiaryPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editEntryMeta, setEditEntryMeta] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
+
+  const [showAwarenessModal, setShowAwarenessModal] = useState(false);
+  const [awarenessDateInput, setAwarenessDateInput] = useState('');
+  const [awarenessDayInput, setAwarenessDayInput] = useState('');
+  const [awarenessError, setAwarenessError] = useState('');
 
   const [bgPreviewUrl, setBgPreviewUrl] = useState(null);
   const [frontCoverPreviewUrl, setFrontCoverPreviewUrl] = useState(null);
@@ -191,6 +197,11 @@ export default function PersonalDiaryPage() {
       saveSettingsPatch({ penStyle: next });
     }
   }
+  function handleDailyAwarenessToggle() {
+    const nextVal = !settings.dailyAwarenessCheck;
+    setSettings((s) => ({ ...s, dailyAwarenessCheck: nextVal }));
+    saveSettingsPatch({ dailyAwarenessCheck: nextVal });
+  }
 
   function handleBgImageChange(e) {
     const file = e.target.files[0];
@@ -232,11 +243,23 @@ export default function PersonalDiaryPage() {
       return;
     }
 
+    if (!isEditing && settings && settings.dailyAwarenessCheck) {
+      setAwarenessDateInput('');
+      setAwarenessDayInput('');
+      setAwarenessError('');
+      setShowAwarenessModal(true);
+      return;
+    }
+
+    await executeSave(trimmed);
+  }
+
+  async function executeSave(trimmedContent) {
     setSaving(true);
     try {
       if (isEditing && editEntryMeta) {
         await diaryService.updateEntry(editEntryMeta.id, {
-          content: trimmed,
+          content: trimmedContent,
           theme: {
             textColor: settings.textColor,
             fontFamily: settings.fontFamily,
@@ -246,8 +269,9 @@ export default function PersonalDiaryPage() {
         window.alert('Entry updated successfully!');
         navigate('/diary/view');
       } else {
-        await diaryService.createEntry(trimmed);
+        await diaryService.createEntry(trimmedContent);
         setContent('');
+        setShowAwarenessModal(false);
         // eslint-disable-next-line no-alert
         window.alert('Entry saved!');
       }
@@ -257,6 +281,28 @@ export default function PersonalDiaryPage() {
     } finally {
       setSaving(false);
     }
+  }
+
+  function handleAwarenessSubmit(e) {
+    e.preventDefault();
+    setAwarenessError('');
+
+    const isDateValid = validateDateAnswer(awarenessDateInput);
+    const isDayValid = validateDayAnswer(awarenessDayInput);
+
+    if (!isDateValid || !isDayValid) {
+      setAwarenessError("That's not quite right. Take a moment and try again.");
+      return;
+    }
+
+    executeSave(content.trim());
+  }
+
+  function handleRevealAnswers() {
+    const answers = getTodayAwarenessAnswers();
+    setAwarenessDateInput(answers.date);
+    setAwarenessDayInput(answers.day);
+    setAwarenessError('');
   }
 
   if (loading || !settings) {
@@ -347,7 +393,7 @@ export default function PersonalDiaryPage() {
         >
           <div className="personal-diary-modal">
             <div className="personal-diary-modal-header">
-              <h3>🎨 Diary Appearance</h3>
+              <h3>🎨 Diary Appearance & Preferences</h3>
               <button
                 type="button"
                 className="personal-diary-modal-close"
@@ -388,6 +434,18 @@ export default function PersonalDiaryPage() {
                     onClick={handlePenStyleToggle}
                   >
                     {settings.penStyle === 'pen-caret-thick' ? '🖊️ Thick' : '✒️ Default'}
+                  </button>
+                </div>
+                <div className="setting-group">
+                  <label>Daily Awareness Check</label>
+                  <p className="setting-desc">Pause for a moment before saving and recall today's date and day.</p>
+                  <button
+                    type="button"
+                    id="awareness-toggle"
+                    className={`btn-awareness-toggle ${settings.dailyAwarenessCheck ? 'active' : ''}`}
+                    onClick={handleDailyAwarenessToggle}
+                  >
+                    {settings.dailyAwarenessCheck ? 'ON' : 'OFF'}
                   </button>
                 </div>
                 <div className="setting-group">
@@ -438,6 +496,94 @@ export default function PersonalDiaryPage() {
           </div>
         </div>
       )}
+
+      {/* Daily Awareness Check Modal */}
+      {showAwarenessModal && (
+        <div
+          className="personal-diary-modal-backdrop"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowAwarenessModal(false);
+          }}
+        >
+          <div className="personal-diary-modal awareness-modal">
+            <div className="personal-diary-modal-header">
+              <h3>🧘 Before you save...</h3>
+              <button
+                type="button"
+                className="personal-diary-modal-close"
+                onClick={() => setShowAwarenessModal(false)}
+                title="Close"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleAwarenessSubmit}>
+              <div className="personal-diary-modal-body">
+                <p className="awareness-intro">
+                  Take a calm breath and recall today's date and day of the week.
+                </p>
+
+                {awarenessError && <div className="awareness-error-banner">{awarenessError}</div>}
+
+                <div className="awareness-field">
+                  <label htmlFor="awareness-date-input">What is today's date?</label>
+                  <input
+                    id="awareness-date-input"
+                    type="text"
+                    className="awareness-input"
+                    placeholder="e.g. 22 August 2026 or 22/08/2026"
+                    value={awarenessDateInput}
+                    onChange={(e) => setAwarenessDateInput(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="awareness-field">
+                  <label htmlFor="awareness-day-input">What day is today?</label>
+                  <input
+                    id="awareness-day-input"
+                    type="text"
+                    className="awareness-input"
+                    placeholder="e.g. Saturday"
+                    value={awarenessDayInput}
+                    onChange={(e) => setAwarenessDayInput(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="awareness-reveal-row">
+                  <button
+                    type="button"
+                    className="btn-reveal-answer"
+                    onClick={handleRevealAnswers}
+                  >
+                    💡 Reveal today's date & day
+                  </button>
+                </div>
+              </div>
+
+              <div className="personal-diary-modal-footer awareness-footer">
+                <button
+                  type="button"
+                  className="btn-modal-cancel"
+                  onClick={() => setShowAwarenessModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn-modal-done"
+                  disabled={saving}
+                >
+                  {saving ? 'Saving...' : 'Continue / Save Entry'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+

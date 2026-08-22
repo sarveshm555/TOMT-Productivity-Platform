@@ -30,6 +30,10 @@ const diarySettingsSchema = new mongoose.Schema(
       enum: ['default', 'pen-caret-thick'],
       default: 'default',
     },
+    dailyAwarenessCheck: {
+      type: Boolean,
+      default: false,
+    },
     bgImageFileId: {
       type: mongoose.Schema.Types.ObjectId,
       default: null,
