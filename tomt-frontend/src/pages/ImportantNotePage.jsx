@@ -283,7 +283,7 @@ export default function ImportantNotePage() {
                 )}
 
                 <div className="important-note-modal-field">
-                  <label className="important-note-modal-label">💡 Inspiration / Message</label>
+                  <label className="important-note-modal-label">💡 Note Content / Takeaways</label>
                   <div className="important-note-modal-text">{modalNote.message}</div>
                 </div>
 
@@ -296,7 +296,7 @@ export default function ImportantNotePage() {
                   </div>
                 )}
 
-                {modalNote.date && <div className="important-note-modal-date">Saved on: {modalNote.date}</div>}
+                {modalNote.date && <div className="important-note-modal-date">📅 Saved on: {modalNote.date}</div>}
               </div>
 
               <div className="important-note-modal-footer">

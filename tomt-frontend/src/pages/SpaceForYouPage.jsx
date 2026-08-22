@@ -327,7 +327,7 @@ export default function SpaceForYouPage() {
                   </div>
                 )}
 
-                {modalNote.date && <div className="space-for-you-modal-date">Saved on: {modalNote.date}</div>}
+                {modalNote.date && <div className="space-for-you-modal-date">📅 Saved on: {modalNote.date}</div>}
               </div>
 
               <div className="space-for-you-modal-footer">
