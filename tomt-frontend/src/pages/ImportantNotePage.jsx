@@ -269,7 +269,13 @@ export default function ImportantNotePage() {
           <div id="note-modal" className="important-note-modal-backdrop" onClick={closeModal}>
             <div className="important-note-modal-card" onClick={(e) => e.stopPropagation()}>
               <div className="important-note-modal-header">
-                <h3 className="important-note-modal-title">{modalNote.name}</h3>
+                <div className="important-note-modal-header-left">
+                  <span className="important-note-modal-header-icon">📅</span>
+                  <div className="important-note-modal-title-wrapper">
+                    <h3 className="important-note-modal-title">{modalNote.name || 'Today'}</h3>
+                    <span className="important-note-modal-title-underline"></span>
+                  </div>
+                </div>
                 <button type="button" className="important-note-modal-close-btn" onClick={closeModal} title="Close modal">
                   ✕
                 </button>
@@ -283,25 +289,38 @@ export default function ImportantNotePage() {
                 )}
 
                 <div className="important-note-modal-field">
-                  <label className="important-note-modal-label">💡 Note Content / Takeaways</label>
-                  <div className="important-note-modal-text">{modalNote.message}</div>
+                  <div className="important-note-modal-label-pill">
+                    <span className="label-icon-badge">💡</span>
+                    <span className="label-text">NOTE CONTENT / TAKEAWAYS</span>
+                  </div>
+                  <div className="important-note-modal-text-box">
+                    <div className="text-box-accent-bar"></div>
+                    <div className="important-note-modal-text">{modalNote.message}</div>
+                  </div>
                 </div>
 
                 {modalNote.link && (
-                  <div className="important-note-modal-field">
-                    <label className="important-note-modal-label">🔗 Link</label>
+                  <div className="important-note-modal-field" style={{ marginTop: '12px' }}>
+                    <div className="important-note-modal-label-pill">
+                      <span className="label-icon-badge">🔗</span>
+                      <span className="label-text">USEFUL LINK</span>
+                    </div>
                     <a href={modalNote.link} target="_blank" rel="noreferrer" className="important-note-modal-link">
                       {modalNote.link}
                     </a>
                   </div>
                 )}
 
-                {modalNote.date && <div className="important-note-modal-date">📅 Saved on: {modalNote.date}</div>}
+                {modalNote.date && (
+                  <div className="important-note-modal-date">
+                    <span className="date-icon">📅</span> Saved on: {modalNote.date}
+                  </div>
+                )}
               </div>
 
               <div className="important-note-modal-footer">
                 <button type="button" className="important-note-modal-footer-close" onClick={closeModal}>
-                  Close
+                  ✕ Close
                 </button>
               </div>
             </div>

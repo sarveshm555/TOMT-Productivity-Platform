@@ -300,7 +300,13 @@ export default function SpaceForYouPage() {
           <div className="space-for-you-modal-backdrop" onClick={closeModal}>
             <div className="space-for-you-modal-card" onClick={(e) => e.stopPropagation()}>
               <div className="space-for-you-modal-header">
-                <h3 className="space-for-you-modal-title">{modalNote.name}</h3>
+                <div className="space-for-you-modal-header-left">
+                  <span className="space-for-you-modal-header-icon">📅</span>
+                  <div className="space-for-you-modal-title-wrapper">
+                    <h3 className="space-for-you-modal-title">{modalNote.name || 'Knowledge Note'}</h3>
+                    <span className="space-for-you-modal-title-underline"></span>
+                  </div>
+                </div>
                 <button type="button" className="space-for-you-modal-close-btn" onClick={closeModal} title="Close">
                   ✕
                 </button>
@@ -314,25 +320,38 @@ export default function SpaceForYouPage() {
                 )}
 
                 <div className="space-for-you-modal-field">
-                  <label className="space-for-you-modal-label">💡 Note Content / Takeaways</label>
-                  <div className="space-for-you-modal-text">{modalNote.message}</div>
+                  <div className="space-for-you-modal-label-pill">
+                    <span className="label-icon-badge">💡</span>
+                    <span className="label-text">NOTE CONTENT / TAKEAWAYS</span>
+                  </div>
+                  <div className="space-for-you-modal-text-box">
+                    <div className="text-box-accent-bar"></div>
+                    <div className="space-for-you-modal-text">{modalNote.message}</div>
+                  </div>
                 </div>
 
                 {modalNote.link && (
-                  <div className="space-for-you-modal-field">
-                    <label className="space-for-you-modal-label">🔗 Useful Link</label>
+                  <div className="space-for-you-modal-field" style={{ marginTop: '12px' }}>
+                    <div className="space-for-you-modal-label-pill">
+                      <span className="label-icon-badge">🔗</span>
+                      <span className="label-text">USEFUL LINK</span>
+                    </div>
                     <a href={modalNote.link} target="_blank" rel="noreferrer" className="space-for-you-modal-link">
                       {modalNote.link}
                     </a>
                   </div>
                 )}
 
-                {modalNote.date && <div className="space-for-you-modal-date">📅 Saved on: {modalNote.date}</div>}
+                {modalNote.date && (
+                  <div className="space-for-you-modal-date">
+                    <span className="date-icon">📅</span> Saved on: {modalNote.date}
+                  </div>
+                )}
               </div>
 
               <div className="space-for-you-modal-footer">
                 <button type="button" className="space-for-you-modal-footer-close" onClick={closeModal}>
-                  Close
+                  ✕ Close
                 </button>
               </div>
             </div>
