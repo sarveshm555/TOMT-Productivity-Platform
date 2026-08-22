@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import * as diaryService from '../api/diaryService.js';
 import apiClient from '../api/axiosClient.js';
 import ConfirmDeleteModal from '../components/ConfirmDeleteModal.jsx';
+import { formatLocalDateTime } from '../utils/dateTimeUtils.js';
 import './ViewDiaryPage.css';
 
 const JSPDF_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
@@ -360,13 +361,14 @@ export default function ViewDiaryPage() {
         }
         const fontFamily = (entry.theme && entry.theme.fontFamily) || 'Georgia, serif';
         const textColor = getViewerTextColor(entry);
+        const formattedDate = formatLocalDateTime(entry.dateTime, entry.displayDateTime);
         page.innerHTML =
           '<div style="text-align:center;margin-bottom:10pt;color:' +
           textColor +
           ';font-family:' +
           fontFamily +
           ';"><h4 style="margin:0;font-size:16pt;">' +
-          entry.displayDateTime +
+          formattedDate +
           '</h4></div><hr style="border-color:#5d4037;"><div style="white-space:pre-wrap;font-size:12pt;color:' +
           textColor +
           ';font-family:' +
@@ -456,9 +458,10 @@ export default function ViewDiaryPage() {
               </li>
             ) : (
               entries.map(function (entry) {
+                const formattedDate = formatLocalDateTime(entry.dateTime, entry.displayDateTime);
                 return (
                   <li className="history-item-view" key={entry.id}>
-                    <span className="entry-title-date">{entry.displayDateTime}</span>
+                    <span className="entry-title-date">{formattedDate}</span>
                     <div className="history-actions">
                       <button
                         type="button"
@@ -533,6 +536,7 @@ export default function ViewDiaryPage() {
                 const bgUrl = entryBgUrls[entry.id];
                 const textColor = getViewerTextColor(entry);
                 const fontFamily = (entry.theme && entry.theme.fontFamily) || 'Georgia, serif';
+                const formattedDate = formatLocalDateTime(entry.dateTime, entry.displayDateTime);
 
                 return (
                   <div
@@ -549,7 +553,7 @@ export default function ViewDiaryPage() {
                     })}
                   >
                     <div style={{ color: textColor, fontFamily: fontFamily }}>
-                      <strong>Date:</strong> {entry.displayDateTime}
+                      <strong>Date:</strong> {formattedDate}
                     </div>
                     <hr style={{ borderColor: '#999' }} />
                     <div style={{ whiteSpace: 'pre-wrap', color: textColor, fontFamily: fontFamily }}>

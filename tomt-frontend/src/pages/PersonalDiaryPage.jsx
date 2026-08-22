@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 import * as diaryService from '../api/diaryService.js';
 import apiClient from '../api/axiosClient.js';
+import { formatLocalDateTime } from '../utils/dateTimeUtils.js';
 import './PersonalDiaryPage.css';
 
 const FONT_OPTIONS = [
@@ -39,17 +40,7 @@ function isColorDark(color) {
 }
 
 function getFormattedCurrentDateTime() {
-  const now = new Date();
-  const day = now.getDate();
-  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const month = monthNames[now.getMonth()];
-  const year = now.getFullYear();
-  let hours = now.getHours();
-  const minutes = now.getMinutes().toString().padStart(2, '0');
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12;
-  hours = hours ? hours : 12;
-  return `${day} ${month} ${year} at ${hours}:${minutes} ${ampm}`;
+  return formatLocalDateTime(new Date());
 }
 
 /**
@@ -133,9 +124,10 @@ export default function PersonalDiaryPage() {
       setSettings(activeSettings);
       setContent(entryData.content || '');
       setIsEditing(true);
+      const formattedDate = formatLocalDateTime(entryData.dateTime, entryData.displayDateTime);
       setEditEntryMeta({
         id: entryData.id,
-        displayDateTime: entryData.displayDateTime,
+        displayDateTime: formattedDate,
         dateTime: entryData.dateTime,
         bgImageUrl: entryTheme.bgImageUrl,
       });

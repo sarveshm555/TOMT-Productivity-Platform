@@ -105,7 +105,7 @@ function serializeEntry(doc) {
   return {
     id: doc._id,
     content: doc.content,
-    dateTime: doc.dateTime,
+    dateTime: doc.dateTime ? doc.dateTime.toISOString() : (doc.createdAt ? doc.createdAt.toISOString() : null),
     displayDateTime: doc.displayDateTime,
     theme: {
       textColor: doc.theme.textColor,
@@ -137,12 +137,8 @@ const getEntryBgImage = asyncHandler(async (req, res) => {
 
 /**
  * POST /api/diary/entries
- * Ported from saveEntry() - `dateTime`/`displayDateTime` are computed
- * server-side at the moment of saving (equivalent point to the original's
- * client-side `new Date()` call). The current settings' textColor/
- * fontFamily/bgImage are snapshotted into the entry's own `theme` -
- * bgImage is duplicated into a NEW GridFS file (see DiaryEntry.js comment
- * for why a shared reference would be wrong).
+ * `dateTime` is computed server-side as UTC Date at the moment of saving.
+ * `displayDateTime` stores the ISO timestamp for backward compatibility.
  */
 const createEntry = asyncHandler(async (req, res) => {
   const { content } = req.body;
@@ -154,11 +150,7 @@ const createEntry = asyncHandler(async (req, res) => {
   const settings = await getOrCreateSettings(req.user.id);
 
   const now = new Date();
-  const displayDateTime = `${now.toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  })} at ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+  const displayDateTime = now.toISOString();
 
   let bgImageFileId = null;
   let bgImageContentType = null;
