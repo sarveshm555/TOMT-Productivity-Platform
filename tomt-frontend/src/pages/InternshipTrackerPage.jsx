@@ -180,7 +180,8 @@ export default function InternshipTrackerPage() {
 
   function openRejectModal(id) {
     setActiveRejectId(id);
-    setMistakeInput('');
+    const targetApp = apps.find((a) => a.id === id);
+    setMistakeInput(targetApp && targetApp.mistakeMessage ? targetApp.mistakeMessage : '');
     setRejectModalOpen(true);
   }
   function closeModal() {
@@ -394,7 +395,7 @@ export default function InternshipTrackerPage() {
                           onClick={() => openTrackModal(app)}
                           title="View Track Links"
                         >
-                          🔗 Track {linkCount > 0 ? `(${linkCount})` : ''}
+                          Track{linkCount > 0 ? ` (${linkCount})` : ''}
                         </button>
                         <button
                           type="button"
@@ -406,7 +407,7 @@ export default function InternshipTrackerPage() {
                           }}
                           title="View & Add Messages"
                         >
-                          💬 Messages {msgCount > 0 ? `(${msgCount})` : ''}
+                          Messages{msgCount > 0 ? ` (${msgCount})` : ''}
                         </button>
                       </div>
                       <div className="action-row action-row-media">
@@ -416,7 +417,7 @@ export default function InternshipTrackerPage() {
                           onClick={() => setActiveImagesApp(app)}
                           title="View & Upload Images"
                         >
-                          📷 Images {imgCount > 0 ? `(${imgCount})` : ''}
+                          Images{imgCount > 0 ? ` (${imgCount})` : ''}
                         </button>
                       </div>
                       <div className="action-row action-row-manage">
@@ -458,6 +459,7 @@ export default function InternshipTrackerPage() {
           <textarea
             id="mistake-input"
             rows="4"
+            placeholder="Don't change your destination. Just change your path."
             style={{ width: '100%', background: '#000', color: 'white', borderRadius: '5px', padding: '10px', border: '1px solid #333' }}
             value={mistakeInput}
             onChange={(e) => setMistakeInput(e.target.value)}
@@ -733,10 +735,12 @@ export default function InternshipTrackerPage() {
               ) : (
                 <div className="tracker-images-grid">
                   {activeImagesApp.images.map((img, idx) => {
-                    const imgId = img.id || img._id || idx;
-                    const imgUrl = img.url || internshipService.getImageUrl(activeImagesApp.id, imgId);
+                    const imgId = String(img.id || img._id || '');
+                    const imgUrl = imgId
+                      ? `/placement/internships/${activeImagesApp.id}/images/${imgId}`
+                      : (img.url || '');
                     return (
-                      <div key={imgId} className="tracker-image-card">
+                      <div key={imgId || idx} className="tracker-image-card">
                         <div
                           className="tracker-image-thumb"
                           title="Click to view full image"

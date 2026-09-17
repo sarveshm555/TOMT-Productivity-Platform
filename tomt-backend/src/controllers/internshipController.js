@@ -5,7 +5,7 @@ const { uploadBuffer, downloadToResponse, deleteFile } = require('../utils/gridf
 
 function serialize(doc) {
   return {
-    id: doc._id,
+    id: String(doc._id),
     company: doc.company,
     role: doc.role,
     dateApplied: doc.dateApplied,
@@ -28,7 +28,7 @@ function serialize(doc) {
       mimeType: img.mimeType,
       size: img.size,
       bucket: img.bucket || 'media',
-      url: `/placement/internships/${doc._id}/images/${img._id}`,
+      url: img._id ? `/placement/internships/${doc._id}/images/${img._id}` : '',
       createdAt: img.createdAt,
     })),
     createdAt: doc.createdAt,
@@ -265,7 +265,7 @@ const getInternshipImage = asyncHandler(async (req, res) => {
   const doc = await Internship.findOne({ _id: req.params.id, userId: req.user.id });
   if (!doc) throw new ApiError(404, 'Application not found.');
 
-  const image = (doc.images || []).find((img) => img._id.toString() === req.params.imageId);
+  const image = (doc.images || []).find((img) => String(img._id) === String(req.params.imageId));
   if (!image || !image.gridfsFileId) throw new ApiError(404, 'Image not found.');
 
   res.setHeader('Content-Type', image.mimeType || 'image/jpeg');
@@ -309,7 +309,7 @@ const deleteInternshipImage = asyncHandler(async (req, res) => {
   const doc = await Internship.findOne({ _id: req.params.id, userId: req.user.id });
   if (!doc) throw new ApiError(404, 'Application not found.');
 
-  const imageIndex = (doc.images || []).findIndex((img) => img._id.toString() === req.params.imageId);
+  const imageIndex = (doc.images || []).findIndex((img) => String(img._id) === String(req.params.imageId));
   if (imageIndex === -1) throw new ApiError(404, 'Image not found.');
 
   const image = doc.images[imageIndex];
