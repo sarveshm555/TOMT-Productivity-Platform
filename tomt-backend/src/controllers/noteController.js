@@ -23,7 +23,7 @@ function serialize(doc) {
  * `notes.unshift(newNote)` insert order for new notes).
  */
 const listNotes = asyncHandler(async (req, res) => {
-  const docs = await Note.find({ userId: req.user.id, scope: 'placement' }).sort({ createdAt: -1 });
+  const docs = await Note.find({ userId: req.user.id, scope: { $in: ['placement', 'space_for_you'] } }).sort({ createdAt: -1 });
   res.status(200).json({ success: true, notes: docs.map(serialize) });
 });
 
@@ -33,7 +33,7 @@ const listNotes = asyncHandler(async (req, res) => {
  * Base64 background-image/img src.
  */
 const getNoteImage = asyncHandler(async (req, res) => {
-  const doc = await Note.findOne({ _id: req.params.id, userId: req.user.id, scope: 'placement' });
+  const doc = await Note.findOne({ _id: req.params.id, userId: req.user.id });
   if (!doc || !doc.imageFileId) throw new ApiError(404, 'Image not found.');
 
   res.setHeader('Content-Type', doc.imageContentType || 'application/octet-stream');
@@ -91,7 +91,7 @@ const updateNote = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'Name / Title and Inspiration / Message are required.');
   }
 
-  const doc = await Note.findOne({ _id: req.params.id, userId: req.user.id, scope: 'placement' });
+  const doc = await Note.findOne({ _id: req.params.id, userId: req.user.id });
   if (!doc) throw new ApiError(404, 'Note not found.');
 
   doc.name = trimmedName;
@@ -116,7 +116,7 @@ const updateNote = asyncHandler(async (req, res) => {
  * Also removes the GridFS image file, if any.
  */
 const deleteNote = asyncHandler(async (req, res) => {
-  const doc = await Note.findOneAndDelete({ _id: req.params.id, userId: req.user.id, scope: 'placement' });
+  const doc = await Note.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
   if (!doc) throw new ApiError(404, 'Note not found.');
 
   if (doc.imageFileId) {

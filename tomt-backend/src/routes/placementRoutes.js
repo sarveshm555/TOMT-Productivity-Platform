@@ -3,9 +3,16 @@ const multer = require('multer');
 const requireAuth = require('../middleware/auth');
 const {
   listInternships,
+  getInternship,
   createInternship,
   updateInternship,
   updateStatus,
+  getInternshipImage,
+  uploadInternshipImages,
+  deleteInternshipImage,
+  addMessage,
+  updateMessage,
+  deleteMessage,
   deleteInternship,
 } = require('../controllers/internshipController');
 const {
@@ -39,10 +46,21 @@ router.use(requireAuth);
 
 // /api/placement/internships - internship-tracker.html + add-internship.html
 router.get('/internships', listInternships);
-router.post('/internships', createInternship);
-router.put('/internships/:id', updateInternship);
+router.get('/internships/:id', getInternship);
+router.post('/internships', upload.array('images', 20), createInternship);
+router.put('/internships/:id', upload.array('images', 20), updateInternship);
 router.patch('/internships/:id/status', updateStatus);
 router.delete('/internships/:id', deleteInternship);
+
+// Dedicated image endpoints
+router.get('/internships/:id/images/:imageId', getInternshipImage);
+router.post('/internships/:id/images', upload.array('images', 20), uploadInternshipImages);
+router.delete('/internships/:id/images/:imageId', deleteInternshipImage);
+
+// Dedicated message endpoints
+router.post('/internships/:id/messages', addMessage);
+router.put('/internships/:id/messages/:messageId', updateMessage);
+router.delete('/internships/:id/messages/:messageId', deleteMessage);
 
 // /api/placement/coding-profiles - coding-profiles.html + add-coding-profile.html
 router.get('/coding-profiles', listCodingProfiles);

@@ -277,10 +277,348 @@
   color: #ffffff;
 }
 
-.internship-page-root .track-modal-footer {
+.internship-page-root .btn-messages {
+  background: #0284c7;
+  color: #ffffff;
+  border: 1px solid #0369a1;
+  transition: all 0.2s ease;
+}
+.internship-page-root .btn-messages:hover {
+  background: #0369a1;
+}
+
+.internship-page-root .btn-images {
+  background: #059669;
+  color: #ffffff;
+  border: 1px solid #047857;
+  transition: all 0.2s ease;
+}
+.internship-page-root .btn-images:hover {
+  background: #047857;
+}
+
+/* Modal sizing and common classes */
+.internship-page-root .detail-modal-card {
+  max-width: 600px;
+  max-height: 85vh;
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  gap: 14px;
+  overflow: hidden;
+}
+
+.internship-page-root .detail-modal-header {
+  border-bottom: 1px solid #2f303d;
+  padding-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.internship-page-root .detail-modal-title {
+  font-size: 1.15em;
+  font-weight: 700;
+  margin: 0;
+}
+
+.internship-page-root .detail-modal-subtitle {
+  color: #94a3b8;
+  font-size: 0.85em;
+  margin-top: 2px;
+}
+
+.internship-page-root .detail-modal-close-icon {
+  background: transparent;
+  border: none;
+  color: #aaa;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.internship-page-root .detail-modal-close-icon:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.internship-page-root .detail-modal-body {
+  max-height: 52vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 4px;
+}
+
+/* Messages in Tracker Modal */
+.internship-page-root .tracker-message-item {
+  background: #101117;
+  border: 1px solid #272836;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.internship-page-root .tracker-message-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.internship-page-root .tracker-message-date {
+  font-size: 0.78em;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.internship-page-root .tracker-message-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.internship-page-root .tracker-message-text {
+  font-size: 0.9em;
+  line-height: 1.5;
+  color: #f0f4f8;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.internship-page-root .tracker-inline-edit-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.internship-page-root .tracker-inline-textarea {
+  width: 100%;
+  background: #191a24;
+  border: 1px solid #38bdf8;
+  color: #fff;
+  padding: 8px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.9em;
+  resize: vertical;
+}
+
+.internship-page-root .tracker-add-message-box {
+  background: #14151e;
+  border: 1px dashed #2f303d;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.internship-page-root .tracker-add-message-input {
+  width: 100%;
+  background: #1f202a;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.88em;
+  resize: vertical;
+}
+
+/* Images in Tracker Modal */
+.internship-page-root .tracker-images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+.internship-page-root .tracker-image-card {
+  background: #101117;
+  border: 1px solid #272836;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.internship-page-root .tracker-image-thumb {
+  width: 100%;
+  height: 100px;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.internship-page-root .tracker-image-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s ease;
+}
+
+.internship-page-root .tracker-image-thumb:hover img {
+  transform: scale(1.06);
+}
+
+.internship-page-root .tracker-image-meta {
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.75em;
+}
+
+.internship-page-root .tracker-image-name {
+  color: var(--heading-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+
+.internship-page-root .tracker-image-size {
+  color: #888;
+}
+
+.internship-page-root .btn-tracker-delete-img {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 4px;
+  font-size: 0.78em;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 2px 8px 8px 8px;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+.internship-page-root .btn-tracker-delete-img:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+.internship-page-root .detail-modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
   border-top: 1px solid #2f303d;
-  padding-top: 14px;
+  padding-top: 12px;
+}
+
+/* Lightbox Modal */
+.internship-lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 15px;
+}
+
+.internship-lightbox-card {
+  position: relative;
+  max-width: 92vw;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  background: #16171d;
+  border-radius: 10px;
+  border: 1px solid #333;
+  overflow: hidden;
+}
+
+.internship-lightbox-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: #111217;
+  border-bottom: 1px solid #272836;
+  gap: 10px;
+}
+
+.internship-lightbox-title {
+  font-size: 0.9em;
+  color: #f0f4f8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70vw;
+}
+
+.internship-lightbox-close {
+  background: transparent;
+  border: none;
+  color: #bbb;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.internship-lightbox-close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.internship-lightbox-body {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+
+.internship-lightbox-body img {
+  max-width: 100%;
+  max-height: 75vh;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+@media (max-width: 600px) {
+  .internship-page-root {
+    padding: 8px;
+  }
+  .internship-page-root .app-container {
+    padding: 12px;
+  }
+  .internship-page-root .action-group {
+    width: 100%;
+  }
+  .internship-page-root .action-group .btn-sm {
+    flex: 1;
+    text-align: center;
+    min-width: 65px;
+  }
+  .internship-page-root .detail-modal-card {
+    max-width: 95vw;
+  }
+  .internship-page-root .tracker-images-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 380px) {
+  .internship-page-root .action-group .btn-sm {
+    font-size: 0.7em;
+    padding: 5px 6px;
+  }
+  .internship-page-root .tracker-images-grid {
+    grid-template-columns: 1fr;
+  }
 }

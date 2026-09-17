@@ -1,5 +1,56 @@
 const mongoose = require('mongoose');
 
+const messageSchema = new mongoose.Schema(
+  {
+    text: {
+      type: String,
+      required: [true, 'Message text is required.'],
+      trim: true,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  { _id: true }
+);
+
+const imageSchema = new mongoose.Schema(
+  {
+    gridfsFileId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
+    fileName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    mimeType: {
+      type: String,
+      required: true,
+    },
+    size: {
+      type: Number,
+      required: true,
+    },
+    bucket: {
+      type: String,
+      enum: ['media', 'documents'],
+      default: 'media',
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  { _id: true }
+);
+
 // Ported from internship-tracker.html/add-internship.html's
 // `internshipApplications` localStorage array.
 const internshipSchema = new mongoose.Schema(
@@ -47,6 +98,14 @@ const internshipSchema = new mongoose.Schema(
         },
       },
     ],
+    messages: {
+      type: [messageSchema],
+      default: [],
+    },
+    images: {
+      type: [imageSchema],
+      default: [],
+    },
   },
   { timestamps: true }
 );

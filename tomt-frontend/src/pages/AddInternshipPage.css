@@ -181,7 +181,294 @@
   border-color: #ff9800;
 }
 
-/* New, minimal - see TargetsPage.css for why. */
+/* Messages Section */
+.add-internship-page-root .messages-section {
+  margin-top: 20px;
+  background: #111217;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.add-internship-page-root .messages-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.add-internship-page-root .messages-title {
+  font-weight: 700;
+  font-size: 0.95em;
+  color: #38bdf8;
+}
+
+.add-internship-page-root .messages-subtitle {
+  font-size: 0.82em;
+  color: #888;
+}
+
+.add-internship-page-root .message-card-item {
+  background: #191a24;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #272836;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.add-internship-page-root .message-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.add-internship-page-root .message-num-badge {
+  font-size: 0.82em;
+  font-weight: 700;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.add-internship-page-root .message-date-badge {
+  font-size: 0.78em;
+  color: #94a3b8;
+}
+
+.add-internship-page-root .message-textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 70px;
+}
+
+.add-internship-page-root .btn-add-message {
+  align-self: flex-start;
+  background: rgba(56, 189, 248, 0.1);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.88em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-internship-page-root .btn-add-message:hover {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+}
+
+/* Images Section */
+.add-internship-page-root .images-section {
+  margin-top: 20px;
+  background: #111217;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.add-internship-page-root .images-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.add-internship-page-root .images-title {
+  font-weight: 700;
+  font-size: 0.95em;
+  color: #34d399;
+}
+
+.add-internship-page-root .images-subtitle {
+  font-size: 0.82em;
+  color: #888;
+}
+
+.add-internship-page-root .images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+.add-internship-page-root .image-card {
+  position: relative;
+  background: #191a24;
+  border: 1px solid #272836;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-internship-page-root .image-thumb-box {
+  width: 100%;
+  height: 100px;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.add-internship-page-root .image-thumb-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s ease;
+}
+
+.add-internship-page-root .image-thumb-box:hover img {
+  transform: scale(1.05);
+}
+
+.add-internship-page-root .image-card-info {
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.75em;
+}
+
+.add-internship-page-root .image-card-name {
+  color: var(--heading-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+
+.add-internship-page-root .image-card-size {
+  color: #888;
+}
+
+.add-internship-page-root .btn-remove-image {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 4px 8px;
+  font-size: 0.78em;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 4px 8px 8px 8px;
+  transition: all 0.2s ease;
+}
+
+.add-internship-page-root .btn-remove-image:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+.add-internship-page-root .btn-add-images {
+  align-self: flex-start;
+  background: rgba(52, 211, 153, 0.1);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.88em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-internship-page-root .btn-add-images:hover {
+  background: rgba(52, 211, 153, 0.2);
+  border-color: #34d399;
+}
+
+/* Lightbox Modal */
+.internship-lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 15px;
+}
+
+.internship-lightbox-card {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background: #16171d;
+  border-radius: 10px;
+  border: 1px solid #333;
+  overflow: hidden;
+}
+
+.internship-lightbox-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: #111217;
+  border-bottom: 1px solid #272836;
+  gap: 10px;
+}
+
+.internship-lightbox-title {
+  font-size: 0.9em;
+  color: #f0f4f8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70vw;
+}
+
+.internship-lightbox-close {
+  background: transparent;
+  border: none;
+  color: #bbb;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.internship-lightbox-close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.internship-lightbox-body {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+
+.internship-lightbox-body img {
+  max-width: 100%;
+  max-height: 75vh;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+/* Minimal Error */
 .add-internship-page-root .add-internship-error {
   color: #e91e63;
   margin-top: 15px;
@@ -190,8 +477,20 @@
 }
 
 @media (max-width: 600px) {
+  .add-internship-page-root {
+    padding: 8px;
+  }
+  .add-internship-page-root .app-container {
+    padding: 14px;
+  }
   .add-internship-page-root .form-row {
     grid-template-columns: 1fr;
+    padding: 12px;
+  }
+  .add-internship-page-root .track-links-section,
+  .add-internship-page-root .messages-section,
+  .add-internship-page-root .images-section {
+    padding: 14px;
   }
   .add-internship-page-root .track-link-row {
     flex-direction: column;
@@ -201,7 +500,20 @@
     align-self: flex-end;
     width: 100%;
   }
+  .add-internship-page-root .btn-add-link-row,
+  .add-internship-page-root .btn-add-message,
+  .add-internship-page-root .btn-add-images,
   .add-internship-page-root .btn {
     width: 100%;
+    text-align: center;
+  }
+  .add-internship-page-root .images-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 380px) {
+  .add-internship-page-root .images-grid {
+    grid-template-columns: 1fr;
   }
 }

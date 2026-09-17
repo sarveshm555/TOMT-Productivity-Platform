@@ -16,7 +16,7 @@ const noteSchema = new mongoose.Schema(
     scope: {
       type: String,
       enum: ['placement', 'space_for_you'],
-      default: 'space_for_you',
+      default: 'placement',
       index: true,
     },
     name: {
