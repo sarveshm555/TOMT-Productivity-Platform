@@ -71,9 +71,13 @@ export default function DailyLearningTrackerPage() {
   // Search filter
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Modals
-  const [activeModal, setActiveModal] = useState(null); // { type: 'link'|'files'|'takeaways'|'view_all', log: object }
-  const [previewDoc, setPreviewDoc] = useState(null); // { kind: 'image'|'pdf', url: string, title: string }
+  // In-Card Expandable Detail View: { logId: string, view: 'link' | 'files' | 'takeaways' | 'view_all' } | null
+  const [expandedCard, setExpandedCard] = useState(null);
+
+  // Lightbox Preview for Photos and PDFs: { kind: 'image'|'pdf', url: string, title: string } | null
+  const [previewDoc, setPreviewDoc] = useState(null);
+
+  // Delete Confirmation
   const [deletingLogId, setDeletingLogId] = useState(null);
 
   useEffect(() => {
@@ -82,7 +86,9 @@ export default function DailyLearningTrackerPage() {
   }, [courseId]);
 
   useEffect(() => {
-    document.title = course ? `${course.name} - Learning Log` : 'Life Manager App - Daily Learning Tracker';
+    document.title = course
+      ? `${course.name} - Learning Log`
+      : 'Life Manager App - Daily Learning Tracker';
   }, [course]);
 
   useEffect(() => {
@@ -95,7 +101,10 @@ export default function DailyLearningTrackerPage() {
     setLoading(true);
     setError('');
     try {
-      const [c, l] = await Promise.all([educationService.getCourse(courseId), educationService.listCourseLogs(courseId)]);
+      const [c, l] = await Promise.all([
+        educationService.getCourse(courseId),
+        educationService.listCourseLogs(courseId),
+      ]);
       setCourse(c);
       setLogs(l);
     } catch (err) {
@@ -107,7 +116,11 @@ export default function DailyLearningTrackerPage() {
 
   const filteredLogs = useMemo(() => {
     const term = searchTerm.toLowerCase();
-    return logs.filter((log) => `${log.topic} ${log.date} ${log.learnings || ''} ${log.link || ''}`.toLowerCase().includes(term));
+    return logs.filter((log) =>
+      `${log.topic} ${log.date} ${log.learnings || ''} ${log.link || ''}`
+        .toLowerCase()
+        .includes(term)
+    );
   }, [logs, searchTerm]);
 
   function resetForm() {
@@ -133,16 +146,14 @@ export default function DailyLearningTrackerPage() {
 
   function handlePhotoSelect(e) {
     if (e.target.files) {
-      const files = Array.from(e.target.files);
-      setStagedPhotos((prev) => [...prev, ...files]);
+      setStagedPhotos((prev) => [...prev, ...Array.from(e.target.files)]);
     }
     e.target.value = '';
   }
 
   function handlePdfSelect(e) {
     if (e.target.files) {
-      const files = Array.from(e.target.files);
-      setStagedPdfs((prev) => [...prev, ...files]);
+      setStagedPdfs((prev) => [...prev, ...Array.from(e.target.files)]);
     }
     e.target.value = '';
   }
@@ -168,14 +179,8 @@ export default function DailyLearningTrackerPage() {
     const trimmedTopic = topicLearned.trim();
     const trimmedLink = learningLink.trim();
 
-    if (!trimmedTopic) {
-      setError('Topic Covered is required.');
-      return;
-    }
-    if (!logDate) {
-      setError('Date Studied is required.');
-      return;
-    }
+    if (!trimmedTopic) { setError('Topic Covered is required.'); return; }
+    if (!logDate) { setError('Date Studied is required.'); return; }
     if (trimmedLink && !isValidHttpUrl(trimmedLink)) {
       setError('Topic Link must be a valid HTTP or HTTPS URL.');
       return;
@@ -198,7 +203,6 @@ export default function DailyLearningTrackerPage() {
         formData.append('keptAttachmentIds', JSON.stringify(keptIds));
       }
 
-      // Append all staged photos and PDFs
       stagedPhotos.forEach((file) => formData.append('files', file));
       stagedPdfs.forEach((file) => formData.append('files', file));
 
@@ -213,7 +217,9 @@ export default function DailyLearningTrackerPage() {
       resetForm();
       setFormVisible(false);
     } catch (err) {
-      const message = (err.response && err.response.data && err.response.data.message) || 'Could not save progress.';
+      const message =
+        (err.response && err.response.data && err.response.data.message) ||
+        'Could not save progress.';
       setError(message);
     } finally {
       setSubmitting(false);
@@ -239,19 +245,38 @@ export default function DailyLearningTrackerPage() {
     try {
       await educationService.deleteCourseLog(courseId, id);
       setLogs((prev) => prev.filter((l) => l.id !== id));
-      if (activeModal && activeModal.log.id === id) {
-        setActiveModal(null);
+      if (expandedCard && String(expandedCard.logId) === String(id)) {
+        setExpandedCard(null);
       }
     } catch (err) {
       setError('Could not delete entry. Please try again.');
     }
   }
 
+  // Toggle in-card detail panel: Link, Files, Takeaways, View All
+  function toggleCardDetail(log, view) {
+    console.log(`ACTION CLICKED: ${view.toUpperCase()}`);
+    console.log('LOG ID:', log.id);
+    console.log('LOG DATA:', log);
+    if (view === 'link') console.log('LINK VALUE:', log.link);
+    if (view === 'takeaways') console.log('TAKEAWAYS VALUE:', log.learnings);
+    if (view === 'files') console.log('ATTACHMENTS COUNT:', (log.attachments || []).length);
+
+    setExpandedCard((current) => {
+      console.log('EXPANDED DETAIL BEFORE:', current);
+      const next =
+        current && String(current.logId) === String(log.id) && current.view === view
+          ? null
+          : { logId: String(log.id), view };
+      console.log('EXPANDED DETAIL AFTER:', next);
+      return next;
+    });
+  }
+
   async function viewAttachment(log, attachment) {
     try {
       const blob = await educationService.fetchAttachmentBlob(courseId, log.id, attachment.id);
       const url = URL.createObjectURL(blob);
-
       if (attachment.fileType === 'pdf') {
         if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
           window.open(url, '_blank');
@@ -268,7 +293,12 @@ export default function DailyLearningTrackerPage() {
 
   async function downloadAttachment(log, attachment) {
     try {
-      const blob = await educationService.fetchAttachmentBlob(courseId, log.id, attachment.id, { download: true });
+      const blob = await educationService.fetchAttachmentBlob(
+        courseId,
+        log.id,
+        attachment.id,
+        { download: true }
+      );
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -290,18 +320,19 @@ export default function DailyLearningTrackerPage() {
   return (
     <div className="daily-learning-tracker-page-root">
       <div className="app-container">
-        {/* Header */}
+
+        {/* ── Header ─────────────────────────────────────────────── */}
         <div className="header-box">
-          <Link to="/placement/education" className="btn-back">
-            ← Back
-          </Link>
-          <h2 id="log-header-title">{loading ? 'Loading...' : course ? course.name : '...'}</h2>
+          <Link to="/placement/education" className="btn-back">← Back</Link>
+          <h2 id="log-header-title">
+            {loading ? 'Loading...' : course ? course.name : '...'}
+          </h2>
           <button type="button" className="btn-toggle-form" id="toggle-form-btn" onClick={toggleForm}>
-            {formVisible ? '❌ Close' : '➕ Log Progress'}
+            {formVisible ? 'Close' : 'Log Progress'}
           </button>
         </div>
 
-        {/* Stats */}
+        {/* ── Stats ──────────────────────────────────────────────── */}
         <div id="stats-container">
           <div className="stat-box">
             Days Logged: <strong id="total-days-display">{logs.length}</strong>
@@ -311,12 +342,12 @@ export default function DailyLearningTrackerPage() {
           </div>
         </div>
 
-        {/* Search */}
+        {/* ── Search ─────────────────────────────────────────────── */}
         <div className="search-container">
           <input
             type="text"
             id="search-input"
-            placeholder="🔍 Search topics, takeaways, or links..."
+            placeholder="Search topics, takeaways, or links..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -324,11 +355,11 @@ export default function DailyLearningTrackerPage() {
 
         {error && <div className="daily-learning-tracker-error">{error}</div>}
 
-        {/* Form Container */}
+        {/* ── Log Progress Form ───────────────────────────────────── */}
         {formVisible && (
           <div id="log-form-container" style={{ display: 'block' }}>
             <div className="form-title-badge">
-              {editId ? '✏️ Edit Learning Progress' : '➕ Log New Progress'}
+              {editId ? 'Edit Learning Progress' : 'Log New Progress'}
             </div>
             <form id="daily-log-form" onSubmit={handleSubmit}>
               <div className="form-row">
@@ -345,7 +376,6 @@ export default function DailyLearningTrackerPage() {
                     onChange={(e) => setTopicLearned(e.target.value)}
                   />
                 </div>
-
                 <div className="form-group flex-1">
                   <label htmlFor="log-date">
                     Date Studied <span className="req-star">*</span>
@@ -388,11 +418,11 @@ export default function DailyLearningTrackerPage() {
 
               {/* Attachments Upload Section */}
               <div className="attachments-section">
-                <label className="section-label">📎 Attachments (Photos & PDFs)</label>
-                
+                <label className="section-label">Attachments (Photos & PDFs)</label>
+
                 <div className="attachment-upload-buttons">
                   <label className="btn-upload-trigger photo-trigger">
-                    📷 Add Photos
+                    Add Photos
                     <input
                       type="file"
                       accept="image/*"
@@ -401,9 +431,8 @@ export default function DailyLearningTrackerPage() {
                       style={{ display: 'none' }}
                     />
                   </label>
-
                   <label className="btn-upload-trigger pdf-trigger">
-                    📄 Add PDFs
+                    Add PDFs
                     <input
                       type="file"
                       accept=".pdf,application/pdf"
@@ -414,44 +443,28 @@ export default function DailyLearningTrackerPage() {
                   </label>
                 </div>
 
-                {/* Staged New Attachments */}
+                {/* Staged new files preview */}
                 {(stagedPhotos.length > 0 || stagedPdfs.length > 0) && (
                   <div className="staged-attachments-list">
                     <div className="staged-group-title">New Files to Upload:</div>
                     {stagedPhotos.map((file, idx) => (
                       <div className="staged-file-item" key={`photo-${idx}`}>
-                        <span className="file-icon">📷</span>
                         <span className="file-name" title={file.name}>{file.name}</span>
                         <span className="file-size">({formatBytes(file.size)})</span>
-                        <button
-                          type="button"
-                          className="btn-remove-staged"
-                          onClick={() => removeStagedPhoto(idx)}
-                          title="Remove file"
-                        >
-                          ✕
-                        </button>
+                        <button type="button" className="btn-remove-staged" onClick={() => removeStagedPhoto(idx)} title="Remove">✕</button>
                       </div>
                     ))}
                     {stagedPdfs.map((file, idx) => (
                       <div className="staged-file-item" key={`pdf-${idx}`}>
-                        <span className="file-icon">📄</span>
                         <span className="file-name" title={file.name}>{file.name}</span>
                         <span className="file-size">({formatBytes(file.size)})</span>
-                        <button
-                          type="button"
-                          className="btn-remove-staged"
-                          onClick={() => removeStagedPdf(idx)}
-                          title="Remove file"
-                        >
-                          ✕
-                        </button>
+                        <button type="button" className="btn-remove-staged" onClick={() => removeStagedPdf(idx)} title="Remove">✕</button>
                       </div>
                     ))}
                   </div>
                 )}
 
-                {/* Existing Attachments during Edit */}
+                {/* Existing attachments management during edit */}
                 {existingAttachments.length > 0 && (
                   <div className="existing-attachments-manage">
                     <div className="staged-group-title">Existing Attachments:</div>
@@ -462,28 +475,14 @@ export default function DailyLearningTrackerPage() {
                           className={`staged-file-item existing ${isMarkedDeleted ? 'marked-deleted' : ''}`}
                           key={att.id}
                         >
-                          <span className="file-icon">{att.fileType === 'pdf' ? '📄' : '📷'}</span>
                           <span className="file-name" title={att.fileName}>
-                            {att.fileName} {isMarkedDeleted ? '(Will be removed)' : ''}
+                            [{att.fileType.toUpperCase()}] {att.fileName}{isMarkedDeleted ? ' (Will be removed)' : ''}
                           </span>
                           <span className="file-size">({formatBytes(att.size)})</span>
                           {isMarkedDeleted ? (
-                            <button
-                              type="button"
-                              className="btn-undo-remove"
-                              onClick={() => undoRemoveExistingAttachment(att.id)}
-                            >
-                              Undo ↩
-                            </button>
+                            <button type="button" className="btn-undo-remove" onClick={() => undoRemoveExistingAttachment(att.id)}>Undo</button>
                           ) : (
-                            <button
-                              type="button"
-                              className="btn-remove-staged"
-                              onClick={() => removeExistingAttachment(att.id)}
-                              title="Remove existing attachment"
-                            >
-                              🗑️ Remove
-                            </button>
+                            <button type="button" className="btn-remove-staged" onClick={() => removeExistingAttachment(att.id)} title="Remove">Remove</button>
                           )}
                         </div>
                       );
@@ -492,19 +491,14 @@ export default function DailyLearningTrackerPage() {
                 )}
               </div>
 
-              <button
-                type="submit"
-                className="btn-log"
-                id="submit-log-button"
-                disabled={submitting}
-              >
-                {submitting ? '⏳ Saving...' : editId ? '💾 Update Progress' : '💾 Save Progress'}
+              <button type="submit" className="btn-log" id="submit-log-button" disabled={submitting}>
+                {submitting ? 'Saving...' : editId ? 'Update Progress' : 'Save Progress'}
               </button>
             </form>
           </div>
         )}
 
-        {/* Progress History List (Compact View) */}
+        {/* ── Progress History List ──────────────────────────────── */}
         <h3>Progress History</h3>
         <ul id="daily-progress-list">
           {loading ? (
@@ -517,73 +511,398 @@ export default function DailyLearningTrackerPage() {
             </li>
           ) : (
             filteredLogs.map((log) => {
-              const photoCount = (log.attachments || []).filter((a) => a.fileType === 'image').length;
-              const pdfCount = (log.attachments || []).filter((a) => a.fileType === 'pdf').length;
               const totalAttachments = (log.attachments || []).length;
+              const isExpanded = expandedCard && String(expandedCard.logId) === String(log.id);
+              const activeView = isExpanded ? expandedCard.view : null;
 
               return (
                 <li className="progress-history-card" key={log.id}>
-                  {/* Compact Header: Topic Name and Date Studied */}
                   <div className="card-primary-info">
                     <div className="card-topic-title">
-                      <span className="topic-icon">📚</span>
                       <span className="topic-text">{log.topic}</span>
                     </div>
-                    <div className="card-date-badge">
-                      📅 {formatDisplayDate(log.date)}
-                    </div>
+                    <div className="card-date-badge">{formatDisplayDate(log.date)}</div>
                   </div>
 
-                  {/* Compact Action Chips */}
+                  {/* Clean text action buttons (no emojis) */}
                   <div className="card-action-bar">
                     <button
                       type="button"
-                      className={`btn-action-chip ${log.link ? 'has-content' : 'chip-dim'}`}
-                      onClick={() => setActiveModal({ type: 'link', log })}
+                      className={`btn-action-chip ${log.link ? 'has-content' : 'chip-dim'} ${activeView === 'link' ? 'chip-active' : ''}`}
+                      onClick={(e) => { e.stopPropagation(); toggleCardDetail(log, 'link'); }}
                     >
-                      🔗 Link
+                      Link
                     </button>
 
                     <button
                       type="button"
-                      className={`btn-action-chip ${totalAttachments > 0 ? 'has-content' : 'chip-dim'}`}
-                      onClick={() => setActiveModal({ type: 'files', log })}
+                      className={`btn-action-chip ${totalAttachments > 0 ? 'has-content' : 'chip-dim'} ${activeView === 'files' ? 'chip-active' : ''}`}
+                      onClick={(e) => { e.stopPropagation(); toggleCardDetail(log, 'files'); }}
                     >
-                      🖼️/📄 Files {totalAttachments > 0 ? `(${totalAttachments})` : ''}
+                      Files
                     </button>
 
                     <button
                       type="button"
-                      className={`btn-action-chip ${log.learnings?.trim() ? 'has-content' : 'chip-dim'}`}
-                      onClick={() => setActiveModal({ type: 'takeaways', log })}
+                      className={`btn-action-chip ${log.learnings?.trim() ? 'has-content' : 'chip-dim'} ${activeView === 'takeaways' ? 'chip-active' : ''}`}
+                      onClick={(e) => { e.stopPropagation(); toggleCardDetail(log, 'takeaways'); }}
                     >
-                      💡 Takeaways
+                      Takeaways
                     </button>
 
                     <button
                       type="button"
-                      className="btn-action-chip btn-view-all"
-                      onClick={() => setActiveModal({ type: 'view_all', log })}
+                      className={`btn-action-chip btn-view-all ${activeView === 'view_all' ? 'chip-active' : ''}`}
+                      onClick={(e) => { e.stopPropagation(); toggleCardDetail(log, 'view_all'); }}
                     >
-                      👁️ View All
+                      View All
                     </button>
 
                     <button
                       type="button"
                       className="btn-action-chip btn-edit-chip"
-                      onClick={() => editEntry(log)}
+                      onClick={(e) => { e.stopPropagation(); editEntry(log); }}
                     >
-                      ✏️ Edit
+                      Edit
                     </button>
 
                     <button
                       type="button"
                       className="btn-action-chip btn-delete-chip"
-                      onClick={() => setDeletingLogId(log.id)}
+                      onClick={(e) => { e.stopPropagation(); setDeletingLogId(log.id); }}
                     >
-                      🗑️ Delete
+                      Delete
                     </button>
                   </div>
+
+                  {/* ── Direct In-Card Expanded Detail Panel ───────── */}
+                  {isExpanded && (
+                    <div className="card-detail-panel" id={`card-detail-${log.id}`}>
+                      <div className="card-detail-header">
+                        <span className="card-detail-title">
+                          {activeView === 'link' && 'Topic Link'}
+                          {activeView === 'files' && 'Attachments (Photos & PDFs)'}
+                          {activeView === 'takeaways' && 'Key Takeaways'}
+                          {activeView === 'view_all' && 'Complete Progress Details'}
+                        </span>
+                        <button
+                          type="button"
+                          className="btn-detail-close"
+                          onClick={() => setExpandedCard(null)}
+                          title="Close section"
+                        >
+                          Close ✕
+                        </button>
+                      </div>
+
+                      {/* 1. LINK VIEW */}
+                      {activeView === 'link' && (
+                        <div className="detail-view-body">
+                          {log.link ? (
+                            <div className="detail-link-box">
+                              <div className="detail-link-label">Saved Resource URL:</div>
+                              <div className="detail-url-text">
+                                <a
+                                  href={log.link}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="detail-anchor-link"
+                                >
+                                  {log.link}
+                                </a>
+                              </div>
+                              <div className="detail-link-btn-row">
+                                <a
+                                  href={log.link}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="btn-open-link"
+                                >
+                                  Open Link ↗
+                                </a>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="detail-empty-message">
+                              No link was added for this topic.
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* 2. FILES VIEW */}
+                      {activeView === 'files' && (
+                        <div className="detail-view-body">
+                          {(!log.attachments || log.attachments.length === 0) ? (
+                            <div className="detail-empty-message">
+                              No photos or PDFs attached.
+                            </div>
+                          ) : (
+                            <div className="detail-attachments-wrapper">
+                              {/* Photos Section */}
+                              {log.attachments.some((a) => a.fileType === 'image') && (
+                                <div className="detail-att-group">
+                                  <div className="detail-group-heading">Photos</div>
+                                  <div className="detail-photos-grid">
+                                    {log.attachments
+                                      .filter((a) => a.fileType === 'image')
+                                      .map((att) => (
+                                        <div className="detail-photo-card" key={att.id}>
+                                          <div
+                                            className="detail-photo-preview"
+                                            onClick={() => viewAttachment(log, att)}
+                                            title="Click to view full image"
+                                          >
+                                            <AuthenticatedImage
+                                              src={`/placement/education/${courseId}/logs/${log.id}/attachments/${att.id}`}
+                                              alt={att.fileName}
+                                              className="detail-photo-img"
+                                            />
+                                          </div>
+                                          <div className="detail-photo-meta">
+                                            <span className="detail-file-name" title={att.fileName}>
+                                              {att.fileName}
+                                            </span>
+                                            <span className="detail-file-size">{formatBytes(att.size)}</span>
+                                          </div>
+                                          <div className="detail-file-actions">
+                                            <button
+                                              type="button"
+                                              className="btn-file-action"
+                                              onClick={() => viewAttachment(log, att)}
+                                            >
+                                              View
+                                            </button>
+                                            <button
+                                              type="button"
+                                              className="btn-file-action"
+                                              onClick={() => downloadAttachment(log, att)}
+                                            >
+                                              Download
+                                            </button>
+                                          </div>
+                                        </div>
+                                      ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* PDFs Section */}
+                              {log.attachments.some((a) => a.fileType === 'pdf') && (
+                                <div className="detail-att-group">
+                                  <div className="detail-group-heading">PDFs</div>
+                                  <div className="detail-pdfs-list">
+                                    {log.attachments
+                                      .filter((a) => a.fileType === 'pdf')
+                                      .map((att) => (
+                                        <div className="detail-pdf-item" key={att.id}>
+                                          <div className="detail-pdf-info">
+                                            <span className="pdf-tag">PDF</span>
+                                            <div className="detail-pdf-text">
+                                              <span className="detail-file-name" title={att.fileName}>
+                                                {att.fileName}
+                                              </span>
+                                              <span className="detail-file-size">{formatBytes(att.size)}</span>
+                                            </div>
+                                          </div>
+                                          <div className="detail-file-actions">
+                                            <button
+                                              type="button"
+                                              className="btn-file-action"
+                                              onClick={() => viewAttachment(log, att)}
+                                            >
+                                              View PDF
+                                            </button>
+                                            <button
+                                              type="button"
+                                              className="btn-file-action"
+                                              onClick={() => downloadAttachment(log, att)}
+                                            >
+                                              Download
+                                            </button>
+                                          </div>
+                                        </div>
+                                      ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* 3. TAKEAWAYS VIEW */}
+                      {activeView === 'takeaways' && (
+                        <div className="detail-view-body">
+                          {log.learnings?.trim() ? (
+                            <div className="detail-takeaways-box">
+                              {log.learnings}
+                            </div>
+                          ) : (
+                            <div className="detail-empty-message">
+                              No key takeaways added for this topic.
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* 4. VIEW ALL */}
+                      {activeView === 'view_all' && (
+                        <div className="detail-view-body view-all-body">
+                          <div className="view-all-row">
+                            <div className="view-all-label">Topic</div>
+                            <div className="view-all-value bold-topic">{log.topic}</div>
+                          </div>
+
+                          <div className="view-all-row">
+                            <div className="view-all-label">Date Studied</div>
+                            <div className="view-all-value">{formatDisplayDate(log.date)}</div>
+                          </div>
+
+                          <div className="view-all-row">
+                            <div className="view-all-label">Topic Link</div>
+                            <div className="view-all-value">
+                              {log.link ? (
+                                <div className="view-all-link-wrapper">
+                                  <a
+                                    href={log.link}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="detail-anchor-link"
+                                  >
+                                    {log.link}
+                                  </a>
+                                  <a
+                                    href={log.link}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="btn-open-link-pill"
+                                  >
+                                    Open ↗
+                                  </a>
+                                </div>
+                              ) : (
+                                <span className="text-muted">None</span>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="view-all-row">
+                            <div className="view-all-label">Topic Covered</div>
+                            <div className="view-all-value">{log.topic}</div>
+                          </div>
+
+                          <div className="view-all-row">
+                            <div className="view-all-label">Key Takeaways</div>
+                            <div className="view-all-value">
+                              {log.learnings?.trim() ? (
+                                <div className="detail-takeaways-box in-view-all">
+                                  {log.learnings}
+                                </div>
+                              ) : (
+                                <span className="text-muted">None</span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Photos in View All */}
+                          {log.attachments?.some((a) => a.fileType === 'image') && (
+                            <div className="view-all-row">
+                              <div className="view-all-label">Photos</div>
+                              <div className="detail-photos-grid in-view-all">
+                                {log.attachments
+                                  .filter((a) => a.fileType === 'image')
+                                  .map((att) => (
+                                    <div className="detail-photo-card" key={att.id}>
+                                      <div
+                                        className="detail-photo-preview"
+                                        onClick={() => viewAttachment(log, att)}
+                                        title="Click to view full image"
+                                      >
+                                        <AuthenticatedImage
+                                          src={`/placement/education/${courseId}/logs/${log.id}/attachments/${att.id}`}
+                                          alt={att.fileName}
+                                          className="detail-photo-img"
+                                        />
+                                      </div>
+                                      <div className="detail-photo-meta">
+                                        <span className="detail-file-name" title={att.fileName}>
+                                          {att.fileName}
+                                        </span>
+                                        <span className="detail-file-size">{formatBytes(att.size)}</span>
+                                      </div>
+                                      <div className="detail-file-actions">
+                                        <button
+                                          type="button"
+                                          className="btn-file-action"
+                                          onClick={() => viewAttachment(log, att)}
+                                        >
+                                          View
+                                        </button>
+                                        <button
+                                          type="button"
+                                          className="btn-file-action"
+                                          onClick={() => downloadAttachment(log, att)}
+                                        >
+                                          Download
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* PDFs in View All */}
+                          {log.attachments?.some((a) => a.fileType === 'pdf') && (
+                            <div className="view-all-row">
+                              <div className="view-all-label">PDFs</div>
+                              <div className="detail-pdfs-list in-view-all">
+                                {log.attachments
+                                  .filter((a) => a.fileType === 'pdf')
+                                  .map((att) => (
+                                    <div className="detail-pdf-item" key={att.id}>
+                                      <div className="detail-pdf-info">
+                                        <span className="pdf-tag">PDF</span>
+                                        <div className="detail-pdf-text">
+                                          <span className="detail-file-name" title={att.fileName}>
+                                            {att.fileName}
+                                          </span>
+                                          <span className="detail-file-size">{formatBytes(att.size)}</span>
+                                        </div>
+                                      </div>
+                                      <div className="detail-file-actions">
+                                        <button
+                                          type="button"
+                                          className="btn-file-action"
+                                          onClick={() => viewAttachment(log, att)}
+                                        >
+                                          View PDF
+                                        </button>
+                                        <button
+                                          type="button"
+                                          className="btn-file-action"
+                                          onClick={() => downloadAttachment(log, att)}
+                                        >
+                                          Download
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {(!log.attachments || log.attachments.length === 0) && (
+                            <div className="view-all-row">
+                              <div className="view-all-label">Attachments</div>
+                              <div className="view-all-value text-muted">No photos or PDFs attached.</div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </li>
               );
             })
@@ -591,360 +910,14 @@ export default function DailyLearningTrackerPage() {
         </ul>
       </div>
 
-      {/* ========================================================================= */}
-      {/* ACTION MODALS                                                             */}
-      {/* ========================================================================= */}
-
-      {/* 1. LINK MODAL */}
-      {activeModal && activeModal.type === 'link' &&
-        createPortal(
-          <div className="modal-backdrop" onClick={() => setActiveModal(null)}>
-            <div className="modal-dialog-box" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-dialog-header">
-                <span className="modal-dialog-title">🔗 Topic Link</span>
-                <button type="button" className="modal-dialog-close" onClick={() => setActiveModal(null)}>
-                  ✕
-                </button>
-              </div>
-              <div className="modal-dialog-body">
-                <div className="modal-topic-heading">📚 {activeModal.log.topic}</div>
-                {activeModal.log.link ? (
-                  <div className="modal-link-box">
-                    <p className="link-label">Saved Resource / URL:</p>
-                    <div className="link-url-display">
-                      <a
-                        href={activeModal.log.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="modal-link-anchor"
-                      >
-                        {activeModal.log.link}
-                      </a>
-                    </div>
-                    <div className="modal-dialog-footer-actions">
-                      <a
-                        href={activeModal.log.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="btn-primary-action"
-                      >
-                        Open Link ↗
-                      </a>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="modal-empty-state">
-                    <span className="empty-icon">🔗</span>
-                    <p>No link was added for this topic.</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>,
-          document.body
-        )}
-
-      {/* 2. FILES MODAL */}
-      {activeModal && activeModal.type === 'files' &&
-        createPortal(
-          <div className="modal-backdrop" onClick={() => setActiveModal(null)}>
-            <div className="modal-dialog-box modal-wide" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-dialog-header">
-                <span className="modal-dialog-title">🖼️ / 📄 Photos & PDFs</span>
-                <button type="button" className="modal-dialog-close" onClick={() => setActiveModal(null)}>
-                  ✕
-                </button>
-              </div>
-              <div className="modal-dialog-body">
-                <div className="modal-topic-heading">📚 {activeModal.log.topic}</div>
-
-                {(!activeModal.log.attachments || activeModal.log.attachments.length === 0) ? (
-                  <div className="modal-empty-state">
-                    <span className="empty-icon">📁</span>
-                    <p>No photos or PDFs attached.</p>
-                  </div>
-                ) : (
-                  <div className="modal-attachments-container">
-                    {/* Photos Section */}
-                    {activeModal.log.attachments.some((a) => a.fileType === 'image') && (
-                      <div className="attachment-category">
-                        <h4>📷 Photos</h4>
-                        <div className="photos-gallery-grid">
-                          {activeModal.log.attachments
-                            .filter((a) => a.fileType === 'image')
-                            .map((att) => (
-                              <div className="photo-card" key={att.id}>
-                                <div
-                                  className="photo-thumbnail-wrap"
-                                  onClick={() => viewAttachment(activeModal.log, att)}
-                                >
-                                  <AuthenticatedImage
-                                    src={`/placement/education/${courseId}/logs/${activeModal.log.id}/attachments/${att.id}`}
-                                    alt={att.fileName}
-                                    className="photo-thumb-img"
-                                  />
-                                </div>
-                                <div className="photo-info-bar">
-                                  <span className="photo-name" title={att.fileName}>{att.fileName}</span>
-                                  <span className="photo-size">{formatBytes(att.size)}</span>
-                                </div>
-                                <div className="attachment-actions-row">
-                                  <button
-                                    type="button"
-                                    className="btn-att-action btn-view"
-                                    onClick={() => viewAttachment(activeModal.log, att)}
-                                  >
-                                    👁️ View
-                                  </button>
-                                  <button
-                                    type="button"
-                                    className="btn-att-action btn-download"
-                                    onClick={() => downloadAttachment(activeModal.log, att)}
-                                  >
-                                    ⬇️ Download
-                                  </button>
-                                </div>
-                              </div>
-                            ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* PDFs Section */}
-                    {activeModal.log.attachments.some((a) => a.fileType === 'pdf') && (
-                      <div className="attachment-category">
-                        <h4>📄 PDFs</h4>
-                        <div className="pdfs-list">
-                          {activeModal.log.attachments
-                            .filter((a) => a.fileType === 'pdf')
-                            .map((att) => (
-                              <div className="pdf-card" key={att.id}>
-                                <div className="pdf-main-info">
-                                  <span className="pdf-icon">📄</span>
-                                  <div className="pdf-text-meta">
-                                    <div className="pdf-title" title={att.fileName}>{att.fileName}</div>
-                                    <div className="pdf-size-badge">{formatBytes(att.size)}</div>
-                                  </div>
-                                </div>
-                                <div className="attachment-actions-row">
-                                  <button
-                                    type="button"
-                                    className="btn-att-action btn-view"
-                                    onClick={() => viewAttachment(activeModal.log, att)}
-                                  >
-                                    👁️ View PDF
-                                  </button>
-                                  <button
-                                    type="button"
-                                    className="btn-att-action btn-download"
-                                    onClick={() => downloadAttachment(activeModal.log, att)}
-                                  >
-                                    ⬇️ Download
-                                  </button>
-                                </div>
-                              </div>
-                            ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>,
-          document.body
-        )}
-
-      {/* 3. KEY TAKEAWAYS MODAL */}
-      {activeModal && activeModal.type === 'takeaways' &&
-        createPortal(
-          <div className="modal-backdrop" onClick={() => setActiveModal(null)}>
-            <div className="modal-dialog-box" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-dialog-header">
-                <span className="modal-dialog-title">💡 Key Takeaways</span>
-                <button type="button" className="modal-dialog-close" onClick={() => setActiveModal(null)}>
-                  ✕
-                </button>
-              </div>
-              <div className="modal-dialog-body">
-                <div className="modal-topic-heading">📚 {activeModal.log.topic}</div>
-                <div className="modal-date-heading">📅 {formatDisplayDate(activeModal.log.date)}</div>
-
-                {activeModal.log.learnings?.trim() ? (
-                  <div className="modal-takeaways-content">
-                    {activeModal.log.learnings}
-                  </div>
-                ) : (
-                  <div className="modal-empty-state">
-                    <span className="empty-icon">💡</span>
-                    <p>No key takeaways added for this topic.</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>,
-          document.body
-        )}
-
-      {/* 4. VIEW ALL MODAL */}
-      {activeModal && activeModal.type === 'view_all' &&
-        createPortal(
-          <div className="modal-backdrop" onClick={() => setActiveModal(null)}>
-            <div className="modal-dialog-box modal-extra-wide" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-dialog-header">
-                <span className="modal-dialog-title">👁️ Complete Progress Details</span>
-                <button type="button" className="modal-dialog-close" onClick={() => setActiveModal(null)}>
-                  ✕
-                </button>
-              </div>
-              <div className="modal-dialog-body view-all-body">
-                {/* Topic & Date */}
-                <div className="view-all-header-section">
-                  <div className="view-all-title">📚 {activeModal.log.topic}</div>
-                  <div className="view-all-date">📅 Studied: {formatDisplayDate(activeModal.log.date)}</div>
-                </div>
-
-                {/* Topic Link if present */}
-                {activeModal.log.link && (
-                  <div className="view-all-block">
-                    <div className="view-all-block-title">🔗 Topic Link</div>
-                    <div className="view-all-link-box">
-                      <a
-                        href={activeModal.log.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="modal-link-anchor"
-                      >
-                        {activeModal.log.link}
-                      </a>
-                      <a
-                        href={activeModal.log.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="btn-link-pill"
-                      >
-                        Open ↗
-                      </a>
-                    </div>
-                  </div>
-                )}
-
-                {/* Topic Covered */}
-                <div className="view-all-block">
-                  <div className="view-all-block-title">📖 Topic Covered</div>
-                  <div className="view-all-text-box">
-                    {activeModal.log.topic}
-                  </div>
-                </div>
-
-                {/* Key Takeaways if present */}
-                {activeModal.log.learnings?.trim() && (
-                  <div className="view-all-block">
-                    <div className="view-all-block-title">💡 Key Takeaways</div>
-                    <div className="view-all-text-box takeaways-box">
-                      {activeModal.log.learnings}
-                    </div>
-                  </div>
-                )}
-
-                {/* Photos if present */}
-                {activeModal.log.attachments?.some((a) => a.fileType === 'image') && (
-                  <div className="view-all-block">
-                    <div className="view-all-block-title">📷 Photos</div>
-                    <div className="photos-gallery-grid">
-                      {activeModal.log.attachments
-                        .filter((a) => a.fileType === 'image')
-                        .map((att) => (
-                          <div className="photo-card" key={att.id}>
-                            <div
-                              className="photo-thumbnail-wrap"
-                              onClick={() => viewAttachment(activeModal.log, att)}
-                            >
-                              <AuthenticatedImage
-                                src={`/placement/education/${courseId}/logs/${activeModal.log.id}/attachments/${att.id}`}
-                                alt={att.fileName}
-                                className="photo-thumb-img"
-                              />
-                            </div>
-                            <div className="photo-info-bar">
-                              <span className="photo-name" title={att.fileName}>{att.fileName}</span>
-                              <span className="photo-size">{formatBytes(att.size)}</span>
-                            </div>
-                            <div className="attachment-actions-row">
-                              <button
-                                type="button"
-                                className="btn-att-action btn-view"
-                                onClick={() => viewAttachment(activeModal.log, att)}
-                              >
-                                👁️ View
-                              </button>
-                              <button
-                                type="button"
-                                className="btn-att-action btn-download"
-                                onClick={() => downloadAttachment(activeModal.log, att)}
-                              >
-                                ⬇️ Download
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* PDFs if present */}
-                {activeModal.log.attachments?.some((a) => a.fileType === 'pdf') && (
-                  <div className="view-all-block">
-                    <div className="view-all-block-title">📄 PDFs</div>
-                    <div className="pdfs-list">
-                      {activeModal.log.attachments
-                        .filter((a) => a.fileType === 'pdf')
-                        .map((att) => (
-                          <div className="pdf-card" key={att.id}>
-                            <div className="pdf-main-info">
-                              <span className="pdf-icon">📄</span>
-                              <div className="pdf-text-meta">
-                                <div className="pdf-title" title={att.fileName}>{att.fileName}</div>
-                                <div className="pdf-size-badge">{formatBytes(att.size)}</div>
-                              </div>
-                            </div>
-                            <div className="attachment-actions-row">
-                              <button
-                                type="button"
-                                className="btn-att-action btn-view"
-                                onClick={() => viewAttachment(activeModal.log, att)}
-                              >
-                                👁️ View PDF
-                              </button>
-                              <button
-                                type="button"
-                                className="btn-att-action btn-download"
-                                onClick={() => downloadAttachment(activeModal.log, att)}
-                              >
-                                ⬇️ Download
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>,
-          document.body
-        )}
-
-      {/* FULL PREVIEW MODAL (for images / desktop PDFs) */}
+      {/* ── Fullscreen Lightbox Preview (for image/pdf view) ─────── */}
       {previewDoc &&
         createPortal(
           <div className="modal-backdrop preview-lightbox-backdrop" onClick={closePreviewDoc}>
             <div className="preview-lightbox-container" onClick={(e) => e.stopPropagation()}>
               <div className="preview-lightbox-header">
                 <span className="lightbox-title" title={previewDoc.title}>{previewDoc.title}</span>
-                <button type="button" onClick={closePreviewDoc} className="modal-dialog-close">
-                  ✕
-                </button>
+                <button type="button" onClick={closePreviewDoc} className="modal-dialog-close">✕</button>
               </div>
               <div className="preview-lightbox-body">
                 {previewDoc.kind === 'pdf' && (
@@ -959,7 +932,7 @@ export default function DailyLearningTrackerPage() {
           document.body
         )}
 
-      {/* CONFIRM DELETE MODAL */}
+      {/* ── Confirm Delete Modal ────────────────────────────────── */}
       <ConfirmDeleteModal
         isOpen={deletingLogId !== null}
         title="Delete Progress Entry?"

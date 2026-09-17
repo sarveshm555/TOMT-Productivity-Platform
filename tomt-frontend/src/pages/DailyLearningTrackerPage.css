@@ -1,27 +1,49 @@
+/* =========================================================================
+   CSS CUSTOM PROPERTIES — defined on :root so that portalled modals
+   (injected via createPortal into document.body, outside the page root div)
+   can inherit these variables. Also re-declared on the page root for
+   specificity when nested within the page itself.
+   ========================================================================= */
+:root {
+  --dlt-primary-color: #00bcd4;
+  --dlt-primary-hover: #00acc1;
+  --dlt-secondary-color: #ff5722;
+  --dlt-bg-color: #101010;
+  --dlt-card-bg: #16171d;
+  --dlt-input-bg: #1f202a;
+  --dlt-text-color: #bdbecb;
+  --dlt-heading-color: #f0f4f8;
+  --dlt-danger-color: #e91e63;
+  --dlt-success-color: #4caf50;
+  --dlt-border-color: #2f303d;
+  --dlt-muted-color: #888;
+  --dlt-shadow-light: 0 0 0 1.5px #2b2c37, 0 0 25px -17px rgba(0, 0, 0, 0.7);
+}
+
 .daily-learning-tracker-page-root {
   font-family: 'Arial', sans-serif;
-  background-color: var(--bg-color);
+  background-color: var(--dlt-bg-color);
   margin: 0;
   padding: 15px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
-  color: var(--text-color);
+  color: var(--dlt-text-color);
 
-  --primary-color: #00bcd4;
-  --primary-hover: #00acc1;
-  --secondary-color: #ff5722;
-  --bg-color: #101010;
-  --card-bg: #16171d;
-  --input-bg: #1f202a;
-  --text-color: #bdbecb;
-  --heading-color: #f0f4f8;
-  --danger-color: #e91e63;
-  --success-color: #4caf50;
-  --border-color: #2f303d;
-  --muted-color: #888;
-  --shadow-light: 0 0 0 1.5px #2b2c37, 0 0 25px -17px rgba(0, 0, 0, 0.7);
+  --primary-color: var(--dlt-primary-color);
+  --primary-hover: var(--dlt-primary-hover);
+  --secondary-color: var(--dlt-secondary-color);
+  --bg-color: var(--dlt-bg-color);
+  --card-bg: var(--dlt-card-bg);
+  --input-bg: var(--dlt-input-bg);
+  --text-color: var(--dlt-text-color);
+  --heading-color: var(--dlt-heading-color);
+  --danger-color: var(--dlt-danger-color);
+  --success-color: var(--dlt-success-color);
+  --border-color: var(--dlt-border-color);
+  --muted-color: var(--dlt-muted-color);
+  --shadow-light: var(--dlt-shadow-light);
 }
 
 .daily-learning-tracker-page-root * {
@@ -518,6 +540,388 @@
   border-color: var(--danger-color);
 }
 
+/* ── Active Chip State ─────────────────────────────────────────── */
+.daily-learning-tracker-page-root .btn-action-chip.chip-active {
+  background: var(--primary-color) !important;
+  color: #fff !important;
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 10px rgba(0, 188, 212, 0.45);
+}
+
+/* ── Expanded Detail Panel (Direct In-Card View) ─────────────────── */
+.daily-learning-tracker-page-root .card-detail-panel {
+  margin-top: 14px;
+  background: #111218;
+  border: 1px solid #2d2f3e;
+  border-radius: 8px;
+  padding: 14px 16px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.35);
+  animation: dlt-detail-fadeIn 0.18s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@keyframes dlt-detail-fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.daily-learning-tracker-page-root .card-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #222430;
+}
+
+.daily-learning-tracker-page-root .card-detail-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  letter-spacing: 0.3px;
+}
+
+.daily-learning-tracker-page-root .btn-detail-close {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.daily-learning-tracker-page-root .btn-detail-close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.daily-learning-tracker-page-root .detail-view-body {
+  font-size: 0.92rem;
+  color: var(--text-color);
+  line-height: 1.5;
+}
+
+.daily-learning-tracker-page-root .detail-empty-message {
+  padding: 14px 0;
+  color: var(--muted-color);
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* Link view inside card */
+.daily-learning-tracker-page-root .detail-link-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.daily-learning-tracker-page-root .detail-link-label {
+  font-size: 0.8rem;
+  color: var(--muted-color);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.daily-learning-tracker-page-root .detail-url-text {
+  background: #181922;
+  border: 1px solid #282a3a;
+  border-radius: 6px;
+  padding: 8px 12px;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+}
+
+.daily-learning-tracker-page-root .detail-anchor-link {
+  color: var(--primary-color);
+  text-decoration: underline;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+}
+
+.daily-learning-tracker-page-root .detail-anchor-link:hover {
+  color: var(--primary-hover);
+}
+
+.daily-learning-tracker-page-root .detail-link-btn-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.daily-learning-tracker-page-root .btn-open-link {
+  background: var(--primary-color);
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: background-color 0.15s ease;
+}
+
+.daily-learning-tracker-page-root .btn-open-link:hover {
+  background: var(--primary-hover);
+}
+
+/* Takeaways view inside card */
+.daily-learning-tracker-page-root .detail-takeaways-box {
+  background: #181922;
+  border: 1px solid #282a3a;
+  border-radius: 6px;
+  padding: 12px 14px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  color: #e2e8f0;
+  line-height: 1.6;
+}
+
+.daily-learning-tracker-page-root .detail-takeaways-box.in-view-all {
+  margin-top: 4px;
+}
+
+/* Files / Attachments inside card */
+.daily-learning-tracker-page-root .detail-attachments-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.daily-learning-tracker-page-root .detail-att-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.daily-learning-tracker-page-root .detail-group-heading {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--heading-color);
+}
+
+.daily-learning-tracker-page-root .detail-photos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.daily-learning-tracker-page-root .detail-photos-grid.in-view-all {
+  margin-top: 6px;
+}
+
+.daily-learning-tracker-page-root .detail-photo-card {
+  background: #181922;
+  border: 1px solid #282a3a;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.daily-learning-tracker-page-root .detail-photo-preview {
+  height: 90px;
+  background: #0d0e12;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.daily-learning-tracker-page-root .detail-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s ease;
+}
+
+.daily-learning-tracker-page-root .detail-photo-preview:hover .detail-photo-img {
+  transform: scale(1.04);
+}
+
+.daily-learning-tracker-page-root .detail-photo-meta {
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.daily-learning-tracker-page-root .detail-file-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.daily-learning-tracker-page-root .detail-file-size {
+  font-size: 0.72rem;
+  color: var(--muted-color);
+}
+
+.daily-learning-tracker-page-root .detail-file-actions {
+  display: flex;
+  gap: 4px;
+  padding: 4px 8px 8px 8px;
+}
+
+.daily-learning-tracker-page-root .btn-file-action {
+  flex: 1;
+  background: #282938;
+  border: 1px solid #3d3e52;
+  color: #cbd5e1;
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 4px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.daily-learning-tracker-page-root .btn-file-action:hover {
+  background: #393a4f;
+  color: #fff;
+  border-color: var(--primary-color);
+}
+
+/* PDFs inside card */
+.daily-learning-tracker-page-root .detail-pdfs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.daily-learning-tracker-page-root .detail-pdfs-list.in-view-all {
+  margin-top: 6px;
+}
+
+.daily-learning-tracker-page-root .detail-pdf-item {
+  background: #181922;
+  border: 1px solid #282a3a;
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.daily-learning-tracker-page-root .detail-pdf-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 140px;
+  flex: 1;
+}
+
+.daily-learning-tracker-page-root .pdf-tag {
+  background: rgba(233, 30, 99, 0.2);
+  color: #f06292;
+  border: 1px solid rgba(233, 30, 99, 0.4);
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.daily-learning-tracker-page-root .detail-pdf-text {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* View All inside card */
+.daily-learning-tracker-page-root .view-all-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.daily-learning-tracker-page-root .view-all-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #1f212c;
+}
+
+.daily-learning-tracker-page-root .view-all-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.daily-learning-tracker-page-root .view-all-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.daily-learning-tracker-page-root .view-all-value {
+  color: #e2e8f0;
+  font-size: 0.92rem;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.daily-learning-tracker-page-root .view-all-value.bold-topic {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--heading-color);
+}
+
+.daily-learning-tracker-page-root .view-all-link-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: #181922;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #282a3a;
+  flex-wrap: wrap;
+}
+
+.daily-learning-tracker-page-root .btn-open-link-pill {
+  background: var(--primary-color);
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease;
+}
+
+.daily-learning-tracker-page-root .btn-open-link-pill:hover {
+  background: var(--primary-hover);
+}
+
+.daily-learning-tracker-page-root .text-muted {
+  color: var(--muted-color);
+  font-style: italic;
+}
+
+
 .daily-learning-tracker-page-root .daily-learning-tracker-error {
   color: var(--danger-color);
   margin-bottom: 15px;
@@ -595,7 +999,7 @@
 .modal-dialog-title {
   font-weight: 800;
   font-size: 1.05rem;
-  color: var(--heading-color);
+  color: var(--dlt-heading-color);
 }
 
 .modal-dialog-close {
@@ -618,7 +1022,7 @@
 .modal-dialog-body {
   padding: 18px;
   overflow-y: auto;
-  color: var(--text-color);
+  color: var(--dlt-text-color);
   font-size: 0.95rem;
   line-height: 1.5;
 }
@@ -626,7 +1030,7 @@
 .modal-topic-heading {
   font-weight: 800;
   font-size: 1.15rem;
-  color: var(--heading-color);
+  color: var(--dlt-heading-color);
   margin-bottom: 6px;
   word-break: break-word;
 }
@@ -640,7 +1044,7 @@
 .modal-empty-state {
   text-align: center;
   padding: 30px 15px;
-  color: var(--muted-color);
+  color: var(--dlt-muted-color);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -664,7 +1068,7 @@
 
 .modal-link-box .link-label {
   font-size: 0.85rem;
-  color: var(--muted-color);
+  color: var(--dlt-muted-color);
   margin: 0 0 6px 0;
 }
 
@@ -679,7 +1083,7 @@
 }
 
 .modal-link-anchor {
-  color: var(--primary-color);
+  color: var(--dlt-primary-color);
   text-decoration: underline;
   word-break: break-all;
 }
@@ -691,7 +1095,7 @@
 }
 
 .btn-primary-action {
-  background-color: var(--primary-color);
+  background-color: var(--dlt-primary-color);
   color: #fff;
   text-decoration: none;
   padding: 8px 18px;
@@ -705,7 +1109,7 @@
 }
 
 .btn-primary-action:hover {
-  background-color: var(--primary-hover);
+  background-color: var(--dlt-primary-hover);
 }
 
 /* Key Takeaways Modal Content */
@@ -731,7 +1135,7 @@
 
 .attachment-category h4 {
   margin: 0 0 10px 0;
-  color: var(--heading-color);
+  color: var(--dlt-heading-color);
   font-size: 1rem;
   display: flex;
   align-items: center;
@@ -879,7 +1283,7 @@
 
 .pdf-title {
   font-weight: 700;
-  color: var(--heading-color);
+  color: var(--dlt-heading-color);
   font-size: 0.92rem;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -889,7 +1293,7 @@
 
 .pdf-size-badge {
   font-size: 0.78rem;
-  color: var(--muted-color);
+  color: var(--dlt-muted-color);
   margin-top: 2px;
 }
 
@@ -908,7 +1312,7 @@
 .view-all-title {
   font-size: 1.3rem;
   font-weight: 800;
-  color: var(--heading-color);
+  color: var(--dlt-heading-color);
   word-break: break-word;
 }
 
@@ -927,7 +1331,7 @@
 .view-all-block-title {
   font-size: 0.95rem;
   font-weight: 800;
-  color: var(--primary-color);
+  color: var(--dlt-primary-color);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -961,7 +1365,7 @@
 }
 
 .btn-link-pill {
-  background: var(--primary-color);
+  background: var(--dlt-primary-color);
   color: #fff;
   text-decoration: none;
   font-size: 0.82rem;
@@ -999,7 +1403,7 @@
 
 .lightbox-title {
   font-weight: 700;
-  color: var(--heading-color);
+  color: var(--dlt-heading-color);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
