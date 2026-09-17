@@ -1,33 +1,151 @@
-# TOMT Productivity Platform
+# 🚀 TOMT Productivity Platform
 
-A full-stack MERN (MongoDB, Express, React, Node.js) productivity platform featuring Diary, Task Management, Coding Tracker, Internship/Placement Management, Routine Trackers, Document Hub, Notes, and more.
+TOMT is a full-stack productivity and career management platform built to help students manage learning, placement preparation, internships, applications, schedules, targets, notes, documents, and other important activities in one place.
 
-## Architecture
+## ✨ Features
 
-- **`tomt-backend/`**: Node.js + Express REST API with MongoDB Atlas, Mongoose, JWT authentication, and GridFS media storage.
-- **`tomt-frontend/`**: Vite + React 18 single-page application with responsive layouts and real-time state management.
-- **`migration/`**: Data migration tools and validation scripts for migrating legacy local storage to MongoDB.
+- 📊 Dashboard
+- 🎓 Education & Learning Progress
+- 💼 Placement Management
+- 🚀 Internship / Application Tracker
+- 🔗 Multiple Application Links
+- 💬 Multiple Application Messages
+- 🖼️ Multiple Application Images
+- 📝 Important Log
+- ❌ Mistake Analysis
+- 📅 Schedule
+- 🎯 Targets
+- 🔔 Notifications
+- 📄 Document Management
+- 👨‍💻 Coding Profiles
+- 🔐 JWT Authentication
+- 🗄️ MongoDB Persistence
+- 📦 MongoDB GridFS File Storage
+- 📱 Responsive Mobile UI
 
-## Getting Started
+## 💼 Internship / Application Tracker
 
-### 1. Backend Setup
-```bash
-cd tomt-backend
-cp .env.example .env
-# Edit .env with your MongoDB URI and JWT secrets
-npm install
-npm run dev
-```
+Track internship and job applications with:
 
-### 2. Frontend Setup
-```bash
-cd tomt-frontend
-cp .env.example .env
-# Edit .env with your VITE_API_URL (defaults to http://localhost:5000/api)
-npm install
-npm run dev
-```
+- Company
+- Role
+- Application date
+- Status
+- Multiple links
+- Multiple messages
+- Multiple images
+- Mistake analysis
 
-## Security & Secrets
-- Never commit `.env` or configuration files containing real credentials.
-- Copy `.env.example` templates to set up local environment variables.
+Supported statuses:
+
+- Need To Apply
+- Applied
+- Interview
+- Offer
+- Rejected
+- Success
+- Failed
+
+The **Tracks** section provides quick access to:
+
+- Links
+- Messages
+- Images
+
+All application data is stored in MongoDB and persists across refresh, logout/login, and backend restarts.
+
+## 🎓 Education / Learning Progress
+
+Track daily learning activities including:
+
+- Courses
+- Topics studied
+- Study dates
+- Topic links
+- Key takeaways
+- Photos
+- PDFs
+- Progress history
+
+Learning records can be viewed, edited, and deleted.
+
+## 📝 Important Log
+
+Placement Important Log allows users to store important placement-related notes.
+
+Notes are stored in MongoDB and protected by user ownership.
+
+## 🗄️ Storage
+
+MongoDB is used for persistent application data.
+
+MongoDB GridFS is used for binary files such as images and PDFs.
+
+The application does not depend on localStorage for primary data persistence.
+
+## 🔐 Security
+
+- JWT authentication
+- Protected API routes
+- User ownership validation
+- Authenticated file access
+- MongoDB-based persistence
+- GridFS file protection
+- Environment variables for secrets
+
+Never commit `.env` files, API keys, passwords, or other secrets.
+
+## 🛠️ Tech Stack
+
+### Frontend
+- React.js
+- Vite
+- JavaScript
+- CSS
+- Axios
+- React Router
+
+### Backend
+- Node.js
+- Express.js
+- JWT
+- Multer
+- REST APIs
+
+### Database & Storage
+- MongoDB
+- Mongoose
+- MongoDB GridFS
+- MongoDB Atlas
+
+### Deployment
+- Vercel
+- Render
+- MongoDB Atlas
+
+## 📁 Project Structure
+
+```text
+TOMT-Productivity-Platform/
+│
+├── tomt-frontend/
+│   ├── src/
+│   │   ├── api/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── context/
+│   │   └── utils/
+│   └── package.json
+│
+└── tomt-backend/
+    ├── src/
+    │   ├── config/
+    │   ├── controllers/
+    │   ├── models/
+    │   ├── routes/
+    │   ├── middleware/
+    │   ├── services/
+    │   └── utils/
+    ├── server.js
+    └── package.json
