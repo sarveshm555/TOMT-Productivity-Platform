@@ -368,71 +368,75 @@ export default function InternshipTrackerPage() {
                   <div className="item-actions">
                     <div className="action-group">
                       {(app.status === 'Applied' || app.status === 'Interview') && (
-                        <>
+                        <div className="action-row action-row-status">
                           <button
                             type="button"
-                            className="btn-sm"
-                            style={{ background: 'var(--success-color)' }}
+                            className="btn-sm btn-action-success"
                             onClick={() => updateStatus(app.id, 'Offer')}
+                            title="Mark as Offer"
                           >
                             Success
                           </button>
                           <button
                             type="button"
-                            className="btn-sm"
-                            style={{ background: 'var(--danger-color)' }}
+                            className="btn-sm btn-action-failed"
                             onClick={() => openRejectModal(app.id)}
+                            title="Mark as Failed"
                           >
                             Failed
                           </button>
-                        </>
+                        </div>
                       )}
-                      <button
-                        type="button"
-                        className="btn-sm btn-track"
-                        onClick={() => openTrackModal(app)}
-                        title="View Track Links"
-                      >
-                        🔗 Track {linkCount > 0 ? `(${linkCount})` : ''}
-                      </button>
-                      <button
-                        type="button"
-                        className="btn-sm btn-messages"
-                        onClick={() => {
-                          setActiveMessagesApp(app);
-                          setEditingMsgId(null);
-                          setNewInlineMsg('');
-                        }}
-                        title="View & Add Messages"
-                      >
-                        💬 Messages {msgCount > 0 ? `(${msgCount})` : ''}
-                      </button>
-                      <button
-                        type="button"
-                        className="btn-sm btn-images"
-                        onClick={() => setActiveImagesApp(app)}
-                        title="View & Upload Images"
-                      >
-                        📷 Images {imgCount > 0 ? `(${imgCount})` : ''}
-                      </button>
-                      <button
-                        type="button"
-                        className="btn-sm"
-                        style={{ background: 'var(--secondary-color)' }}
-                        onClick={() => editApp(app.id)}
-                        title="Edit Application"
-                      >
-                        ✏️ Edit
-                      </button>
-                      <button
-                        type="button"
-                        className="btn-sm"
-                        style={{ background: '#444' }}
-                        onClick={() => setDeletingAppId(app.id)}
-                        title="Delete Application"
-                      >
-                        🗑️
-                      </button>
+                      <div className="action-row action-row-details">
+                        <button
+                          type="button"
+                          className="btn-sm btn-track"
+                          onClick={() => openTrackModal(app)}
+                          title="View Track Links"
+                        >
+                          🔗 Track {linkCount > 0 ? `(${linkCount})` : ''}
+                        </button>
+                        <button
+                          type="button"
+                          className="btn-sm btn-messages"
+                          onClick={() => {
+                            setActiveMessagesApp(app);
+                            setEditingMsgId(null);
+                            setNewInlineMsg('');
+                          }}
+                          title="View & Add Messages"
+                        >
+                          💬 Messages {msgCount > 0 ? `(${msgCount})` : ''}
+                        </button>
+                      </div>
+                      <div className="action-row action-row-media">
+                        <button
+                          type="button"
+                          className="btn-sm btn-images"
+                          onClick={() => setActiveImagesApp(app)}
+                          title="View & Upload Images"
+                        >
+                          📷 Images {imgCount > 0 ? `(${imgCount})` : ''}
+                        </button>
+                      </div>
+                      <div className="action-row action-row-manage">
+                        <button
+                          type="button"
+                          className="btn-sm btn-edit"
+                          onClick={() => editApp(app.id)}
+                          title="Edit Application"
+                        >
+                          ✏️ Edit
+                        </button>
+                        <button
+                          type="button"
+                          className="btn-sm btn-delete"
+                          onClick={() => setDeletingAppId(app.id)}
+                          title="Delete Application"
+                        >
+                          🗑️ Delete
+                        </button>
+                      </div>
                     </div>
                   </div>
                   {app.mistakeMessage && (
