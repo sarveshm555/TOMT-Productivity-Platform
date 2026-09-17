@@ -1,5 +1,37 @@
 const mongoose = require('mongoose');
 
+const attachmentSchema = new mongoose.Schema(
+  {
+    gridfsFileId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
+    fileName: {
+      type: String,
+      required: true,
+    },
+    fileType: {
+      type: String,
+      enum: ['image', 'pdf'],
+      required: true,
+    },
+    mimeType: {
+      type: String,
+      required: true,
+    },
+    size: {
+      type: Number,
+      required: true,
+    },
+    bucket: {
+      type: String,
+      enum: ['media', 'documents'],
+      default: 'documents',
+    },
+  },
+  { _id: true, timestamps: true }
+);
+
 // Ported from daily-learning-tracker.html's `courseLog_<courseName>`
 // dynamic localStorage keys. Normalized per Phase 2 (Section 6/11) exactly
 // like CodingLog.js - a real `courseId` foreign key replaces the
@@ -33,7 +65,11 @@ const courseLogSchema = new mongoose.Schema(
     },
     learnings: {
       type: String,
-      required: [true, 'Key Takeaways is required.'],
+      default: '',
+    },
+    attachments: {
+      type: [attachmentSchema],
+      default: [],
     },
   },
   { timestamps: true }

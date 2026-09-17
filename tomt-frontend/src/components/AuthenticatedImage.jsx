@@ -9,7 +9,7 @@ import apiClient from '../api/axiosClient.js';
  * image. This fetches the image through the authenticated axios client and
  * renders it as an object URL instead.
  */
-export default function AuthenticatedImage({ src, alt, className, style }) {
+export default function AuthenticatedImage({ src, alt, className, style, onClick }) {
   const [objectUrl, setObjectUrl] = useState(null);
 
   useEffect(() => {
@@ -39,5 +39,5 @@ export default function AuthenticatedImage({ src, alt, className, style }) {
   }, [src]);
 
   if (!objectUrl) return null;
-  return <img src={objectUrl} alt={alt} className={className} style={style} />;
+  return <img src={objectUrl} alt={alt} className={className} style={style} onClick={onClick} />;
 }

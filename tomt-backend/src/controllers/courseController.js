@@ -2,6 +2,7 @@ const Course = require('../models/Course');
 const CourseLog = require('../models/CourseLog');
 const ApiError = require('../utils/ApiError');
 const asyncHandler = require('../utils/asyncHandler');
+const { deleteFile } = require('../utils/gridfs');
 
 async function serializeWithProgress(doc) {
   const logCount = await CourseLog.countDocuments({ courseId: doc._id });
@@ -79,12 +80,22 @@ const updateCourse = asyncHandler(async (req, res) => {
 /**
  * DELETE /api/placement/education/:id
  * Ported from deleteCourse(id, name). Cascades to delete the course's
- * CourseLog entries - same reasoning as CodingProfile's delete (see
- * codingProfileController.js's deleteCodingProfile comment).
+ * CourseLog entries and any associated GridFS attachment files.
  */
 const deleteCourse = asyncHandler(async (req, res) => {
   const doc = await Course.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
   if (!doc) throw new ApiError(404, 'Course not found.');
+
+  const logs = await CourseLog.find({ courseId: doc._id });
+  for (const log of logs) {
+    if (log.attachments && log.attachments.length > 0) {
+      for (const att of log.attachments) {
+        const bucket = att.bucket || (att.fileType === 'pdf' ? 'documents' : 'media');
+        await deleteFile(bucket, att.gridfsFileId).catch(() => {});
+      }
+    }
+  }
+
   await CourseLog.deleteMany({ courseId: doc._id });
   res.status(200).json({ success: true, message: 'Course deleted.' });
 });

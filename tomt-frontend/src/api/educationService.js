@@ -28,3 +28,13 @@ export function updateCourseLog(courseId, logId, payload) {
 export function deleteCourseLog(courseId, logId) {
   return apiClient.delete(`/placement/education/${courseId}/logs/${logId}`).then((res) => res.data);
 }
+
+export function fetchAttachmentBlob(courseId, logId, attachmentId, { download = false } = {}) {
+  const query = download ? '?download=true' : '';
+  return apiClient
+    .get(`/placement/education/${courseId}/logs/${logId}/attachments/${attachmentId}${query}`, {
+      responseType: 'blob',
+    })
+    .then((res) => res.data);
+}
+

@@ -18,7 +18,13 @@ const {
 } = require('../controllers/codingProfileController');
 const { listLogs, createLog, updateLog, deleteLog } = require('../controllers/codingLogController');
 const { listCourses, getCourse, createCourse, updateCourse, deleteCourse } = require('../controllers/courseController');
-const { listCourseLogs, createCourseLog, updateCourseLog, deleteCourseLog } = require('../controllers/courseLogController');
+const {
+  listCourseLogs,
+  createCourseLog,
+  updateCourseLog,
+  deleteCourseLog,
+  getCourseLogAttachment,
+} = require('../controllers/courseLogController');
 const { listDocuments, uploadDocument, getDocumentFile, deleteDocument } = require('../controllers/documentController');
 const { listProfileLinks, createProfileLink, deleteProfileLink } = require('../controllers/profileLinkController');
 const { listNotes, getNoteImage, createNote, updateNote, deleteNote } = require('../controllers/noteController');
@@ -61,9 +67,10 @@ router.delete('/education/:id', deleteCourse);
 
 // /api/placement/education/:courseId/logs - daily-learning-tracker.html
 router.get('/education/:courseId/logs', listCourseLogs);
-router.post('/education/:courseId/logs', createCourseLog);
-router.put('/education/:courseId/logs/:logId', updateCourseLog);
+router.post('/education/:courseId/logs', upload.array('files', 20), createCourseLog);
+router.put('/education/:courseId/logs/:logId', upload.array('files', 20), updateCourseLog);
 router.delete('/education/:courseId/logs/:logId', deleteCourseLog);
+router.get('/education/:courseId/logs/:logId/attachments/:attachmentId', getCourseLogAttachment);
 
 // /api/placement/documents - documents.html
 // Reuses the SAME `upload` multer instance (memoryStorage, streamed to
