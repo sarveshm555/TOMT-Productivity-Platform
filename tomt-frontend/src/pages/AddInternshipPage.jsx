@@ -405,13 +405,13 @@ export default function AddInternshipPage() {
             <div className="messages-header">
               <label className="messages-title">💬 Messages &amp; Updates</label>
               <span className="messages-subtitle">
-                Log timeline updates, HR email excerpts, recruiter notes, and interview notes.
+                Add a message or update.
               </span>
             </div>
 
             {messages.length === 0 ? (
               <div style={{ color: '#777', fontSize: '0.88em', padding: '8px 0' }}>
-                No messages added yet. Click &quot;+ Add Message&quot; to log notes or updates.
+                No messages yet.
               </div>
             ) : (
               messages.map((msg, idx) => (
@@ -453,7 +453,7 @@ export default function AddInternshipPage() {
             <div className="images-header">
               <label className="images-title">📷 Images &amp; Screenshots</label>
               <span className="images-subtitle">
-                Upload interview confirmations, test scores, job descriptions, or portal screenshots.
+                Add relevant images.
               </span>
             </div>
 
@@ -469,7 +469,7 @@ export default function AddInternshipPage() {
 
             {existingImages.length === 0 && stagedImages.length === 0 ? (
               <div style={{ color: '#777', fontSize: '0.88em', padding: '8px 0' }}>
-                No images attached yet. Click &quot;+ Add Images&quot; to upload screenshots.
+                No images yet.
               </div>
             ) : (
               <div className="images-grid">

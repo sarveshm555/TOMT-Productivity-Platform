@@ -245,11 +245,32 @@
   .internship-page-root .action-row-status {
     grid-template-columns: 1fr 1fr;
   }
-  .internship-page-root .action-row-details {
+  .internship-page-root .action-row-main {
     grid-template-columns: 1fr 1fr 1fr;
   }
-  .internship-page-root .action-row-manage {
-    grid-template-columns: 1fr 1fr;
+  .internship-page-root .tracks-compact-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    width: 100%;
+    padding: 7px;
+    background: #14151f;
+    border: 1px solid #2a2b38;
+    border-radius: 6px;
+    box-sizing: border-box;
+    margin-top: 2px;
+  }
+  .internship-page-root .tracks-compact-section .btn-sm {
+    width: 100%;
+    height: 32px;
+    min-height: 32px;
+    padding: 5px 6px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    border-radius: 5px;
+    box-sizing: border-box;
+    text-align: center;
+    justify-content: center;
   }
   .internship-page-root .action-row .btn-sm {
     width: 100%;
@@ -283,15 +304,36 @@
   border: 1px solid var(--primary-color);
 }
 
-.internship-page-root .btn-track {
+.internship-page-root .btn-track,
+.internship-page-root .btn-tracks {
   background: #ff9800;
   color: #ffffff;
   border: 1px solid #e08600;
   transition: all 0.2s ease;
 }
 
-.internship-page-root .btn-track:hover {
+.internship-page-root .btn-track:hover,
+.internship-page-root .btn-tracks:hover {
   background: #f57c00;
+}
+
+.internship-page-root .btn-tracks.active {
+  background: #e65100;
+  border-color: #bf360c;
+  box-shadow: 0 0 6px rgba(255, 152, 0, 0.4);
+}
+
+.internship-page-root .tracks-compact-section {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  background: #14151f;
+  border: 1px solid #2a2b38;
+  border-radius: 6px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 4px;
 }
 
 /* Track Links Modal Styling */
@@ -724,11 +766,20 @@
   .internship-page-root .action-row-status {
     grid-template-columns: 1fr 1fr;
   }
-  .internship-page-root .action-row-details {
+  .internship-page-root .action-row-main {
     grid-template-columns: 1fr 1fr 1fr;
   }
-  .internship-page-root .action-row-manage {
-    grid-template-columns: 1fr 1fr;
+  .internship-page-root .tracks-compact-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 5px;
+    padding: 5px;
+  }
+  .internship-page-root .tracks-compact-section .btn-sm {
+    font-size: 0.72rem;
+    padding: 4px 4px;
+    height: 30px;
+    min-height: 30px;
   }
   .internship-page-root .action-row .btn-sm {
     font-size: 0.72rem;

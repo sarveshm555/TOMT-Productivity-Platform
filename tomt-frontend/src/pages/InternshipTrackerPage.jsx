@@ -60,6 +60,7 @@ export default function InternshipTrackerPage() {
   const [deletingAppId, setDeletingAppId] = useState(null);
   const [activeTrackApp, setActiveTrackApp] = useState(null);
   const [deletingTrackLinkIndex, setDeletingTrackLinkIndex] = useState(null);
+  const [openTracksAppId, setOpenTracksAppId] = useState(null);
 
   // Messages modal & inline actions state
   const [activeMessagesApp, setActiveMessagesApp] = useState(null);
@@ -388,37 +389,15 @@ export default function InternshipTrackerPage() {
                           </button>
                         </div>
                       )}
-                      <div className="action-row action-row-details">
+                      <div className="action-row action-row-main">
                         <button
                           type="button"
-                          className="btn-sm btn-track"
-                          onClick={() => openTrackModal(app)}
-                          title="View Track Links"
+                          className={`btn-sm btn-tracks${openTracksAppId === app.id ? ' active' : ''}`}
+                          onClick={() => setOpenTracksAppId((prev) => (prev === app.id ? null : app.id))}
+                          title="Open Links, Messages, and Images"
                         >
-                          Track{linkCount > 0 ? ` (${linkCount})` : ''}
+                          Tracks {openTracksAppId === app.id ? '▴' : '▾'}
                         </button>
-                        <button
-                          type="button"
-                          className="btn-sm btn-messages"
-                          onClick={() => {
-                            setActiveMessagesApp(app);
-                            setEditingMsgId(null);
-                            setNewInlineMsg('');
-                          }}
-                          title="View & Add Messages"
-                        >
-                          Messages{msgCount > 0 ? ` (${msgCount})` : ''}
-                        </button>
-                        <button
-                          type="button"
-                          className="btn-sm btn-images"
-                          onClick={() => setActiveImagesApp(app)}
-                          title="View & Upload Images"
-                        >
-                          Images{imgCount > 0 ? ` (${imgCount})` : ''}
-                        </button>
-                      </div>
-                      <div className="action-row action-row-manage">
                         <button
                           type="button"
                           className="btn-sm btn-edit"
@@ -436,6 +415,39 @@ export default function InternshipTrackerPage() {
                           🗑️ Delete
                         </button>
                       </div>
+
+                      {openTracksAppId === app.id && (
+                        <div className="tracks-compact-section">
+                          <button
+                            type="button"
+                            className="btn-sm btn-track"
+                            onClick={() => openTrackModal(app)}
+                            title="View Links"
+                          >
+                            Links{linkCount > 0 ? ` (${linkCount})` : ''}
+                          </button>
+                          <button
+                            type="button"
+                            className="btn-sm btn-messages"
+                            onClick={() => {
+                              setActiveMessagesApp(app);
+                              setEditingMsgId(null);
+                              setNewInlineMsg('');
+                            }}
+                            title="View & Add Messages"
+                          >
+                            Messages{msgCount > 0 ? ` (${msgCount})` : ''}
+                          </button>
+                          <button
+                            type="button"
+                            className="btn-sm btn-images"
+                            onClick={() => setActiveImagesApp(app)}
+                            title="View & Upload Images"
+                          >
+                            Images{imgCount > 0 ? ` (${imgCount})` : ''}
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                   {app.mistakeMessage && (
@@ -478,7 +490,7 @@ export default function InternshipTrackerPage() {
           <div className="modal-content track-modal-card">
             <div className="track-modal-header">
               <h3 style={{ color: '#ff9800', margin: 0 }}>
-                🔗 Track Links - {activeTrackApp.company}
+                🔗 Links - {activeTrackApp.company}
               </h3>
               <div style={{ color: '#aaa', fontSize: '0.88em', marginTop: '2px' }}>{activeTrackApp.role}</div>
             </div>
@@ -486,7 +498,7 @@ export default function InternshipTrackerPage() {
             <div className="track-modal-body">
               {!activeTrackApp.trackLinks || activeTrackApp.trackLinks.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '20px 0', color: '#888' }}>
-                  No track links saved for this application yet.
+                  No links yet.
                 </div>
               ) : (
                 <div className="track-links-list">
@@ -568,7 +580,7 @@ export default function InternshipTrackerPage() {
             <div className="detail-modal-body">
               {!activeMessagesApp.messages || activeMessagesApp.messages.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '24px 0', color: '#888' }}>
-                  No messages or notes added for this application yet.
+                  No messages yet.
                 </div>
               ) : (
                 activeMessagesApp.messages.map((msg, idx) => {
@@ -728,7 +740,7 @@ export default function InternshipTrackerPage() {
             <div className="detail-modal-body">
               {!activeImagesApp.images || activeImagesApp.images.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '24px 0', color: '#888' }}>
-                  No images uploaded for this application yet.
+                  No images yet.
                 </div>
               ) : (
                 <div className="tracker-images-grid">
