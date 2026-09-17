@@ -137,17 +137,19 @@
   align-items: center;
 }
 
-.internship-page-root .action-group {
+.internship-page-root .action-row-single-line {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 6px;
-  flex-wrap: wrap;
+  box-sizing: border-box;
 }
 
-.internship-page-root .action-row {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+.internship-page-root .action-row-single-line .btn-sm {
+  white-space: nowrap;
+  padding: 5px 8px;
+  font-size: 0.78rem;
 }
 
 .internship-page-root .btn-sm {
@@ -230,59 +232,30 @@
     padding-top: 10px;
     margin-top: 2px;
   }
-  .internship-page-root .action-group {
+  .internship-page-root .action-row-single-line {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
-  }
-  .internship-page-root .action-row {
-    display: grid;
-    gap: 6px;
-    width: 100%;
+    gap: 4px;
     box-sizing: border-box;
   }
-  .internship-page-root .action-row-status {
-    grid-template-columns: 1fr 1fr;
-  }
-  .internship-page-root .action-row-main {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-  .internship-page-root .tracks-compact-section {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 6px;
-    width: 100%;
-    padding: 7px;
-    background: #14151f;
-    border: 1px solid #2a2b38;
-    border-radius: 6px;
-    box-sizing: border-box;
-    margin-top: 2px;
-  }
-  .internship-page-root .tracks-compact-section .btn-sm {
-    width: 100%;
-    height: 32px;
-    min-height: 32px;
-    padding: 5px 6px;
-    font-size: 0.76rem;
+  .internship-page-root .action-row-single-line .btn-sm {
+    flex: 1 1 0;
+    min-width: 0;
+    width: 0;
+    height: 30px;
+    min-height: 30px;
+    padding: 5px 2px;
+    font-size: 0.72rem;
     font-weight: 600;
     border-radius: 5px;
     box-sizing: border-box;
     text-align: center;
     justify-content: center;
-  }
-  .internship-page-root .action-row .btn-sm {
-    width: 100%;
-    height: 32px;
-    min-height: 32px;
-    padding: 5px 6px;
-    font-size: 0.76rem;
-    font-weight: 600;
-    border-radius: 5px;
-    box-sizing: border-box;
-    text-align: center;
-    justify-content: center;
+    white-space: nowrap;
   }
 }
 
@@ -323,17 +296,271 @@
   box-shadow: 0 0 6px rgba(255, 152, 0, 0.4);
 }
 
-.internship-page-root .tracks-compact-section {
+/* =============================================================
+   Tracks Drawer Card (Directly below action buttons)
+   ============================================================= */
+.internship-page-root .tracks-drawer-card {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin-top: 8px;
+  background: #12131d;
+  border: 1px solid #272a3c;
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: fadeIn 0.15s ease-in-out;
+}
+
+.internship-page-root .tracks-drawer-header {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 8px;
-  background: #14151f;
-  border: 1px solid #2a2b38;
-  border-radius: 6px;
+  justify-content: space-between;
   width: 100%;
+}
+
+.internship-page-root .tracks-drawer-title {
+  font-weight: 700;
+  font-size: 0.84rem;
+  color: #ff9800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.internship-page-root .tracks-drawer-close-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  line-height: 1;
+  transition: all 0.15s ease;
+}
+
+.internship-page-root .tracks-drawer-close-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.internship-page-root .tracks-divider {
+  width: 100%;
+  height: 1px;
+  background: #25283b;
+  border: none;
+  margin: 0;
+}
+
+.internship-page-root .tracks-vertical-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.internship-page-root .tracks-vertical-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
   box-sizing: border-box;
+  text-align: left;
+}
+
+.internship-page-root .tracks-vertical-btn.btn-track {
+  background: #1a1924;
+  color: #ffb74d;
+  border-color: #3b2c1d;
+}
+.internship-page-root .tracks-vertical-btn.btn-track:hover,
+.internship-page-root .tracks-vertical-btn.btn-track.active {
+  background: #2c2014;
+  border-color: #ff9800;
+  color: #ffffff;
+  box-shadow: 0 0 6px rgba(255, 152, 0, 0.3);
+}
+
+.internship-page-root .tracks-vertical-btn.btn-messages {
+  background: #141e2a;
+  color: #38bdf8;
+  border-color: #1c3652;
+}
+.internship-page-root .tracks-vertical-btn.btn-messages:hover,
+.internship-page-root .tracks-vertical-btn.btn-messages.active {
+  background: #0d2844;
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 0 6px rgba(56, 189, 248, 0.3);
+}
+
+.internship-page-root .tracks-vertical-btn.btn-images {
+  background: #132220;
+  color: #34d399;
+  border-color: #194437;
+}
+.internship-page-root .tracks-vertical-btn.btn-images:hover,
+.internship-page-root .tracks-vertical-btn.btn-images.active {
+  background: #093325;
+  border-color: #34d399;
+  color: #ffffff;
+  box-shadow: 0 0 6px rgba(52, 211, 153, 0.3);
+}
+
+.internship-page-root .tracks-content-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #0b0c12;
+  border-radius: 6px;
+  border: 1px solid #202334;
+  margin-top: 2px;
+}
+
+.internship-page-root .tracks-empty-text {
+  color: #888;
+  font-size: 0.8rem;
+  padding: 8px 0;
+  text-align: center;
+}
+
+.internship-page-root .tracks-links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.internship-page-root .tracks-link-item {
+  display: flex;
+  align-items: center;
+  padding: 5px 8px;
+  background: #141724;
+  border: 1px solid #24293f;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.internship-page-root .tracks-link-anchor {
+  color: #ff9800;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: 100%;
+}
+.internship-page-root .tracks-link-anchor:hover {
+  text-decoration: underline;
+  color: #ffb74d;
+}
+
+.internship-page-root .tracks-messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.internship-page-root .tracker-message-item-mini {
+  background: #141724;
+  border-radius: 5px;
+  padding: 6px 8px;
+  border-left: 3px solid #38bdf8;
+}
+
+.internship-page-root .tracker-message-date-mini {
+  font-size: 0.7rem;
+  color: #7dd3fc;
+  margin-bottom: 2px;
+}
+
+.internship-page-root .tracker-message-text-mini {
+  font-size: 0.8rem;
+  color: #e2e8f0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.internship-page-root .tracks-more-msg-hint {
+  font-size: 0.7rem;
+  color: #64748b;
+  text-align: center;
+}
+
+.internship-page-root .tracks-quick-msg-box {
+  display: flex;
+  gap: 6px;
+  width: 100%;
   margin-top: 4px;
+}
+
+.internship-page-root .tracks-quick-msg-input {
+  flex: 1;
+  background: #161a29;
+  border: 1px solid #2e384d;
+  border-radius: 5px;
+  padding: 5px 8px;
+  color: #fff;
+  font-size: 0.8rem;
+}
+
+.internship-page-root .tracks-quick-msg-input:focus {
+  outline: none;
+  border-color: #38bdf8;
+}
+
+.internship-page-root .tracks-images-grid-mini {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+  gap: 6px;
+  width: 100%;
+}
+
+.internship-page-root .tracker-image-thumb-mini {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid #2b3046;
+  cursor: pointer;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.internship-page-root .tracker-image-thumb-mini:hover {
+  transform: scale(1.04);
+  border-color: #34d399;
+}
+
+.internship-page-root .tracker-image-thumb-mini img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.internship-page-root .btn-tracks-manage {
+  margin-top: 4px;
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 /* Track Links Modal Styling */
@@ -747,47 +974,25 @@
 
 @media (max-width: 380px) {
   .internship-page-root {
-    padding: 8px 5px;
+    padding: 6px 4px;
   }
   .internship-page-root .app-container {
-    padding: 10px 6px;
+    padding: 8px 4px;
     border-radius: 8px;
   }
   .internship-page-root .app-item {
-    padding: 10px 8px;
-    gap: 8px;
+    padding: 8px 6px;
+    gap: 6px;
   }
-  .internship-page-root .action-group {
-    gap: 5px;
+  .internship-page-root .action-row-single-line {
+    gap: 3px;
   }
-  .internship-page-root .action-row {
-    gap: 5px;
-  }
-  .internship-page-root .action-row-status {
-    grid-template-columns: 1fr 1fr;
-  }
-  .internship-page-root .action-row-main {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-  .internship-page-root .tracks-compact-section {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 5px;
-    padding: 5px;
-  }
-  .internship-page-root .tracks-compact-section .btn-sm {
-    font-size: 0.72rem;
-    padding: 4px 4px;
-    height: 30px;
-    min-height: 30px;
-  }
-  .internship-page-root .action-row .btn-sm {
-    font-size: 0.72rem;
-    padding: 4px 4px;
-    height: 30px;
-    min-height: 30px;
-    gap: 2px;
-    letter-spacing: -0.01em;
+  .internship-page-root .action-row-single-line .btn-sm {
+    padding: 4px 1px;
+    height: 28px;
+    min-height: 28px;
+    font-size: 0.67rem;
+    letter-spacing: -0.02em;
   }
   .internship-page-root .tracker-images-grid {
     grid-template-columns: 1fr;

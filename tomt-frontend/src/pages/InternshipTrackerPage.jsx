@@ -61,6 +61,9 @@ export default function InternshipTrackerPage() {
   const [activeTrackApp, setActiveTrackApp] = useState(null);
   const [deletingTrackLinkIndex, setDeletingTrackLinkIndex] = useState(null);
   const [openTracksAppId, setOpenTracksAppId] = useState(null);
+  const [activeTrackTab, setActiveTrackTab] = useState(null);
+  const [inlineTrackMsg, setInlineTrackMsg] = useState('');
+  const [isSubmittingTrackMsg, setIsSubmittingTrackMsg] = useState(false);
 
   // Messages modal & inline actions state
   const [activeMessagesApp, setActiveMessagesApp] = useState(null);
@@ -201,8 +204,22 @@ export default function InternshipTrackerPage() {
   }
 
   // -------------------------------------------------------------
-  // Messages Modal Handlers
+  // Tracks Inline & Messages Handlers
   // -------------------------------------------------------------
+  async function handleQuickAddTrackMessage(appId) {
+    if (!inlineTrackMsg.trim() || isSubmittingTrackMsg) return;
+    setIsSubmittingTrackMsg(true);
+    try {
+      const updatedApp = await internshipService.addMessage(appId, inlineTrackMsg.trim());
+      setApps((prev) => prev.map((a) => (a.id === appId ? { ...a, ...updatedApp } : a)));
+      setInlineTrackMsg('');
+    } catch (err) {
+      setError('Could not add message. Please try again.');
+    } finally {
+      setIsSubmittingTrackMsg(false);
+    }
+  }
+
   async function handleAddModalMessage() {
     if (!activeMessagesApp || !newInlineMsg.trim() || isSubmittingMsg) return;
     setIsSubmittingMsg(true);
@@ -368,9 +385,9 @@ export default function InternshipTrackerPage() {
                     <span style={{ fontWeight: 'bold', color: getStatusColor(app.status) }}>{app.status}</span>
                   </div>
                   <div className="item-actions">
-                    <div className="action-group">
+                    <div className="action-row-single-line">
                       {(app.status === 'Applied' || app.status === 'Interview') && (
-                        <div className="action-row action-row-status">
+                        <>
                           <button
                             type="button"
                             className="btn-sm btn-action-success"
@@ -387,69 +404,215 @@ export default function InternshipTrackerPage() {
                           >
                             Failed
                           </button>
-                        </div>
+                        </>
                       )}
-                      <div className="action-row action-row-main">
+                      <button
+                        type="button"
+                        className={`btn-sm btn-tracks${openTracksAppId === app.id ? ' active' : ''}`}
+                        onClick={() => {
+                          setOpenTracksAppId((prev) => {
+                            const next = prev === app.id ? null : app.id;
+                            if (!next) setActiveTrackTab(null);
+                            return next;
+                          });
+                        }}
+                        title="Tracks"
+                      >
+                        Tracks
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-sm btn-edit"
+                        onClick={() => editApp(app.id)}
+                        title="Edit Application"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-sm btn-delete"
+                        onClick={() => setDeletingAppId(app.id)}
+                        title="Delete Application"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+
+                  {openTracksAppId === app.id && (
+                    <div className="tracks-drawer-card">
+                      <div className="tracks-drawer-header">
+                        <span className="tracks-drawer-title">Tracks</span>
                         <button
                           type="button"
-                          className={`btn-sm btn-tracks${openTracksAppId === app.id ? ' active' : ''}`}
-                          onClick={() => setOpenTracksAppId((prev) => (prev === app.id ? null : app.id))}
-                          title="Open Links, Messages, and Images"
+                          className="tracks-drawer-close-btn"
+                          onClick={() => {
+                            setOpenTracksAppId(null);
+                            setActiveTrackTab(null);
+                          }}
+                          title="Close Tracks"
                         >
-                          Tracks {openTracksAppId === app.id ? '▴' : '▾'}
-                        </button>
-                        <button
-                          type="button"
-                          className="btn-sm btn-edit"
-                          onClick={() => editApp(app.id)}
-                          title="Edit Application"
-                        >
-                          ✏️ Edit
-                        </button>
-                        <button
-                          type="button"
-                          className="btn-sm btn-delete"
-                          onClick={() => setDeletingAppId(app.id)}
-                          title="Delete Application"
-                        >
-                          🗑️ Delete
+                          ✕
                         </button>
                       </div>
 
-                      {openTracksAppId === app.id && (
-                        <div className="tracks-compact-section">
+                      <div className="tracks-divider" />
+
+                      <div className="tracks-vertical-menu">
+                        <button
+                          type="button"
+                          className={`tracks-vertical-btn btn-track${activeTrackTab === 'links' ? ' active' : ''}`}
+                          onClick={() => setActiveTrackTab((prev) => (prev === 'links' ? null : 'links'))}
+                        >
+                          Links{linkCount > 0 ? ` (${linkCount})` : ''}
+                        </button>
+                        <button
+                          type="button"
+                          className={`tracks-vertical-btn btn-messages${activeTrackTab === 'messages' ? ' active' : ''}`}
+                          onClick={() => setActiveTrackTab((prev) => (prev === 'messages' ? null : 'messages'))}
+                        >
+                          Messages{msgCount > 0 ? ` (${msgCount})` : ''}
+                        </button>
+                        <button
+                          type="button"
+                          className={`tracks-vertical-btn btn-images${activeTrackTab === 'images' ? ' active' : ''}`}
+                          onClick={() => setActiveTrackTab((prev) => (prev === 'images' ? null : 'images'))}
+                        >
+                          Images{imgCount > 0 ? ` (${imgCount})` : ''}
+                        </button>
+                      </div>
+
+                      <div className="tracks-divider" />
+
+                      {activeTrackTab === 'links' && (
+                        <div className="tracks-content-panel">
+                          {(!app.trackLinks || app.trackLinks.length === 0) ? (
+                            <div className="tracks-empty-text">No track links added yet.</div>
+                          ) : (
+                            <div className="tracks-links-list">
+                              {app.trackLinks.map((link, idx) => (
+                                <div key={idx} className="tracks-link-item">
+                                  <a
+                                    href={link.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="tracks-link-anchor"
+                                    title={link.url}
+                                  >
+                                    {link.label ? link.label : link.url}
+                                  </a>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                           <button
                             type="button"
-                            className="btn-sm btn-track"
+                            className="btn-sm btn-tracks-manage"
+                            style={{ background: '#ff9800', color: '#fff', alignSelf: 'flex-start' }}
                             onClick={() => openTrackModal(app)}
-                            title="View Links"
                           >
-                            Links{linkCount > 0 ? ` (${linkCount})` : ''}
+                            Manage Links
                           </button>
+                        </div>
+                      )}
+
+                      {activeTrackTab === 'messages' && (
+                        <div className="tracks-content-panel">
+                          {(!app.messages || app.messages.length === 0) ? (
+                            <div className="tracks-empty-text">No messages yet.</div>
+                          ) : (
+                            <div className="tracks-messages-list">
+                              {app.messages.slice(-3).map((msg, idx) => (
+                                <div key={msg.id || msg._id || idx} className="tracker-message-item-mini">
+                                  <div className="tracker-message-date-mini">
+                                    {msg.createdAt ? formatLocalDateTime(msg.createdAt) : 'Just now'}
+                                  </div>
+                                  <div className="tracker-message-text-mini">{msg.text}</div>
+                                </div>
+                              ))}
+                              {app.messages.length > 3 && (
+                                <div className="tracks-more-msg-hint">
+                                  Showing latest 3 of {app.messages.length} messages.
+                                </div>
+                              )}
+                            </div>
+                          )}
+                          <div className="tracks-quick-msg-box">
+                            <input
+                              type="text"
+                              className="tracks-quick-msg-input"
+                              placeholder="Quick message..."
+                              value={inlineTrackMsg}
+                              onChange={(e) => setInlineTrackMsg(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault();
+                                  handleQuickAddTrackMessage(app.id);
+                                }
+                              }}
+                              disabled={isSubmittingTrackMsg}
+                            />
+                            <button
+                              type="button"
+                              className="btn-sm"
+                              style={{ background: '#0284c7', color: '#fff', padding: '4px 10px', fontSize: '0.75rem' }}
+                              onClick={() => handleQuickAddTrackMessage(app.id)}
+                              disabled={isSubmittingTrackMsg || !inlineTrackMsg.trim()}
+                            >
+                              {isSubmittingTrackMsg ? '...' : 'Add'}
+                            </button>
+                          </div>
                           <button
                             type="button"
-                            className="btn-sm btn-messages"
+                            className="btn-sm btn-tracks-manage"
+                            style={{ background: '#1e293b', color: '#38bdf8', border: '1px solid #0284c7', alignSelf: 'flex-start' }}
                             onClick={() => {
                               setActiveMessagesApp(app);
                               setEditingMsgId(null);
                               setNewInlineMsg('');
                             }}
-                            title="View & Add Messages"
                           >
-                            Messages{msgCount > 0 ? ` (${msgCount})` : ''}
+                            Manage Messages
                           </button>
+                        </div>
+                      )}
+
+                      {activeTrackTab === 'images' && (
+                        <div className="tracks-content-panel">
+                          {(!app.images || app.images.length === 0) ? (
+                            <div className="tracks-empty-text">No images uploaded yet.</div>
+                          ) : (
+                            <div className="tracks-images-grid-mini">
+                              {app.images.map((img, idx) => {
+                                const imgId = img.id || img._id;
+                                const imgUrl = imgId
+                                  ? `/placement/internships/${app.id}/images/${imgId}`
+                                  : (img.url || '');
+                                return (
+                                  <div
+                                    key={imgId || idx}
+                                    className="tracker-image-thumb-mini"
+                                    title="Click to preview full image"
+                                    onClick={() => setLightboxDoc({ url: imgUrl, title: img.fileName || 'Application Image' })}
+                                  >
+                                    <AuthenticatedImage src={imgUrl} alt={img.fileName || 'Screenshot'} />
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
                           <button
                             type="button"
-                            className="btn-sm btn-images"
+                            className="btn-sm btn-tracks-manage"
+                            style={{ background: '#059669', color: '#fff', alignSelf: 'flex-start' }}
                             onClick={() => setActiveImagesApp(app)}
-                            title="View & Upload Images"
                           >
-                            Images{imgCount > 0 ? ` (${imgCount})` : ''}
+                            Manage Images
                           </button>
                         </div>
                       )}
                     </div>
-                  </div>
+                  )}
                   {app.mistakeMessage && (
                     <div className="mistake-tag">
                       <strong>🚨 Mistake Analysis:</strong> {app.mistakeMessage}
