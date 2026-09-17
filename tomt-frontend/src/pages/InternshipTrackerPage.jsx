@@ -409,8 +409,6 @@ export default function InternshipTrackerPage() {
                         >
                           Messages{msgCount > 0 ? ` (${msgCount})` : ''}
                         </button>
-                      </div>
-                      <div className="action-row action-row-media">
                         <button
                           type="button"
                           className="btn-sm btn-images"

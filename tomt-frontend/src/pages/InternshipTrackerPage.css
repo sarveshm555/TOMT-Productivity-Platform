@@ -238,28 +238,30 @@
   }
   .internship-page-root .action-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
     gap: 6px;
     width: 100%;
+    box-sizing: border-box;
   }
   .internship-page-root .action-row-status {
     grid-template-columns: 1fr 1fr;
   }
   .internship-page-root .action-row-details {
-    grid-template-columns: 1fr 1fr;
-  }
-  .internship-page-root .action-row-media {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
   }
   .internship-page-root .action-row-manage {
     grid-template-columns: 1fr 1fr;
   }
   .internship-page-root .action-row .btn-sm {
     width: 100%;
+    height: 32px;
     min-height: 32px;
-    padding: 5px 8px;
-    font-size: 0.78rem;
+    padding: 5px 6px;
+    font-size: 0.76rem;
+    font-weight: 600;
     border-radius: 5px;
+    box-sizing: border-box;
+    text-align: center;
+    justify-content: center;
   }
 }
 
@@ -693,9 +695,6 @@
   .internship-page-root .app-item {
     padding: 12px 10px;
   }
-  .internship-page-root .action-row {
-    gap: 7px;
-  }
   .internship-page-root .detail-modal-card {
     max-width: 95vw;
   }
@@ -722,17 +721,22 @@
   .internship-page-root .action-row {
     gap: 5px;
   }
-  .internship-page-root .action-row-media {
-    grid-template-columns: 1fr;
+  .internship-page-root .action-row-status {
+    grid-template-columns: 1fr 1fr;
+  }
+  .internship-page-root .action-row-details {
+    grid-template-columns: 1fr 1fr 1fr;
   }
   .internship-page-root .action-row-manage {
     grid-template-columns: 1fr 1fr;
   }
   .internship-page-root .action-row .btn-sm {
-    font-size: 0.74rem;
-    padding: 4px 6px;
+    font-size: 0.72rem;
+    padding: 4px 4px;
+    height: 30px;
     min-height: 30px;
     gap: 2px;
+    letter-spacing: -0.01em;
   }
   .internship-page-root .tracker-images-grid {
     grid-template-columns: 1fr;
