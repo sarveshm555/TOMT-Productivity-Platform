@@ -20,10 +20,14 @@ export function listCourseLogs(courseId) {
   return apiClient.get(`/placement/education/${courseId}/logs`).then((res) => res.data.logs);
 }
 export function createCourseLog(courseId, payload) {
-  return apiClient.post(`/placement/education/${courseId}/logs`, payload).then((res) => res.data.log);
+  const isFormData = typeof FormData !== 'undefined' && payload instanceof FormData;
+  const config = isFormData ? { headers: { 'Content-Type': 'multipart/form-data' } } : undefined;
+  return apiClient.post(`/placement/education/${courseId}/logs`, payload, config).then((res) => res.data.log);
 }
 export function updateCourseLog(courseId, logId, payload) {
-  return apiClient.put(`/placement/education/${courseId}/logs/${logId}`, payload).then((res) => res.data.log);
+  const isFormData = typeof FormData !== 'undefined' && payload instanceof FormData;
+  const config = isFormData ? { headers: { 'Content-Type': 'multipart/form-data' } } : undefined;
+  return apiClient.put(`/placement/education/${courseId}/logs/${logId}`, payload, config).then((res) => res.data.log);
 }
 export function deleteCourseLog(courseId, logId) {
   return apiClient.delete(`/placement/education/${courseId}/logs/${logId}`).then((res) => res.data);

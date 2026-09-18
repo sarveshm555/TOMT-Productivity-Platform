@@ -145,15 +145,17 @@ export default function DailyLearningTrackerPage() {
   }
 
   function handlePhotoSelect(e) {
-    if (e.target.files) {
-      setStagedPhotos((prev) => [...prev, ...Array.from(e.target.files)]);
+    const files = e.target.files ? Array.from(e.target.files) : [];
+    if (files.length > 0) {
+      setStagedPhotos((prev) => [...prev, ...files]);
     }
     e.target.value = '';
   }
 
   function handlePdfSelect(e) {
-    if (e.target.files) {
-      setStagedPdfs((prev) => [...prev, ...Array.from(e.target.files)]);
+    const files = e.target.files ? Array.from(e.target.files) : [];
+    if (files.length > 0) {
+      setStagedPdfs((prev) => [...prev, ...files]);
     }
     e.target.value = '';
   }
@@ -328,7 +330,7 @@ export default function DailyLearningTrackerPage() {
             {loading ? 'Loading...' : course ? course.name : '...'}
           </h2>
           <button type="button" className="btn-toggle-form" id="toggle-form-btn" onClick={toggleForm}>
-            {formVisible ? 'Close' : 'Log Progress'}
+            {formVisible ? 'Close' : '➕ Add New / Log Progress'}
           </button>
         </div>
 
@@ -421,9 +423,10 @@ export default function DailyLearningTrackerPage() {
                 <label className="section-label">Attachments (Photos & PDFs)</label>
 
                 <div className="attachment-upload-buttons">
-                  <label className="btn-upload-trigger photo-trigger">
-                    Add Photos
+                  <label className="btn-upload-trigger photo-trigger" htmlFor="learning-photo-input">
+                    📷 Add Photos
                     <input
+                      id="learning-photo-input"
                       type="file"
                       accept="image/*"
                       multiple
@@ -431,9 +434,10 @@ export default function DailyLearningTrackerPage() {
                       style={{ display: 'none' }}
                     />
                   </label>
-                  <label className="btn-upload-trigger pdf-trigger">
-                    Add PDFs
+                  <label className="btn-upload-trigger pdf-trigger" htmlFor="learning-pdf-input">
+                    📄 Add PDFs
                     <input
+                      id="learning-pdf-input"
                       type="file"
                       accept=".pdf,application/pdf"
                       multiple
@@ -524,6 +528,31 @@ export default function DailyLearningTrackerPage() {
                     <div className="card-date-badge">{formatDisplayDate(log.date)}</div>
                   </div>
 
+                  {/* Photo Thumbnails Preview in Progress History */}
+                  {log.attachments?.some((a) => a.fileType === 'image') && (
+                    <div className="card-photos-preview-strip">
+                      {log.attachments
+                        .filter((a) => a.fileType === 'image')
+                        .map((att) => (
+                          <div
+                            className="card-photo-thumb"
+                            key={att.id}
+                            title={`Click to view full image: ${att.fileName}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              viewAttachment(log, att);
+                            }}
+                          >
+                            <AuthenticatedImage
+                              src={`/placement/education/${courseId}/logs/${log.id}/attachments/${att.id}`}
+                              alt={att.fileName}
+                              className="card-thumb-img"
+                            />
+                          </div>
+                        ))}
+                    </div>
+                  )}
+
                   {/* Clean text action buttons (no emojis) */}
                   <div className="card-action-bar">
                     <button
@@ -539,7 +568,7 @@ export default function DailyLearningTrackerPage() {
                       className={`btn-action-chip ${totalAttachments > 0 ? 'has-content' : 'chip-dim'} ${activeView === 'files' ? 'chip-active' : ''}`}
                       onClick={(e) => { e.stopPropagation(); toggleCardDetail(log, 'files'); }}
                     >
-                      Files
+                      Files {totalAttachments > 0 ? `(${totalAttachments})` : ''}
                     </button>
 
                     <button

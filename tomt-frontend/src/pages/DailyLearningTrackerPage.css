@@ -469,6 +469,43 @@
   white-space: nowrap;
 }
 
+/* ── Photo Thumbnails Preview in Progress History Cards ────────── */
+.daily-learning-tracker-page-root .card-photos-preview-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 2px;
+}
+
+.daily-learning-tracker-page-root .card-photo-thumb {
+  width: 90px;
+  height: 64px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #0f1016;
+  border: 1px solid #2e3042;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.daily-learning-tracker-page-root .card-photo-thumb:hover {
+  transform: scale(1.05);
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(0, 188, 212, 0.3);
+}
+
+.daily-learning-tracker-page-root .card-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .daily-learning-tracker-page-root .card-action-bar {
   display: flex;
   align-items: center;
